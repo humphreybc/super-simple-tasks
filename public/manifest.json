@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+
+  "name": "Super Simple Tasks",
+  "description": "A very simple tasks app that uses localStorage.",
+  "version": "1.0",
+
+  "icons": {
+    "16": "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
+  },
+
+  "permissions": [
+    "tabs",
+    "storage"
+  ],
+
+  "offline_enabled": true,
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "browser_action": {
+    "default_icon": "img/icon19.png",
+    "default_title": "Super Simple Tasks"
+  }
+}
