@@ -4,8 +4,8 @@
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
   "name": "Super Simple Tasks",
-  "description": "A very simple tasks app that uses localStorage.",
-  "version": "1.1",
+  "description": "The world's simplest tasks app with offline support, an elegant design, and no account required!",
+  "version": "1.2",
 
   "icons": {
     "16": "img/icon16.png",
