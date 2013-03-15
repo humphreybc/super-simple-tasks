@@ -15,11 +15,16 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 
 * Star a task and it goes to the top
 * Edit a task
+* Drag and drop tasks to reorder
 * IE support
+* Sync using Chrome's native sync API
+* Set up a proper build system that doesn't rely on LiveReload
 
 ### Dependencies
 
 Uses [Coffeescript](http://coffeescript.org/) and [Stylus](http://learnboost.github.com/stylus/). I compile with [LiveReload](http://livereload.com/) which is pretty great, but any Coffeescript / Stylus compiler will do.
+
+There's currently an AngularJS port underway in the angular branch.
 
 ### Forking and licensing
 
