@@ -1,0 +1,14 @@
+{
+  "name": "uxdesignday",
+  "version": "0.0.0",
+  "devDependencies": {
+    "coffee-script": "latest",
+    "grunt": "latest",
+    "grunt-contrib-watch": "latest",
+    "grunt-contrib-coffee": "latest",
+    "grunt-coffeelint": "latest",
+    "grunt-contrib-stylus": "latest",
+    "grunt-contrib-cssmin": "latest",
+    "grunt-contrib-uglify": "latest"
+  }
+}

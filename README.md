@@ -19,7 +19,6 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 * Add due date - today, tomorrow, this week, next week, this month
 * Add description field
 * Edit tasks
-* Set up a proper build system that doesn't rely on LiveReload
 
 #### 1.3
 
