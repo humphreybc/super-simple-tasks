@@ -13,12 +13,24 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 
 ### To-do
 
-* Star a task and it goes to the top
-* Edit a task
-* Drag and drop tasks to reorder
+#### 1.2
+
+* Add priority - minor, major, critical, blocker
+* Add due date - today, tomorrow, this week, next week, this month
+* Add description field
+* Edit tasks
+* Set up a proper build system that doesn't rely on LiveReload
+
+#### 1.3
+
+* Toggle to sort by priority, due date, creation order
+* Retina favicon
+* Simpler (hate to say it, 'flat') design
+
+#### 1.4
+
 * IE support
 * Sync using Chrome's native sync API
-* Set up a proper build system that doesn't rely on LiveReload
 
 ### Dependencies
 
