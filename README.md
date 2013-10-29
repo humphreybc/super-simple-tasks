@@ -23,7 +23,6 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 #### 1.3
 
 * Toggle to sort by priority, due date, creation order
-* Retina favicon
 * Simpler (hate to say it, 'flat') design
 
 #### 1.4
