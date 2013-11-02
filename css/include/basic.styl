@@ -16,23 +16,14 @@ input, button, textarea
 
 .wrapper
   margin 0px auto
-  width 450px
+  width 550px
 
 .content
   margin 20px auto 20px
-  border-radius 6px
-  border 1px solid #ccc
-  box-shadow 0px 2px 3px #ddd
-  min-height 600px
-  background-color background-gray
+  min-height 650px
 
 .header
   padding 20px
-  box-shadow inset 0px 1px 0px white, 0px 1px 0px white
-  background-image linear-gradient(top, #f7f6f5, #eee)
-  border-top-left-radius 6px
-  border-top-right-radius 6px
-  border-bottom 1px solid #ccc
 
 #mark-all-done
   float right
@@ -71,7 +62,7 @@ h1
   margin 0px
   text-transform uppercase
   font-size font-large
-  color xlight-gray
+  color blue
   text-shadow 0px 1px white
 
 a
@@ -92,37 +83,42 @@ a
 
 input[type='text']
   float left
-  margin-right 2%
   padding 7px 8px
-  border-radius 3px
+  border-top-left-radius 3px
+  border-bottom-left-radius 3px
   border 1px solid xlight-gray
-  width 73%
+  border-right none
+  width 75%
   font-size font-small
 
-  &:focus
+  &:hover, &:focus
+    border 1px solid dark-blue
+    border-right none
     outline none
-    border 1px solid light-gray
-    box-shadow 0px 1px 2px #ccc
 
 // Buttons
 
 .button
   width 25%
   float left
-  background-image linear-gradient(top, green, lighten(dark-green, 5))
-  box-shadow inset 0px 1px 0px lighten(green, 10)
-  border 1px solid dark-green
-  border-radius 3px
+  background-color blue
+  border 1px solid dark-blue
+  border-top-right-radius 3px
+  border-bottom-right-radius 3px
   padding 7px 8px
   font-size font-small
-  font-weight 600
-  text-shadow 0px 2px dark-green
+  font-weight 700
   color white
   cursor pointer
+  outline none
 
   &:hover
-    box-shadow 0px 2px 3px #ddd, inset 0px 1px 0px lighten(green, 20)
-    background-image linear-gradient(top, lighten(green,10), green)
+    background-color lighten(blue, 5)
+    box-shadow 0px 1px 2px #ccc
+
+  &:active
+    background-color dark-blue
+    box-shadow inset 0px 2px 3px darken(dark-blue, 5)
 
 // The todo list
 
@@ -133,13 +129,11 @@ input[type='text']
 
   li
     padding 10px 20px 10px
-    border-bottom 1px solid #ddd
-    box-shadow 0px 1px 0px white
     cursor pointer
+    overflow hidden
 
     &:hover
       background-color #eee
-      box-shadow inset 0px 0px 3px #d9d9d9, 0px 1px 0px white
 
     input[type='checkbox']
       cursor pointer
@@ -151,10 +145,28 @@ input[type='text']
       overflow hidden
 
     label
+      float left
       cursor pointer
       display block
-      padding-left 25px
+      padding-left 28px
       text-indent -30px
+
+    .priority
+      float right
+      color white
+      padding 2px 5px 2px
+      font-size font-xsmall
+      font-weight 700
+      border-radius 3px
+
+    .blocker
+      background-color red
+
+    .major
+      background-color dark-yellow
+
+    .minor
+      background-color green
 
 // The footer
 
@@ -164,10 +176,10 @@ input[type='text']
   padding-bottom 20px
 
   a
-    color green
+    color blue
 
     &:hover
-      color dark-green
+      color dark-blue
 
   ul
     list-style-type none
@@ -199,3 +211,17 @@ input[type='text']
 
   #mark-all-done
     float none
+
+  input[type='text']
+    border 1px solid xlight-gray
+    border-radius 3px
+
+    &:hover, &:focus
+      border 1px solid dark-blue
+
+  .button
+    border-radius 3px
+
+  .footer ul li
+    width 100%
+    margin-bottom 5px

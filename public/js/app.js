@@ -88,7 +88,7 @@
       names = getNames(allTodos);
       for (i = _i = 0, _len = names.length; _i < _len; i = ++_i) {
         name = names[i];
-        names[i] = '<li><label><input type="checkbox" id="todo' + i + '" />' + name + '</label></li>';
+        names[i] = '<li><label><input type="checkbox" id="todo' + i + '" />' + name + '</label><div class="priority blocker">Blocker</div></li>';
       }
       return names;
     };

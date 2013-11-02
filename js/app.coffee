@@ -79,7 +79,7 @@ $(document).ready ->
   generateHTML = (allTodos) ->
     names = getNames(allTodos)
     for name, i in names
-      names[i] = '<li><label><input type="checkbox" id="todo' + i + '" />' + name + '</label></li>'
+      names[i] = '<li><label><input type="checkbox" id="todo' + i + '" />' + name + '</label><div class="priority blocker">Blocker</div></li>'
     names
 
   # Inserts that nicely formatted list into ul #todo-list
