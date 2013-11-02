@@ -1,8 +1,8 @@
 (function() {
   $(document).ready(function() {
-    var clickedTimers, createToDo, generateHTML, getAllTodos, getId, getNames, initialize, markAllDone, markDone, setAllTodos, setNewTodo, showTodos, timeout, undoLast, undoUX;
-    clickedTimers = {};
+    var createToDo, generateHTML, getAllTodos, getId, getNames, initialize, markAllDone, markDone, priorities, setAllTodos, setNewTodo, showTodos, timeout, undoLast, undoUX;
     timeout = 0;
+    priorities = ['minor', 'major', 'blocker'];
     initialize = function() {
       var allTodos;
       allTodos = getAllTodos();
@@ -88,7 +88,7 @@
       names = getNames(allTodos);
       for (i = _i = 0, _len = names.length; _i < _len; i = ++_i) {
         name = names[i];
-        names[i] = '<li><label><input type="checkbox" id="todo' + i + '" />' + name + '</label><div class="priority blocker">Blocker</div></li>';
+        names[i] = '<li><label><input type="checkbox" id="todo' + i + '" />' + name + '</label><a class="priority" priority="minor">minor</a></li>';
       }
       return names;
     };
@@ -130,13 +130,24 @@
     $("#undo").click(function(e) {
       return undoLast();
     });
-    return $(document).on("click", "#todo-list li", function(e) {
+    $(document).on("click", "#todo-list li label input", function(e) {
       var self;
-      e.stopPropagation();
-      self = this;
+      self = $(this).closest('li');
       return $(self).fadeOut(500, function() {
         return markDone(getId(self));
       });
+    });
+    return $(document).on("click", ".priority", function(e) {
+      var currentIndex, currentPriority, self;
+      self = $(this);
+      currentPriority = self.attr('priority');
+      currentIndex = $.inArray(currentPriority, priorities);
+      if (currentIndex === priorities.length - 1) {
+        currentIndex = -1;
+      }
+      currentPriority = priorities[currentIndex + 1];
+      self.attr('priority', currentPriority);
+      return self.text(currentPriority);
     });
   });
 

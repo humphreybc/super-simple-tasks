@@ -1,7 +1,7 @@
 $(document).ready ->
 
-  clickedTimers = {}
   timeout = 0
+  priorities = ['minor', 'major', 'blocker']
 
   # Runs functions on page load
   initialize = ->
@@ -79,7 +79,7 @@ $(document).ready ->
   generateHTML = (allTodos) ->
     names = getNames(allTodos)
     for name, i in names
-      names[i] = '<li><label><input type="checkbox" id="todo' + i + '" />' + name + '</label><div class="priority blocker">Blocker</div></li>'
+      names[i] = '<li><label><input type="checkbox" id="todo' + i + '" />' + name + '</label><a class="priority" priority="minor">minor</a></li>'
     names
 
   # Inserts that nicely formatted list into ul #todo-list
@@ -127,10 +127,22 @@ $(document).ready ->
     undoLast()
 
   # When you click an li, fade it out and run markDone()
-  $(document).on "click", "#todo-list li", (e) ->
-    e.stopPropagation()
-    self = this
+  $(document).on "click", "#todo-list li label input", (e) ->
+    self = $(this).closest('li')
 
-    $(self).fadeOut(500, ->
+    $(self).fadeOut 500, ->
       markDone(getId(self))
-    ) 
+
+  # Click on a priority lozenge to change priority
+  $(document).on "click", ".priority", (e) ->
+    self = $(this)
+
+    currentPriority = self.attr('priority')
+
+    currentIndex = $.inArray(currentPriority, priorities)
+    if currentIndex == priorities.length - 1
+      currentIndex = -1
+    currentPriority = priorities[currentIndex + 1]
+    self.attr('priority', currentPriority)
+    self.text(currentPriority)
+
