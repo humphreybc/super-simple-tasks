@@ -160,8 +160,6 @@
         currentIndex = -1;
       }
       currentPriority = priorities[currentIndex + 1];
-      self.attr('priority', currentPriority);
-      self.text(currentPriority);
       li = $(this).closest('li');
       return updateAttr(li, 'priority', currentPriority);
     });

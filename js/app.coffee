@@ -153,12 +153,8 @@ $(document).ready ->
     if currentIndex == priorities.length - 1
       currentIndex = -1
     currentPriority = priorities[currentIndex + 1]
-    self.attr('priority', currentPriority)
-    self.text(currentPriority)
 
     li = $(this).closest('li')
 
     updateAttr(li, 'priority', currentPriority)
-
-    # now we need to pass the new priority through to the function that saves stuff to localstorage
 
