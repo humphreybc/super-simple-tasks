@@ -1,6 +1,6 @@
 (function() {
   $(document).ready(function() {
-    var createTask, generateHTML, getAllTasks, getId, getNames, initialize, markAllDone, markDone, priorities, setAllTasks, setNewTask, showTasks, timeout, undoLast, undoUX;
+    var createTask, generateHTML, getAllTasks, getId, getNames, initialize, markAllDone, markDone, priorities, setAllTasks, setNewTask, showTasks, timeout, undoLast, undoUX, updateAttr;
     timeout = 0;
     priorities = ['minor', 'major', 'blocker'];
     initialize = function() {
@@ -13,25 +13,30 @@
       var task;
       return task = {
         isDone: false,
-        name: name
+        name: name,
+        priority: 'minor'
       };
     };
     getAllTasks = function() {
       var allTasks;
-      allTasks = localStorage.getItem("task");
+      allTasks = localStorage.getItem("todo");
       allTasks = JSON.parse(allTasks) || [
         {
           "isDone": false,
-          "name": "Add a new task above"
+          "name": "Add a new task above",
+          'priority': 'major'
         }, {
           "isDone": false,
-          "name": "Refresh and see your task is still here"
+          "name": "Refresh and see your task is still here",
+          'priority': 'minor'
         }, {
           "isDone": false,
-          "name": "Click a task to complete it"
+          "name": "Click a task to complete it",
+          'priority': 'minor'
         }, {
           "isDone": false,
-          "name": "Follow <a href='http://twitter.com/humphreybc' target='_blank'>@humphreybc</a> on Twitter"
+          "name": "Follow <a href='http://twitter.com/humphreybc' target='_blank'>@humphreybc</a> on Twitter",
+          'priority': 'minor'
         }
       ];
       return allTasks;
@@ -46,8 +51,16 @@
         return setAllTasks(allTasks);
       }
     };
+    updateAttr = function(li, attr, value) {
+      var allTasks, id, task;
+      id = getId(li);
+      allTasks = getAllTasks();
+      task = allTasks[id];
+      task[attr] = value;
+      return setAllTasks(allTasks);
+    };
     setAllTasks = function(allTasks) {
-      localStorage.setItem("task", JSON.stringify(allTasks));
+      localStorage.setItem("todo", JSON.stringify(allTasks));
       showTasks(allTasks);
       return $("#new-task").val('');
     };
@@ -83,14 +96,14 @@
       }
       return names;
     };
-    generateHTML = function(allTasks) {
-      var i, name, names, _i, _len;
-      names = getNames(allTasks);
-      for (i = _i = 0, _len = names.length; _i < _len; i = ++_i) {
-        name = names[i];
-        names[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + name + '</label><a class="priority" priority="minor">minor</a></li>';
+    generateHTML = function(tasks) {
+      var html, i, task, _i, _len;
+      html = [];
+      for (i = _i = 0, _len = tasks.length; _i < _len; i = ++_i) {
+        task = tasks[i];
+        html[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><a class="priority" priority="' + task.priority + '">' + task.priority + '</a></li>';
       }
-      return names;
+      return html;
     };
     showTasks = function(allTasks) {
       var html;
@@ -138,7 +151,7 @@
       });
     });
     return $(document).on("click", ".priority", function(e) {
-      var currentIndex, currentPriority, self;
+      var currentIndex, currentPriority, li, self;
       self = $(this);
       currentPriority = self.attr('priority');
       currentIndex = $.inArray(currentPriority, priorities);
@@ -147,7 +160,9 @@
       }
       currentPriority = priorities[currentIndex + 1];
       self.attr('priority', currentPriority);
-      return self.text(currentPriority);
+      self.text(currentPriority);
+      li = $(this).closest('li');
+      return updateAttr(li, 'priority', currentPriority);
     });
   });
 

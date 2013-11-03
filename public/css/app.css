@@ -29,10 +29,13 @@ input[type='text']:hover,input[type='text']:focus{border:1px solid #09c;border-r
 #task-list li:hover{background-color:#f7f6f5}
 #task-list li input[type='checkbox']{cursor:pointer;width:28px;height:13px;padding:0;margin:0;position:relative;overflow:hidden}
 #task-list li label{float:left;display:block;padding-left:28px;text-indent:-30px}
-#task-list li .priority{float:right;color:#fff;background-color:#444;padding:2px 5px 2px;font-size:12px;text-transform:capitalize;font-weight:700;-webkit-border-radius:3px;border-radius:3px;cursor:pointer}
-#task-list li [priority='blocker']{background-color:#f44}
-#task-list li [priority='major']{background-color:#f80}
-#task-list li [priority='minor']{background-color:#9c0}
+#task-list li .priority{float:right;color:#fff;background-color:#444;width:60px;text-align:center;padding:2px 5px 2px;font-size:12px;text-transform:capitalize;font-weight:700;-webkit-border-radius:3px;border-radius:3px;cursor:pointer}
+#task-list li [priority='blocker']{background-color:#f44;}
+#task-list li [priority='blocker']:hover{background-color:#ff5d5d}
+#task-list li [priority='major']{background-color:#fb3;}
+#task-list li [priority='major']:hover{background-color:#ffc34d}
+#task-list li [priority='minor']{background-color:#9c0;}
+#task-list li [priority='minor']:hover{background-color:#a1d600}
 .footer{margin:0 auto;width:450px;padding-bottom:20px;}
 .footer ul{list-style-type:none;color:#888;margin:0;padding:0;overflow:hidden;}
 .footer ul li{float:left;font-size:12px;width:33%;text-align:center}

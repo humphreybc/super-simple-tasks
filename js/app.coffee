@@ -14,17 +14,16 @@ $(document).ready ->
     task =
       isDone: false
       name: name
-
-    # I think in here we need to add another key:value pair for priority
+      priority: 'minor'
 
   # Pulls what we have in localStorage
   getAllTasks = ->
-    allTasks = localStorage.getItem("task")
+    allTasks = localStorage.getItem("todo")
     # allTasks = JSON.parse(allTasks) || []
-    allTasks = JSON.parse(allTasks) || [{"isDone":false,"name":"Add a new task above"},
-                                        {"isDone":false,"name":"Refresh and see your task is still here"},
-                                        {"isDone":false,"name":"Click a task to complete it"},
-                                        {"isDone":false,"name":"Follow <a href='http://twitter.com/humphreybc' target='_blank'>@humphreybc</a> on Twitter"}]
+    allTasks = JSON.parse(allTasks) || [{"isDone":false,"name":"Add a new task above", 'priority':'major'},
+                                        {"isDone":false,"name":"Refresh and see your task is still here", 'priority':'minor'},
+                                        {"isDone":false,"name":"Click a task to complete it", 'priority':'minor'},
+                                        {"isDone":false,"name":"Follow <a href='http://twitter.com/humphreybc' target='_blank'>@humphreybc</a> on Twitter", 'priority':'minor'}]
     allTasks
 
   # Gets whatever is in the input and saves it
@@ -36,9 +35,16 @@ $(document).ready ->
       allTasks.push newTask
       setAllTasks(allTasks)
 
+  updateAttr = (li, attr, value) ->
+    id = getId(li)
+    allTasks = getAllTasks()
+    task = allTasks[id]
+    task[attr] = value
+    setAllTasks(allTasks)
+
   # Updates the localStorage and runs showTasks again to update the list
   setAllTasks = (allTasks) ->
-    localStorage.setItem("task", JSON.stringify(allTasks))
+    localStorage.setItem("todo", JSON.stringify(allTasks))
     showTasks(allTasks)
     $("#new-task").val('')
     
@@ -78,11 +84,11 @@ $(document).ready ->
     names # return them so allTasks() can use it
 
   # Gives us the list formatted nicely
-  generateHTML = (allTasks) ->
-    names = getNames(allTasks)
-    for name, i in names
-      names[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + name + '</label><a class="priority" priority="minor">minor</a></li>'
-    names
+  generateHTML = (tasks) ->
+    html = []
+    for task, i in tasks
+      html[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><a class="priority" priority="' + task.priority + '">' + task.priority + '</a></li>'
+    html
 
   # Inserts that nicely formatted list into ul #task-list
   showTasks = (allTasks) ->
@@ -147,6 +153,10 @@ $(document).ready ->
     currentPriority = priorities[currentIndex + 1]
     self.attr('priority', currentPriority)
     self.text(currentPriority)
+
+    li = $(this).closest('li')
+
+    updateAttr(li, 'priority', currentPriority)
 
     # now we need to pass the new priority through to the function that saves stuff to localstorage
 

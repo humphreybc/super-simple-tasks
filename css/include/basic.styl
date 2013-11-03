@@ -153,6 +153,8 @@ input[type='text']
       float right
       color white
       background-color gray
+      width 60px
+      text-align center
       padding 2px 5px 2px
       font-size font-xsmall
       text-transform capitalize
@@ -163,11 +165,20 @@ input[type='text']
     [priority='blocker']
       background-color red
 
+      &:hover
+        background-color lighten(red, 5) 
+
     [priority='major']
-      background-color dark-yellow
+      background-color yellow
+
+      &:hover
+        background-color lighten(yellow, 5)  
 
     [priority='minor']
       background-color green
+
+      &:hover
+        background-color lighten(green, 2)  
 
 // The footer
 
