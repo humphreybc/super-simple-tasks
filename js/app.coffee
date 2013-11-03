@@ -1,5 +1,7 @@
 $(document).ready ->
 
+  db_key = 'todo' # DO NOT CHANGE
+
   timeout = 0
   priorities = ['minor', 'major', 'blocker']
 
@@ -18,7 +20,7 @@ $(document).ready ->
 
   # Pulls what we have in localStorage
   getAllTasks = ->
-    allTasks = localStorage.getItem("todo")
+    allTasks = localStorage.getItem(db_key)
     # allTasks = JSON.parse(allTasks) || []
     allTasks = JSON.parse(allTasks) || [{"isDone":false,"name":"Add a new task above", 'priority':'major'},
                                         {"isDone":false,"name":"Refresh and see your task is still here", 'priority':'minor'},
@@ -44,7 +46,7 @@ $(document).ready ->
 
   # Updates the localStorage and runs showTasks again to update the list
   setAllTasks = (allTasks) ->
-    localStorage.setItem("todo", JSON.stringify(allTasks))
+    localStorage.setItem(db_key, JSON.stringify(allTasks))
     showTasks(allTasks)
     $("#new-task").val('')
     

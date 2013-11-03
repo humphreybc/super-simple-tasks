@@ -1,6 +1,7 @@
 (function() {
   $(document).ready(function() {
-    var createTask, generateHTML, getAllTasks, getId, getNames, initialize, markAllDone, markDone, priorities, setAllTasks, setNewTask, showTasks, timeout, undoLast, undoUX, updateAttr;
+    var createTask, db_key, generateHTML, getAllTasks, getId, getNames, initialize, markAllDone, markDone, priorities, setAllTasks, setNewTask, showTasks, timeout, undoLast, undoUX, updateAttr;
+    db_key = 'todo';
     timeout = 0;
     priorities = ['minor', 'major', 'blocker'];
     initialize = function() {
@@ -19,7 +20,7 @@
     };
     getAllTasks = function() {
       var allTasks;
-      allTasks = localStorage.getItem("todo");
+      allTasks = localStorage.getItem(db_key);
       allTasks = JSON.parse(allTasks) || [
         {
           "isDone": false,
@@ -60,7 +61,7 @@
       return setAllTasks(allTasks);
     };
     setAllTasks = function(allTasks) {
-      localStorage.setItem("todo", JSON.stringify(allTasks));
+      localStorage.setItem(db_key, JSON.stringify(allTasks));
       showTasks(allTasks);
       return $("#new-task").val('');
     };
