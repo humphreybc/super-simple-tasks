@@ -1,25 +1,25 @@
 (function() {
   $(document).ready(function() {
-    var createToDo, generateHTML, getAllTodos, getId, getNames, initialize, markAllDone, markDone, priorities, setAllTodos, setNewTodo, showTodos, timeout, undoLast, undoUX;
+    var createTask, generateHTML, getAllTasks, getId, getNames, initialize, markAllDone, markDone, priorities, setAllTasks, setNewTask, showTasks, timeout, undoLast, undoUX;
     timeout = 0;
     priorities = ['minor', 'major', 'blocker'];
     initialize = function() {
-      var allTodos;
-      allTodos = getAllTodos();
-      showTodos(allTodos);
-      return $("#new-todo").focus();
+      var allTasks;
+      allTasks = getAllTasks();
+      showTasks(allTasks);
+      return $("#new-task").focus();
     };
-    createToDo = function(name) {
-      var todo;
-      return todo = {
+    createTask = function(name) {
+      var task;
+      return task = {
         isDone: false,
         name: name
       };
     };
-    getAllTodos = function() {
-      var allTodos;
-      allTodos = localStorage.getItem("todo");
-      allTodos = JSON.parse(allTodos) || [
+    getAllTasks = function() {
+      var allTasks;
+      allTasks = localStorage.getItem("task");
+      allTasks = JSON.parse(allTasks) || [
         {
           "isDone": false,
           "name": "Add a new task above"
@@ -34,32 +34,32 @@
           "name": "Follow <a href='http://twitter.com/humphreybc' target='_blank'>@humphreybc</a> on Twitter"
         }
       ];
-      return allTodos;
+      return allTasks;
     };
-    setNewTodo = function() {
-      var allTodos, name, newTodo;
-      name = $("#new-todo").val();
+    setNewTask = function() {
+      var allTasks, name, newTask;
+      name = $("#new-task").val();
       if (name !== '') {
-        newTodo = createToDo(name);
-        allTodos = getAllTodos();
-        allTodos.push(newTodo);
-        return setAllTodos(allTodos);
+        newTask = createTask(name);
+        allTasks = getAllTasks();
+        allTasks.push(newTask);
+        return setAllTasks(allTasks);
       }
     };
-    setAllTodos = function(allTodos) {
-      localStorage.setItem("todo", JSON.stringify(allTodos));
-      showTodos(allTodos);
-      return $("#new-todo").val('');
+    setAllTasks = function(allTasks) {
+      localStorage.setItem("task", JSON.stringify(allTasks));
+      showTasks(allTasks);
+      return $("#new-task").val('');
     };
     getId = function(li) {
       var id;
-      id = $(li).find('input').attr('id').replace('todo', '');
+      id = $(li).find('input').attr('id').replace('task', '');
       return parseInt(id);
     };
     markDone = function(id) {
-      var allTodos, toDelete;
-      allTodos = getAllTodos();
-      toDelete = allTodos[id];
+      var allTasks, toDelete;
+      allTasks = getAllTasks();
+      toDelete = allTasks[id];
       toDelete['position'] = id;
       localStorage.setItem("undo", JSON.stringify(toDelete));
       $("#undo").fadeIn(150);
@@ -67,57 +67,57 @@
         $("#undo").fadeOut(250);
         return localStorage.removeItem("undo");
       }, 5000);
-      allTodos = getAllTodos();
-      allTodos.splice(id, 1);
-      return setAllTodos(allTodos);
+      allTasks = getAllTasks();
+      allTasks.splice(id, 1);
+      return setAllTasks(allTasks);
     };
     markAllDone = function() {
-      return setAllTodos([]);
+      return setAllTasks([]);
     };
-    getNames = function(allTodos) {
-      var names, todo, _i, _len;
+    getNames = function(allTasks) {
+      var names, task, _i, _len;
       names = [];
-      for (_i = 0, _len = allTodos.length; _i < _len; _i++) {
-        todo = allTodos[_i];
-        names.push(todo['name']);
+      for (_i = 0, _len = allTasks.length; _i < _len; _i++) {
+        task = allTasks[_i];
+        names.push(task['name']);
       }
       return names;
     };
-    generateHTML = function(allTodos) {
+    generateHTML = function(allTasks) {
       var i, name, names, _i, _len;
-      names = getNames(allTodos);
+      names = getNames(allTasks);
       for (i = _i = 0, _len = names.length; _i < _len; i = ++_i) {
         name = names[i];
-        names[i] = '<li><label><input type="checkbox" id="todo' + i + '" />' + name + '</label><a class="priority" priority="minor">minor</a></li>';
+        names[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + name + '</label><a class="priority" priority="minor">minor</a></li>';
       }
       return names;
     };
-    showTodos = function(allTodos) {
+    showTasks = function(allTasks) {
       var html;
-      html = generateHTML(allTodos);
-      return $("#todo-list").html(html);
+      html = generateHTML(allTasks);
+      return $("#task-list").html(html);
     };
     undoLast = function() {
-      var allTodos, position, redo;
+      var allTasks, position, redo;
       redo = localStorage.getItem("undo");
       redo = JSON.parse(redo);
-      allTodos = getAllTodos();
+      allTasks = getAllTasks();
       position = redo.position;
       delete redo['position'];
-      allTodos.splice(position, 0, redo);
-      setAllTodos(allTodos);
+      allTasks.splice(position, 0, redo);
+      setAllTasks(allTasks);
       localStorage.removeItem("undo");
-      return undoUX(allTodos);
+      return undoUX(allTasks);
     };
-    undoUX = function(allTodos) {
-      showTodos(allTodos);
+    undoUX = function(allTasks) {
+      showTasks(allTasks);
       clearTimeout(timeout);
       return $("#undo").hide();
     };
     initialize();
-    $("#todo-submit").click(function(e) {
+    $("#task-submit").click(function(e) {
       e.preventDefault();
-      return setNewTodo();
+      return setNewTask();
     });
     $("#mark-all-done").click(function(e) {
       e.preventDefault();
@@ -130,7 +130,7 @@
     $("#undo").click(function(e) {
       return undoLast();
     });
-    $(document).on("click", "#todo-list li label input", function(e) {
+    $(document).on("click", "#task-list li label input", function(e) {
       var self;
       self = $(this).closest('li');
       return $(self).fadeOut(500, function() {
