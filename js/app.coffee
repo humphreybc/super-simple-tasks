@@ -1,9 +1,13 @@
+# Mainly DOM manipulation
 $(document).ready ->
 
   db_key = 'todo' # DO NOT CHANGE
 
+  # undo fading timeout
   timeout = 0
+
   priorities = ['minor', 'major', 'blocker']
+  duedates = ['today', 'tomorrow', 'this week', 'next week', 'this month']
 
   # Runs functions on page load
   initialize = ->
@@ -11,28 +15,20 @@ $(document).ready ->
     showTasks(allTasks)
     $("#new-task").focus()
 
-  # Creates a new task object
-  createTask = (name) ->
-    task =
-      isDone: false
-      name: name
-      priority: 'minor'
-
   # Pulls what we have in localStorage
   getAllTasks = ->
     allTasks = localStorage.getItem(db_key)
-    # allTasks = JSON.parse(allTasks) || []
-    allTasks = JSON.parse(allTasks) || [{"isDone":false,"name":"Add a new task above", 'priority':'major'},
-                                        {"isDone":false,"name":"Refresh and see your task is still here", 'priority':'minor'},
-                                        {"isDone":false,"name":"Click a task to complete it", 'priority':'minor'},
-                                        {"isDone":false,"name":"Follow <a href='http://twitter.com/humphreybc' target='_blank'>@humphreybc</a> on Twitter", 'priority':'minor'}]
+    allTasks = JSON.parse(allTasks) || [{"isDone":false,"name":"Add a new task above", 'priority':'major', 'duedate':'today'},
+                                        {"isDone":false,"name":"Refresh and see your task is still here", 'priority':'minor', 'duedate':'today'},
+                                        {"isDone":false,"name":"Click a task to complete it", 'priority':'minor', 'duedate':'tomorrow'},
+                                        {"isDone":false,"name":"Follow <a href='http://twitter.com/humphreybc' target='_blank'>@humphreybc</a> on Twitter", 'priority':'major', 'duedate':'today'}]
     allTasks
 
   # Gets whatever is in the input and saves it
   setNewTask = ->
     name = $("#new-task").val()
     unless name == ''
-      newTask = createTask(name)
+      newTask = Task.createTask(name)
       allTasks = getAllTasks()
       allTasks.push newTask
       setAllTasks(allTasks)
@@ -89,7 +85,7 @@ $(document).ready ->
   generateHTML = (tasks) ->
     html = []
     for task, i in tasks
-      html[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><a class="priority" priority="' + task.priority + '">' + task.priority + '</a></li>'
+      html[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><a class="duedate" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</a>' + '<a class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</a></li>'
     html
 
   # Inserts that nicely formatted list into ul #task-list
@@ -143,18 +139,29 @@ $(document).ready ->
     $(self).fadeOut 500, ->
       markDone(getId(self))
 
-  # Click on a priority lozenge to change priority
-  $(document).on "click", ".priority", (e) ->
-    self = $(this)
-
-    currentPriority = self.attr('priority')
-
-    currentIndex = $.inArray(currentPriority, priorities)
-    if currentIndex == priorities.length - 1
-      currentIndex = -1
-    currentPriority = priorities[currentIndex + 1]
+  # Click on .priority or .duedate
+  # Depending on what it is, run the changeAttr() function and pass parameter
+  $(document).on 'click', '.priority, .duedate', (e) ->
+    type_attr = $(e.currentTarget).attr('type')
+    value = $(this).attr(type_attr)
 
     li = $(this).closest('li')
+    
+    changeAttr(li, type_attr, value)
 
-    updateAttr(li, 'priority', currentPriority)
+  # Change the attribute (in the DOM) and run updateAttr to change it in localStorage
+  changeAttr = (li, attr, value) ->
+
+    if attr == 'priority'
+      array = priorities
+    else if attr == 'duedate'
+      array = duedates
+
+    currentIndex = $.inArray(value, array)
+
+    if currentIndex == array.length - 1
+      currentIndex = -1
+    value = array[currentIndex + 1]
+
+    updateAttr(li, attr, value)
 

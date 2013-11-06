@@ -1,22 +1,15 @@
 (function() {
   $(document).ready(function() {
-    var createTask, db_key, generateHTML, getAllTasks, getId, getNames, initialize, markAllDone, markDone, priorities, setAllTasks, setNewTask, showTasks, timeout, undoLast, undoUX, updateAttr;
+    var changeAttr, db_key, duedates, generateHTML, getAllTasks, getId, getNames, initialize, markAllDone, markDone, priorities, setAllTasks, setNewTask, showTasks, timeout, undoLast, undoUX, updateAttr;
     db_key = 'todo';
     timeout = 0;
     priorities = ['minor', 'major', 'blocker'];
+    duedates = ['today', 'tomorrow', 'this week', 'next week', 'this month'];
     initialize = function() {
       var allTasks;
       allTasks = getAllTasks();
       showTasks(allTasks);
       return $("#new-task").focus();
-    };
-    createTask = function(name) {
-      var task;
-      return task = {
-        isDone: false,
-        name: name,
-        priority: 'minor'
-      };
     };
     getAllTasks = function() {
       var allTasks;
@@ -25,19 +18,23 @@
         {
           "isDone": false,
           "name": "Add a new task above",
-          'priority': 'major'
+          'priority': 'major',
+          'duedate': 'today'
         }, {
           "isDone": false,
           "name": "Refresh and see your task is still here",
-          'priority': 'minor'
+          'priority': 'minor',
+          'duedate': 'today'
         }, {
           "isDone": false,
           "name": "Click a task to complete it",
-          'priority': 'minor'
+          'priority': 'minor',
+          'duedate': 'tomorrow'
         }, {
           "isDone": false,
           "name": "Follow <a href='http://twitter.com/humphreybc' target='_blank'>@humphreybc</a> on Twitter",
-          'priority': 'minor'
+          'priority': 'major',
+          'duedate': 'today'
         }
       ];
       return allTasks;
@@ -46,7 +43,7 @@
       var allTasks, name, newTask;
       name = $("#new-task").val();
       if (name !== '') {
-        newTask = createTask(name);
+        newTask = Task.createTask(name);
         allTasks = getAllTasks();
         allTasks.push(newTask);
         return setAllTasks(allTasks);
@@ -102,7 +99,7 @@
       html = [];
       for (i = _i = 0, _len = tasks.length; _i < _len; i = ++_i) {
         task = tasks[i];
-        html[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><a class="priority" priority="' + task.priority + '">' + task.priority + '</a></li>';
+        html[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><a class="duedate" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</a>' + '<a class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</a></li>';
       }
       return html;
     };
@@ -151,18 +148,49 @@
         return markDone(getId(self));
       });
     });
-    return $(document).on("click", ".priority", function(e) {
-      var currentIndex, currentPriority, li, self;
-      self = $(this);
-      currentPriority = self.attr('priority');
-      currentIndex = $.inArray(currentPriority, priorities);
-      if (currentIndex === priorities.length - 1) {
+    $(document).on('click', '.priority, .duedate', function(e) {
+      var li, type_attr, value;
+      type_attr = $(e.currentTarget).attr('type');
+      value = $(this).attr(type_attr);
+      li = $(this).closest('li');
+      return changeAttr(li, type_attr, value);
+    });
+    return changeAttr = function(li, attr, value) {
+      var array, currentIndex;
+      if (attr === 'priority') {
+        array = priorities;
+      } else if (attr === 'duedate') {
+        array = duedates;
+      }
+      currentIndex = $.inArray(value, array);
+      if (currentIndex === array.length - 1) {
         currentIndex = -1;
       }
-      currentPriority = priorities[currentIndex + 1];
-      li = $(this).closest('li');
-      return updateAttr(li, 'priority', currentPriority);
-    });
+      value = array[currentIndex + 1];
+      return updateAttr(li, attr, value);
+    };
   });
+
+}).call(this);
+
+(function() {
+  var Task;
+
+  Task = (function() {
+    function Task() {}
+
+    Task.createTask = function(name) {
+      var task;
+      return task = {
+        isDone: false,
+        name: name,
+        priority: 'minor',
+        duedate: 'today'
+      };
+    };
+
+    return Task;
+
+  })();
 
 }).call(this);
