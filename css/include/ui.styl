@@ -1,0 +1,49 @@
+// UI style that's not the core task list
+
+.wrapper
+  margin 0px auto
+  width 650px
+
+.content
+  margin 20px auto 20px
+  min-height 650px
+
+.header
+  padding 20px
+
+#mark-all-done
+  float right
+  margin-top -17px
+  font-size font-xsmall
+  color light-gray
+
+  &:hover
+    color gray
+
+#undo
+  text-align center
+  background-color gray
+  color white
+  border-radius 3px
+  padding 2px 5px 1px
+  cursor pointer
+  font-size 13px
+  display none
+  position fixed
+  top 8px
+  left 50%
+  margin-left -100px
+  width 200px
+
+  &:hover
+    background-color black
+
+  .icon-history
+    margin-right 5px
+    vertical-align middle
+
+// Add a new task
+
+#new-task-wrapper
+  margin-top 20px
+  overflow hidden

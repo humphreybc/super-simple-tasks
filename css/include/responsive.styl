@@ -1,0 +1,30 @@
+// Responsive for mobile devices
+
+@media screen and (max-width: 500px)
+  .content, .footer
+    width 100%
+
+  #task-submit, #new-task
+    display block
+    float none
+    width 100%
+
+  #task-submit
+    margin-top 10px
+
+  #mark-all-done
+    float none
+
+  input[type='text']
+    border 1px solid xlight-gray
+    border-radius 3px
+
+    &:hover, &:focus
+      border 1px solid dark-blue
+
+  .button
+    border-radius 3px
+
+  .footer ul li
+    width 100%
+    margin-bottom 5px

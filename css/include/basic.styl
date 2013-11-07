@@ -1,6 +1,8 @@
 *
   box-sizing: border-box
 
+// Background stuff
+
 body
   background-color white
   font-family "Roboto", sans-serif
@@ -12,48 +14,6 @@ body
 input, button, textarea
   -webkit-font-smoothing antialiased
   font-family "Roboto", sans-serif
-
-.wrapper
-  margin 0px auto
-  width 650px
-
-.content
-  margin 20px auto 20px
-  min-height 650px
-
-.header
-  padding 20px
-
-#mark-all-done
-  float right
-  margin-top -17px
-  font-size font-xsmall
-  color light-gray
-
-  &:hover
-    color gray
-
-#undo
-  text-align center
-  background-color gray
-  color white
-  border-radius 3px
-  padding 2px 5px 1px
-  cursor pointer
-  font-size 13px
-  display none
-  position fixed
-  top 8px
-  left 50%
-  margin-left -100px
-  width 200px
-
-  &:hover
-    background-color black
-
-  .icon-history
-    margin-right 5px
-    vertical-align middle
 
 // Fonts
 
@@ -70,12 +30,6 @@ a
 
   &:hover
     color dark-blue
-
-// Add a new task
-
-#new-task-wrapper
-  margin-top 20px
-  overflow hidden
 
 // Inputs
 
@@ -117,124 +71,3 @@ input[type='text']
   &:active
     background-color dark-blue
     box-shadow inset 0px 2px 3px darken(dark-blue, 5)
-
-// The task list
-
-#task-list
-  margin 0px
-  padding 0px
-  list-style-type none
-
-  li
-    padding 10px 20px 10px
-    overflow hidden
-    user-select none
-
-    &:hover
-      background-color #f7f6f5
-
-    input[type='checkbox']
-      cursor pointer
-      width 28px
-      height 13px
-      padding 0px
-      margin 0px
-      position relative
-      overflow hidden
-
-    label
-      float left
-      display block
-      padding-left 28px
-      text-indent -30px
-
-    .priority
-      float right
-      color white
-      background-color gray
-      width 60px
-      text-align center
-      padding 2px 5px 2px
-      font-size font-xsmall
-      text-transform capitalize
-      font-weight 700
-      border-radius 3px
-      cursor pointer
-
-    [priority='blocker']
-      background-color red
-
-      &:hover
-        background-color lighten(red, 5)
-
-    [priority='major']
-      background-color yellow
-
-      &:hover
-        background-color lighten(yellow, 5)  
-
-    [priority='minor']
-      background-color green
-
-      &:hover
-        background-color lighten(green, 2)
-
-    .duedate
-      color light-gray
-      margin-left 10px
-
-      &:hover
-        color blue
-        cursor pointer
-
-// The footer
-
-.footer
-  margin 0px auto
-  width 450px
-  padding-bottom 20px
-
-  ul
-    list-style-type none
-    color light-gray
-    margin 0px
-    padding 0px
-    overflow hidden
-
-    li
-      float left
-      font-size font-xsmall
-      width 33%
-      text-align center
-
-
-// Responsive for mobile devices
-
-@media screen and (max-width: 500px)
-  .content, .footer
-    width 100%
-
-  #task-submit, #new-task
-    display block
-    float none
-    width 100%
-
-  #task-submit
-    margin-top 10px
-
-  #mark-all-done
-    float none
-
-  input[type='text']
-    border 1px solid xlight-gray
-    border-radius 3px
-
-    &:hover, &:focus
-      border 1px solid dark-blue
-
-  .button
-    border-radius 3px
-
-  .footer ul li
-    width 100%
-    margin-bottom 5px
