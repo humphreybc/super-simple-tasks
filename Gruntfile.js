@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     coffee: {
       scripts: {
         files: {
-          'public/js/app.js': 'js/*.coffee'
+          'public/js/app.js': ['js/app.coffee','js/task.coffee']
         }
       }
     },
