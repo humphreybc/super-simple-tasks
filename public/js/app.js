@@ -47,7 +47,7 @@ var Arrays, DB, Task;
 DB = (function() {
   function DB() {}
 
-  DB.db_key = 'dev';
+  DB.db_key = 'todo';
 
   return DB;
 

@@ -3,8 +3,8 @@
 class DB
 
   # DO NOT CHANGE
-  # @db_key = 'todo'
-  @db_key = 'dev'
+  @db_key = 'todo'
+  # @db_key = 'dev'
 
 class Arrays
 
