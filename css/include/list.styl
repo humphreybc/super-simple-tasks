@@ -6,7 +6,7 @@
   list-style-type none
 
   li
-    padding 10px 20px 10px
+    padding 12px 20px 12px
     overflow hidden
     user-select none
 
@@ -16,25 +16,26 @@
     input[type='checkbox']
       cursor pointer
       width 28px
-      height 13px
-      padding 0px
+      height 15px
       margin 0px
       position relative
       overflow hidden
 
     label
+      font-weight 500
       float left
       display block
       padding-left 28px
-      text-indent -30px
+      text-indent -28px
+      font-size font-small
 
     .priority
       float right
       color white
       background-color gray
-      width 60px
+      min-width 65px
       text-align center
-      padding 2px 5px 2px
+      padding 2px 8px 2px
       font-size font-xsmall
       text-transform capitalize
       font-weight 700
@@ -62,6 +63,7 @@
     .duedate
       color light-gray
       margin-left 10px
+      font-size font-small
 
       &:hover
         color blue
