@@ -22,20 +22,15 @@ class Views
     $('#task-list').html(html)
 
     if allTasks.length == 0
-      $('#all-done').css('opacity', '100')
+      $('#all-done').show()
     else
       $('#all-done').hide()
 
-      timeout = setTimeout(->
-        $('#all-done').css('opacity', '0')
-        $('#all-done').show()
-      , 500)
-
   @undoFade: ->
-    $('#undo').fadeIn(150)
+    $('#undo').css('opacity', '100')
 
     timeout = setTimeout(->
-      $('#undo').fadeOut(250)
+      $('#undo').css('opacity', '0')
       localStorage.removeItem('undo')
     , 5000)
 
@@ -43,5 +38,5 @@ class Views
   @undoUX: (allTasks) ->
     @showTasks(allTasks)
     clearTimeout(timeout)
-    $('#undo').hide()
+    $('#undo').css('opacity', '0')
 

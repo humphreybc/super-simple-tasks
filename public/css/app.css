@@ -18,11 +18,11 @@ input[type='text']:hover,input[type='text']:focus{border:1px solid #09c;border-r
 .button:hover{background-color:#4abde8;-webkit-box-shadow:inset 0 -1px 0 #09c;box-shadow:inset 0 -1px 0 #09c}
 .button:active{background-color:#09c;-webkit-box-shadow:inset 0 2px 3px #0086b3;box-shadow:inset 0 2px 3px #0086b3}
 .wrapper{margin:0 auto;width:750px}
-.content{margin:20px auto 20px;min-height:650px}
+.content{margin:20px auto 40px;min-height:650px}
 .header{padding:20px}
 #mark-all-done{float:right;margin-top:-17px;font-size:1em;color:#888;}
 #mark-all-done:hover{color:#444}
-#undo{text-align:center;background-color:#444;color:#fff;-webkit-border-radius:3px;border-radius:3px;padding:2px 5px 1px;cursor:pointer;font-size:13px;display:none;position:fixed;top:8px;left:50%;margin-left:-100px;width:200px;}
+#undo{opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0);-webkit-transition:opacity 250ms;-moz-transition:opacity 250ms;-o-transition:opacity 250ms;-ms-transition:opacity 250ms;transition:opacity 250ms;text-align:center;background-color:#444;color:#fff;-webkit-border-radius:3px;border-radius:3px;padding:2px 5px 3px;cursor:pointer;font-size:13px;position:fixed;top:8px;left:50%;margin-left:-100px;width:200px;}
 #undo:hover{background-color:#222}
 #undo .icon-history{margin-right:5px;vertical-align:middle}
 #new-task-wrapper{margin-top:20px;overflow:hidden}
@@ -43,9 +43,8 @@ input[type='text']:hover,input[type='text']:focus{border:1px solid #09c;border-r
 .footer{margin:0 auto;width:650px;padding-bottom:20px;}
 .footer ul{list-style-type:none;color:#888;margin:0;padding:0;overflow:hidden;}
 .footer ul li{float:left;width:33%;text-align:center}
-#all-done{opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0);-webkit-transition:opacity 500ms;-moz-transition:opacity 500ms;-o-transition:opacity 500ms;-ms-transition:opacity 500ms;transition:opacity 500ms;margin-top:60px;text-align:center;color:#aaa;}
+#all-done{margin-top:60px;text-align:center;color:#aaa;}
 #all-done .icon-trophy{display:block;font-size:8em;margin-bottom:20px}
-.hide{margin-top:40px !important}
 @media screen and (max-width: 600px){body{font-size:12px;padding:0}
 .content{margin-top:0}
 .content,.footer{width:100%}

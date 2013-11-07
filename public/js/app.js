@@ -223,20 +223,16 @@ Views = (function() {
     html = this.generateHTML(allTasks);
     $('#task-list').html(html);
     if (allTasks.length === 0) {
-      return $('#all-done').css('opacity', '100');
+      return $('#all-done').show();
     } else {
-      $('#all-done').hide();
-      return timeout = setTimeout(function() {
-        $('#all-done').css('opacity', '0');
-        return $('#all-done').show();
-      }, 500);
+      return $('#all-done').hide();
     }
   };
 
   Views.undoFade = function() {
-    $('#undo').fadeIn(150);
+    $('#undo').css('opacity', '100');
     return timeout = setTimeout(function() {
-      $('#undo').fadeOut(250);
+      $('#undo').css('opacity', '0');
       return localStorage.removeItem('undo');
     }, 5000);
   };
@@ -244,7 +240,7 @@ Views = (function() {
   Views.undoUX = function(allTasks) {
     this.showTasks(allTasks);
     clearTimeout(timeout);
-    return $('#undo').hide();
+    return $('#undo').css('opacity', '0');
   };
 
   return Views;
