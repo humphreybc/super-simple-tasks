@@ -1,15 +1,17 @@
-@font-face{font-family:'entypo';src:url("fonts/entypo.eot");src:url("fonts/entypo.eot?#iefix") format('embedded-opentype'),url("fonts/entypo.svg#entypo") format('svg'),url("fonts/entypo.woff") format('woff'),url("fonts/entypo.ttf") format('truetype');font-weight:normal;font-style:normal}
-[data-icon]:before{font-family:'entypo';content:attr(data-icon);speak:none;font-weight:normal;line-height:1;-webkit-font-smoothing:antialiased}
-.icon-pencil:before,.icon-star:before,.icon-history:before{font-family:'entypo';speak:none;font-style:normal;font-weight:normal;line-height:1;-webkit-font-smoothing:antialiased}
-.icon-pencil:before{content:"\21"}
-.icon-star:before{content:"\22"}
-.icon-history:before{content:"\23"}
+@font-face{font-family:'entypo';src:url("fonts/entypo.eot");src:url("fonts/entypo.eot?#iefix") format('embedded-opentype'),url("fonts/entypo.ttf") format('truetype'),url("fonts/entypo.woff") format('woff'),url("fonts/entypo.svg#entypo") format('svg');font-weight:normal;font-style:normal}
+[class*="icon-"]{font-family:'entypo';speak:none;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.icon-history:before{content:"\e600"}
+.icon-calendar:before{content:"\e601"}
+.icon-star:before{content:"\e602"}
+.icon-trophy:before{content:"\e603"}
+.icon-thumbs-up:before{content:"\e604"}
 *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
 body{background-color:#fff;font-family:"Roboto",sans-serif;color:#444;font-size:14px;-webkit-font-smoothing:antialiased;padding:10px}
 input,button,textarea{-webkit-font-smoothing:antialiased;font-family:"Roboto",sans-serif}
-h1{margin:0;text-transform:uppercase;font-size:1.6em;color:#33b5e5;text-shadow:0 1px #fff}
+h1{margin:0;font-size:1.6em;color:#33b5e5;text-shadow:0 1px #fff}
 a{color:#33b5e5;text-decoration:none;}
 a:hover{color:#09c}
+p{font-size:1.2em}
 input[type='text']{float:left;padding:7px 8px;border-top-left-radius:3px;border-bottom-left-radius:3px;border:1px solid #aaa;border-right:none;width:75%;font-size:1.2em;}
 input[type='text']:hover,input[type='text']:focus{border:1px solid #09c;border-right:none;outline:none}
 .button{width:25%;float:left;background-color:#33b5e5;border:1px solid #09c;border-top-right-radius:3px;border-bottom-right-radius:3px;padding:7px 8px;font-size:1.2em;font-weight:700;color:#fff;cursor:pointer;outline:none;}
@@ -41,6 +43,9 @@ input[type='text']:hover,input[type='text']:focus{border:1px solid #09c;border-r
 .footer{margin:0 auto;width:650px;padding-bottom:20px;}
 .footer ul{list-style-type:none;color:#888;margin:0;padding:0;overflow:hidden;}
 .footer ul li{float:left;width:33%;text-align:center}
+#all-done{opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0);-webkit-transition:opacity 500ms;-moz-transition:opacity 500ms;-o-transition:opacity 500ms;-ms-transition:opacity 500ms;transition:opacity 500ms;margin-top:60px;text-align:center;color:#aaa;}
+#all-done .icon-trophy{display:block;font-size:8em;margin-bottom:20px}
+.hide{margin-top:40px !important}
 @media screen and (max-width: 600px){body{font-size:12px;padding:0}
 .content{margin-top:0}
 .content,.footer{width:100%}

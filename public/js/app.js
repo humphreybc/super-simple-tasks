@@ -47,7 +47,7 @@ var Arrays, DB, Task;
 DB = (function() {
   function DB() {}
 
-  DB.db_key = 'todo';
+  DB.db_key = 'dev';
 
   return DB;
 
@@ -173,7 +173,10 @@ Task = (function() {
   };
 
   Task.markAllDone = function() {
-    return this.setAllTasks([]);
+    var allTasks;
+    this.setAllTasks([]);
+    allTasks = this.getAllTasks();
+    return Views.showTasks(allTasks);
   };
 
   Task.getNames = function(allTasks) {
@@ -218,7 +221,16 @@ Views = (function() {
   Views.showTasks = function(allTasks) {
     var html;
     html = this.generateHTML(allTasks);
-    return $('#task-list').html(html);
+    $('#task-list').html(html);
+    if (allTasks.length === 0) {
+      return $('#all-done').css('opacity', '100');
+    } else {
+      $('#all-done').hide();
+      return timeout = setTimeout(function() {
+        $('#all-done').css('opacity', '0');
+        return $('#all-done').show();
+      }, 500);
+    }
   };
 
   Views.undoFade = function() {

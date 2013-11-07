@@ -21,6 +21,16 @@ class Views
     html = @generateHTML(allTasks)
     $('#task-list').html(html)
 
+    if allTasks.length == 0
+      $('#all-done').css('opacity', '100')
+    else
+      $('#all-done').hide()
+
+      timeout = setTimeout(->
+        $('#all-done').css('opacity', '0')
+        $('#all-done').show()
+      , 500)
+
   @undoFade: ->
     $('#undo').fadeIn(150)
 
@@ -35,4 +45,3 @@ class Views
     clearTimeout(timeout)
     $('#undo').hide()
 
-    

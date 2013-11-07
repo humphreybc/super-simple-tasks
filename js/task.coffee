@@ -3,7 +3,8 @@
 class DB
 
   # DO NOT CHANGE
-  @db_key = 'todo'
+  # @db_key = 'todo'
+  @db_key = 'dev'
 
 class Arrays
 
@@ -118,6 +119,8 @@ class Task
   # Clears localStorage
   @markAllDone: ->
     @setAllTasks([])
+    allTasks = @getAllTasks()
+    Views.showTasks(allTasks)
 
   # Grab everything from the key 'name' out of the object
   @getNames: (allTasks) ->
