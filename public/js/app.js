@@ -17,7 +17,7 @@ $(document).ready(function() {
   $('#mark-all-done').click(function(e) {
     e.preventDefault();
     if (confirm('Are you sure you want to mark all tasks as done?')) {
-      return Views.markAllDone();
+      return Task.markAllDone();
     } else {
 
     }

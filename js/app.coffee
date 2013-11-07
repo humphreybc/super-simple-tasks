@@ -20,7 +20,7 @@ $(document).ready ->
   $('#mark-all-done').click (e) ->
     e.preventDefault()
     if confirm 'Are you sure you want to mark all tasks as done?'
-      Views.markAllDone()
+      Task.markAllDone()
     else
       return
 
