@@ -5,7 +5,11 @@ module.exports = function(grunt) {
       scripts: {
         files: {
           'public/js/app.js': ['js/app.coffee','js/task.coffee']
+        },
+        options: {
+          bare: true
         }
+
       }
     },
     coffeelint: {
