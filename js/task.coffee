@@ -53,7 +53,11 @@ class Task
       priority: 'minor'
       duedate: 'today'
 
-  # Gets whatever is in the input and saves it
+  # Receives name which is in the input
+  # If the input is blank, doesn't save it
+  # Uses @createTask() to make a new task object
+  # Adds the new task to the end of the array
+  # Passes that updated array through to @setAllTasks() to be written to storage
   @setNewTask: (name) ->
     unless name == ''
       newTask = @createTask(name)
@@ -61,9 +65,14 @@ class Task
       allTasks.push newTask
       @setAllTasks(allTasks)
 
-  # Change the attribute (in the DOM) and run updateAttr to change it in localStorage
-  @changeAttr: (li, attr, value) ->
+  # Updates the storage and runs Views.showTasks() again to update the HTML list
+  # DB.db_key is a variable set at the top of this file for the storage key
+  @setAllTasks: (allTasks) ->
+    localStorage.setItem(DB.db_key, JSON.stringify(allTasks))
+    Views.showTasks(allTasks)
 
+  # Change the attribute (in the DOM) and run updateAttr to change it in storage
+  @changeAttr: (li, attr, value) ->
     if attr == 'priority'
       array = Arrays.priorities
     else if attr == 'duedate'
@@ -77,56 +86,49 @@ class Task
 
     @updateAttr(li, attr, value)
 
+  # Updates the attribute in storage
   @updateAttr: (li, attr, value) ->
     id = Views.getId(li)
-    allTasks = Task.getAllTasks()
+    allTasks = @getAllTasks()
     task = allTasks[id]
     task[attr] = value
     @setAllTasks(allTasks)
 
-  # Updates the localStorage and runs showTasks again to update the list
-  @setAllTasks: (allTasks) ->
-    localStorage.setItem(DB.db_key, JSON.stringify(allTasks))
-    Views.showTasks(allTasks)
-
-  # Removes the selected task from the list and passes that to setAllTasks to update storage
-  @markDone: (id) ->
-    allTasks = Task.getAllTasks()
-    toDelete = allTasks[id]
-    toDelete['position'] = id
-    localStorage.setItem('undo', JSON.stringify(toDelete))
-
-    Views.undoFade()
-
-    allTasks = Task.getAllTasks()
-    allTasks.splice(id,1)
-    @setAllTasks(allTasks)
-
-  # Grab the last task from storage 'undo' and add it back to storage 'task' using Task.setAllTasks()
+  # Grab the last task from storage 'undo' and add it back to storage using @setAllTasks()
   # Then remove that entry from storage 'undo' 
   @undoLast: ->
     redo = localStorage.getItem('undo')
     redo = JSON.parse(redo)
+
     allTasks = @getAllTasks()
+
     position = redo.position
     delete redo['position']
     allTasks.splice(position, 0, redo)
+
     @setAllTasks(allTasks)
     localStorage.removeItem('undo')
 
     Views.undoUX(allTasks)
 
-  # Clears localStorage
+  # Removes the selected task from the list and passes that to setAllTasks to update storage
+  @markDone: (id) ->
+    allTasks = @getAllTasks()
+    toDelete = allTasks[id]
+    toDelete['position'] = id
+
+    # Sets the item we're removing in localStorage as 'undo' just in case
+    localStorage.setItem('undo', JSON.stringify(toDelete))
+    Views.undoFade()
+
+    allTasks = @getAllTasks()
+    allTasks.splice(id,1)
+    @setAllTasks(allTasks)
+
+  # Clears storage and then runs Views.showTasks() to show the blank state message
   @markAllDone: ->
     @setAllTasks([])
     allTasks = @getAllTasks()
     Views.showTasks(allTasks)
-
-  # Grab everything from the key 'name' out of the object
-  @getNames: (allTasks) ->
-    names = [] # create a new array for our names
-    for task in allTasks # iterate on each
-      names.push task['name'] # append the value to our new array called names
-    names # return them so allTasks() can use it
 
     

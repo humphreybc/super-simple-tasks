@@ -15,21 +15,27 @@ $(document).ready(function() {
     return $('#new-task').val('');
   });
   $('#mark-all-done').click(function(e) {
+    var allTasks;
     e.preventDefault();
-    if (confirm('Are you sure you want to mark all tasks as done?')) {
-      return Task.markAllDone();
+    allTasks = Task.getAllTasks();
+    if (allTasks.length === 0) {
+      return confirm('No tasks to mark done!');
     } else {
+      if (confirm('Are you sure you want to mark all tasks as done?')) {
+        return Task.markAllDone();
+      } else {
 
+      }
     }
   });
   $('#undo').click(function(e) {
     return Task.undoLast();
   });
   $(document).on('click', '#task-list li label input', function(e) {
-    var self;
-    self = $(this).closest('li');
-    return $(self).fadeOut(500, function() {
-      return Task.markDone(Views.getId(self));
+    var li;
+    li = $(this).closest('li');
+    return li.hide(function() {
+      return Task.markDone(Views.getId(li));
     });
   });
   $(document).on('click', '.priority, .duedate', function(e) {
@@ -118,6 +124,11 @@ Task = (function() {
     }
   };
 
+  Task.setAllTasks = function(allTasks) {
+    localStorage.setItem(DB.db_key, JSON.stringify(allTasks));
+    return Views.showTasks(allTasks);
+  };
+
   Task.changeAttr = function(li, attr, value) {
     var array, currentIndex;
     if (attr === 'priority') {
@@ -136,26 +147,9 @@ Task = (function() {
   Task.updateAttr = function(li, attr, value) {
     var allTasks, id, task;
     id = Views.getId(li);
-    allTasks = Task.getAllTasks();
+    allTasks = this.getAllTasks();
     task = allTasks[id];
     task[attr] = value;
-    return this.setAllTasks(allTasks);
-  };
-
-  Task.setAllTasks = function(allTasks) {
-    localStorage.setItem(DB.db_key, JSON.stringify(allTasks));
-    return Views.showTasks(allTasks);
-  };
-
-  Task.markDone = function(id) {
-    var allTasks, toDelete;
-    allTasks = Task.getAllTasks();
-    toDelete = allTasks[id];
-    toDelete['position'] = id;
-    localStorage.setItem('undo', JSON.stringify(toDelete));
-    Views.undoFade();
-    allTasks = Task.getAllTasks();
-    allTasks.splice(id, 1);
     return this.setAllTasks(allTasks);
   };
 
@@ -172,21 +166,23 @@ Task = (function() {
     return Views.undoUX(allTasks);
   };
 
+  Task.markDone = function(id) {
+    var allTasks, toDelete;
+    allTasks = this.getAllTasks();
+    toDelete = allTasks[id];
+    toDelete['position'] = id;
+    localStorage.setItem('undo', JSON.stringify(toDelete));
+    Views.undoFade();
+    allTasks = this.getAllTasks();
+    allTasks.splice(id, 1);
+    return this.setAllTasks(allTasks);
+  };
+
   Task.markAllDone = function() {
     var allTasks;
     this.setAllTasks([]);
     allTasks = this.getAllTasks();
     return Views.showTasks(allTasks);
-  };
-
-  Task.getNames = function(allTasks) {
-    var names, task, _i, _len;
-    names = [];
-    for (_i = 0, _len = allTasks.length; _i < _len; _i++) {
-      task = allTasks[_i];
-      names.push(task['name']);
-    }
-    return names;
   };
 
   return Task;
@@ -208,22 +204,23 @@ Views = (function() {
     return parseInt(id);
   };
 
-  Views.generateHTML = function(tasks) {
-    var html, i, task, _i, _len;
-    html = [];
-    for (i = _i = 0, _len = tasks.length; _i < _len; i = ++_i) {
-      task = tasks[i];
-      html[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><a class="duedate" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</a>' + '<a class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</a></li>';
+  Views.generateHTML = function(allTasks) {
+    var i, task, task_list, _i, _len;
+    task_list = [];
+    for (i = _i = 0, _len = allTasks.length; _i < _len; i = ++_i) {
+      task = allTasks[i];
+      task_list[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><a class="duedate" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</a>' + '<a class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</a></li>';
     }
-    return html;
+    return task_list;
   };
 
   Views.showTasks = function(allTasks) {
-    var html;
-    html = this.generateHTML(allTasks);
-    $('#task-list').html(html);
+    var task_list;
+    task_list = this.generateHTML(allTasks);
+    $('#task-list').html(task_list);
     if (allTasks.length === 0) {
-      return $('#all-done').show();
+      $('#all-done').show();
+      return $('#new-task').focus();
     } else {
       return $('#all-done').hide();
     }

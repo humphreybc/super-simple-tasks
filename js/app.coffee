@@ -16,31 +16,35 @@ $(document).ready ->
     Task.setNewTask(name)
     $('#new-task').val('')
 
-  # Click Mark all done
+  # Click Mark all done. If there are no tasks, gives you a different message.
   $('#mark-all-done').click (e) ->
-    e.preventDefault()
-    if confirm 'Are you sure you want to mark all tasks as done?'
-      Task.markAllDone()
+    e.preventDefault()  
+    allTasks = Task.getAllTasks()
+    if allTasks.length == 0
+      confirm 'No tasks to mark done!'
     else
-      return
+      if confirm 'Are you sure you want to mark all tasks as done?'
+        Task.markAllDone()
+      else
+        return
 
-  # If the user clicks on the undo thing
+  # If the user clicks on the undo thing, run Task.undoLast()
   $('#undo').click (e) ->
     Task.undoLast()
 
-  # When you click an li, fade it out and run markDone()
+  # When you click the checkbox or the label for the checkbox, 
+  # hide the entire li and run markDone() to remove from storage
   $(document).on 'click', '#task-list li label input', (e) ->
-    self = $(this).closest('li')
-
-    $(self).fadeOut 500, ->
-      Task.markDone(Views.getId(self))
+    li = $(this).closest('li')
+    
+    li.hide ->
+      Task.markDone(Views.getId(li))
 
   # Click on .priority or .duedate
   # Depending on what it is, run the changeAttr() function and pass parameter
   $(document).on 'click', '.priority, .duedate', (e) ->
     type_attr = $(e.currentTarget).attr('type')
     value = $(this).attr(type_attr)
-
     li = $(this).closest('li')
     
     Task.changeAttr(li, type_attr, value)
