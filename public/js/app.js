@@ -5,7 +5,8 @@ $(document).ready(function() {
     var allTasks;
     allTasks = Task.getAllTasks();
     Views.showTasks(allTasks);
-    return new_task_input.focus();
+    new_task_input.focus();
+    return $('body').css('opacity', '100');
   };
   $('#task-submit').click(function(e) {
     var name;
@@ -227,9 +228,9 @@ Views = (function() {
   };
 
   Views.undoFade = function() {
-    $('#undo').css('opacity', '100');
+    $('#undo').fadeIn();
     return timeout = setTimeout(function() {
-      $('#undo').css('opacity', '0');
+      $('#undo').fadeOut();
       return localStorage.removeItem('undo');
     }, 5000);
   };

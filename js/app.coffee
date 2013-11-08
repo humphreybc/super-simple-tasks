@@ -8,6 +8,7 @@ $(document).ready ->
     allTasks = Task.getAllTasks()
     Views.showTasks(allTasks)
     new_task_input.focus()
+    $('body').css('opacity', '100')
 
   # Triggers the setting of the new task when clicking the button
   $('#task-submit').click (e) ->

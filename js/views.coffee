@@ -31,10 +31,10 @@ class Views
 
   # Fades in the undo thing
   @undoFade: ->
-    $('#undo').css('opacity', '100')
+    $('#undo').fadeIn()
 
     timeout = setTimeout(->
-      $('#undo').css('opacity', '0')
+      $('#undo').fadeOut()
       localStorage.removeItem('undo')
     , 5000)
 
