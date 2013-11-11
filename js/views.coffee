@@ -23,10 +23,6 @@ class Views
     task_list = @generateHTML(allTasks)
     $('#task-list').html(task_list)
 
-    tour = $('#tour').tourbus({})
-
-    tour.trigger 'depart.tourbus'
-
     if allTasks.length == 0
       $('#all-done').show()
       $('#new-task').focus()
@@ -48,4 +44,8 @@ class Views
     @showTasks(allTasks)
     clearTimeout(timeout)
     $('#undo').fadeOut()
+
+  # Saves a state in storage when the tour is over
+  @finishTour: ->
+    localStorage.setItem('sst-tour', 1)
 

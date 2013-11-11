@@ -26,21 +26,21 @@ class Arrays
                     },
                     {
                       'isDone':false,
-                      'name':'Refresh and see your task is still here', 
+                      'name':'Refresh to see that your task is still here', 
                       'priority':'minor', 
                       'duedate':'today'
-                    },
-                    {
-                      'isDone':false,
-                      'name':'Click a task to complete it', 
-                      'priority':'minor', 
-                      'duedate':'tomorrow'
                     },
                     {
                       'isDone':false,
                       'name':'Follow <a href="http://twitter.com/humphreybc" target="_blank">@humphreybc</a> on Twitter', 
                       'priority':'major', 
                       'duedate':'today'
+                    },
+                    {
+                      'isDone':false,
+                      'name':'Click a task’s name to complete it', 
+                      'priority':'minor', 
+                      'duedate':'tomorrow'
                     }]
 
 class Task

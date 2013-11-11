@@ -536,11 +536,17 @@ $(document).ready(function() {
   var initialize, new_task_input;
   new_task_input = $('#new-task');
   initialize = function() {
-    var allTasks;
+    var allTasks, tour;
     allTasks = Task.getAllTasks();
     Views.showTasks(allTasks);
     new_task_input.focus();
-    return $('body').css('opacity', '100');
+    $('body').css('opacity', '100');
+    tour = $('#tour').tourbus({
+      onStop: Views.finishTour
+    });
+    if ((localStorage.getItem('sst-tour') === null) && ($(window).width() > 600)) {
+      return tour.trigger('depart.tourbus');
+    }
   };
   $('#task-submit').click(function(e) {
     var name;
@@ -614,19 +620,19 @@ Arrays = (function() {
       'duedate': 'today'
     }, {
       'isDone': false,
-      'name': 'Refresh and see your task is still here',
+      'name': 'Refresh to see that your task is still here',
       'priority': 'minor',
       'duedate': 'today'
-    }, {
-      'isDone': false,
-      'name': 'Click a task to complete it',
-      'priority': 'minor',
-      'duedate': 'tomorrow'
     }, {
       'isDone': false,
       'name': 'Follow <a href="http://twitter.com/humphreybc" target="_blank">@humphreybc</a> on Twitter',
       'priority': 'major',
       'duedate': 'today'
+    }, {
+      'isDone': false,
+      'name': 'Click a task’s name to complete it',
+      'priority': 'minor',
+      'duedate': 'tomorrow'
     }
   ];
 
@@ -755,11 +761,9 @@ Views = (function() {
   };
 
   Views.showTasks = function(allTasks) {
-    var task_list, tour;
+    var task_list;
     task_list = this.generateHTML(allTasks);
     $('#task-list').html(task_list);
-    tour = $('#tour').tourbus({});
-    tour.trigger('depart.tourbus');
     if (allTasks.length === 0) {
       $('#all-done').show();
       return $('#new-task').focus();
@@ -780,6 +784,10 @@ Views = (function() {
     this.showTasks(allTasks);
     clearTimeout(timeout);
     return $('#undo').fadeOut();
+  };
+
+  Views.finishTour = function() {
+    return localStorage.setItem('sst-tour', 1);
   };
 
   return Views;

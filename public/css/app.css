@@ -60,7 +60,7 @@ input[type='checkbox']{vertical-align:middle}
 .button{-webkit-border-radius:3px;border-radius:3px}
 .footer ul li{width:100%;margin-bottom:5px}
 }.tourbus-legs{display:none}
-.tourbus-leg{position:absolute;visibility:hidden;top:0;-webkit-border-radius:6px;border-radius:6px;border:1px solid #ccc;-webkit-box-shadow:0 3px 6px rgba(0,0,0,0.05);box-shadow:0 3px 6px rgba(0,0,0,0.05);background:#fff;color:#222}
+.tourbus-leg{position:absolute;visibility:hidden;top:0;-webkit-border-radius:6px;border-radius:6px;border:1px solid #33b5e5;-webkit-box-shadow:0 3px 6px rgba(0,0,0,0.05);box-shadow:0 3px 6px rgba(0,0,0,0.05);background:#fff;color:#222}
 .tourbus-leg-inner{padding:20px;position:relative;zoom:1;}
 .tourbus-leg-inner:after{clear:both}
 .tourbus-leg-inner p{padding:0;margin:0 0 10px;font-size:1em}
@@ -71,13 +71,13 @@ input[type='checkbox']{vertical-align:middle}
 .tourbus-arrow:after{border-width:10px}
 .tourbus-arrow:before{border-width:12px}
 .tourbus-arrow-right:after{border-right-color:#fff;margin-top:-14px;top:50%}
-.tourbus-arrow-right:before{border-right-color:#ccc;margin-top:-16px;top:50%}
+.tourbus-arrow-right:before{border-right-color:#33b5e5;margin-top:-16px;top:50%}
 .tourbus-arrow-left:after{border-left-color:#fff;margin-top:-14px;top:50%}
-.tourbus-arrow-left:before{border-left-color:#ccc;margin-top:-16px;top:50%}
+.tourbus-arrow-left:before{border-left-color:#33b5e5;margin-top:-16px;top:50%}
 .tourbus-arrow-bottom:after{border-bottom-color:#fff;margin-left:-14px;left:50%}
-.tourbus-arrow-bottom:before{border-bottom-color:#ccc;margin-left:-16px;left:50%}
+.tourbus-arrow-bottom:before{border-bottom-color:#33b5e5;margin-left:-16px;left:50%}
 .tourbus-arrow-top:after{border-top-color:#fff;margin-left:-14px;left:50%}
-.tourbus-arrow-top:before{border-top-color:#ccc;margin-left:-16px;left:50%}
+.tourbus-arrow-top:before{border-top-color:#33b5e5;margin-left:-16px;left:50%}
 .tourbus-arrow-right:after,.tourbus-arrow-right:before{right:100%}
 .tourbus-arrow-left:after,.tourbus-arrow-left:before{left:100%}
 .tourbus-arrow-bottom:after,.tourbus-arrow-bottom:before{bottom:100%}
