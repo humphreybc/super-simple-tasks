@@ -23,7 +23,7 @@
   <div class='content wrapper'>
 
     <div class='header'>
-      <h1>Super Simple Tasks</h1>
+      <h1 id='title'>Super Simple Tasks</h1>
       <a href='#' id='mark-all-done'>Mark all done</a>
 
       <form id='new-task-wrapper'>
@@ -37,6 +37,25 @@
       <span class='icon-trophy'></span>
       <p>Congratulations, you’re all done!<br>Have a cup of tea.</p>
     </div>
+
+    <ol class='tourbus-legs' id='tour'>
+
+      <li data-el='#new-task' data-orientation='bottom' data-margin='15' data-width='350'>
+        <p>Welcome! Start by typing a new task. Hit Enter or click the Add Task button to add it to your list.</p>
+        <a href='javascript:void(0);' class='tourbus-next'>Got it! Onto the next step...</a>
+      </li>
+
+      <li data-el='.priority' data-orientation='left' data-margin='20' data-width='250'>
+        <p>Change the priority by clicking a priority lozenge.</p>
+        <a href='javascript:void(0);' class='tourbus-next'>Got it! Onto the next step...</a>
+      </li>
+
+      <li data-el='#task-list' data-orientation='bottom' data-width='250'>
+        <p>Complete a task by clicking the checkbox or its name.</p>
+        <a href='javascript:void(0);' class='tourbus-stop'>All finished!</a>
+      </li>
+
+    </ol>
 
   </div>
 
