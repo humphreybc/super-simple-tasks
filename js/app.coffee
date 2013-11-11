@@ -38,7 +38,7 @@ $(document).ready ->
   $(document).on 'click', '#task-list li label input', (e) ->
     li = $(this).closest('li')
     
-    li.hide ->
+    li.slideToggle ->
       Task.markDone(Views.getId(li))
 
   # Click on .priority or .duedate

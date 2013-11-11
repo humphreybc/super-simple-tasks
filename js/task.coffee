@@ -20,6 +20,12 @@ class Arrays
                     },
                     {
                       'isDone':false,
+                      'name':'Perhaps give it a priority or due date', 
+                      'priority':'minor', 
+                      'duedate':'today'
+                    },
+                    {
+                      'isDone':false,
                       'name':'Refresh and see your task is still here', 
                       'priority':'minor', 
                       'duedate':'today'

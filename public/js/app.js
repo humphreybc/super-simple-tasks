@@ -35,7 +35,7 @@ $(document).ready(function() {
   $(document).on('click', '#task-list li label input', function(e) {
     var li;
     li = $(this).closest('li');
-    return li.hide(function() {
+    return li.slideToggle(function() {
       return Task.markDone(Views.getId(li));
     });
   });
@@ -72,6 +72,11 @@ Arrays = (function() {
       'isDone': false,
       'name': 'Add a new task above',
       'priority': 'major',
+      'duedate': 'today'
+    }, {
+      'isDone': false,
+      'name': 'Perhaps give it a priority or due date',
+      'priority': 'minor',
       'duedate': 'today'
     }, {
       'isDone': false,
@@ -238,7 +243,7 @@ Views = (function() {
   Views.undoUX = function(allTasks) {
     this.showTasks(allTasks);
     clearTimeout(timeout);
-    return $('#undo').css('opacity', '0');
+    return $('#undo').fadeOut();
   };
 
   return Views;

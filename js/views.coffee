@@ -43,5 +43,5 @@ class Views
   @undoUX: (allTasks) ->
     @showTasks(allTasks)
     clearTimeout(timeout)
-    $('#undo').css('opacity', '0')
+    $('#undo').fadeOut()
 
