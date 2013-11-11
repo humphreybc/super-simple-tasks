@@ -544,7 +544,7 @@ $(document).ready(function() {
     tour = $('#tour').tourbus({
       onStop: Views.finishTour
     });
-    if ((localStorage.getItem('sst-tour') === null) && ($(window).width() > 600)) {
+    if ((localStorage.getItem('sst-tour') === null) && ($(window).width() > 600) && (allTasks.length > 0)) {
       return tour.trigger('depart.tourbus');
     }
   };

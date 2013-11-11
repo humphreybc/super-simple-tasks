@@ -13,7 +13,7 @@ $(document).ready ->
     tour = $('#tour').tourbus({onStop: Views.finishTour})
 
     # Start the tour if it hasn't run before and the window is wider than 600px
-    if (localStorage.getItem('sst-tour') == null) and ($(window).width() > 600)
+    if (localStorage.getItem('sst-tour') == null) and ($(window).width() > 600) and (allTasks.length > 0)
       tour.trigger 'depart.tourbus'
 
   # Triggers the setting of the new task when clicking the button
