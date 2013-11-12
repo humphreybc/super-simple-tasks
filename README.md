@@ -14,13 +14,13 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 
 ### To-do
 
-#### 1.3
+#### 1.4
 
 * Toggle to sort by priority, due date, creation order
 * Sync tasks across multiple devices and browsers
 * Collaborate on tasks with others by sharing
 
-#### 1.4
+#### 1.5
 
 * IE support
 
