@@ -51,15 +51,13 @@ class Task
     allTasks = JSON.parse(allTasks) || Arrays.default_data
 
     # Migrate from < 1.2
-    # Checks to see if there is data without the priority attribute (hence < 1.2)
-    # Updates each task with a default priority and due date
-    # Then sets those in storage before continuing
-    unless allTasks.length == 0
-      if allTasks[1].priority == undefined
-        for task, i in allTasks
-          name = allTasks[i].name
-          allTasks[i] = @createTask(name)
-          @setAllTasks(allTasks)
+
+    # Only run if there are tasks, and if the first one has no priority attribute (hence < 1.2)
+    if (allTasks.length > 0) and (allTasks[0].priority == undefined) # Only run if there
+      for task, i in allTasks # Updates each task with a default priority and due date
+        name = allTasks[i].name
+        allTasks[i] = @createTask(name)
+        @setAllTasks(allTasks) # Sets those in storage before continuing
 
     allTasks
 

@@ -647,14 +647,12 @@ Task = (function() {
     var allTasks, i, name, task, _i, _len;
     allTasks = localStorage.getItem(DB.db_key);
     allTasks = JSON.parse(allTasks) || Arrays.default_data;
-    if (allTasks.length !== 0) {
-      if (allTasks[1].priority === void 0) {
-        for (i = _i = 0, _len = allTasks.length; _i < _len; i = ++_i) {
-          task = allTasks[i];
-          name = allTasks[i].name;
-          allTasks[i] = this.createTask(name);
-          this.setAllTasks(allTasks);
-        }
+    if ((allTasks.length > 0) && (allTasks[0].priority === void 0)) {
+      for (i = _i = 0, _len = allTasks.length; _i < _len; i = ++_i) {
+        task = allTasks[i];
+        name = allTasks[i].name;
+        allTasks[i] = this.createTask(name);
+        this.setAllTasks(allTasks);
       }
     }
     return allTasks;
@@ -787,7 +785,7 @@ Views = (function() {
     return timeout = setTimeout(function() {
       $('#undo').fadeOut();
       return localStorage.removeItem('undo');
-    }, 5000);
+    }, 5000000);
   };
 
   Views.undoUX = function(allTasks) {
