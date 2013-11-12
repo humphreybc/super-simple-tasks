@@ -9,23 +9,20 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 * No account required - close your browser and come back and your tasks will still be there
 * Mobile support
 * Extremely simple UI
+* Priority and due date attributes
 * Bulk mark all tasks completed
 
 ### To-do
 
-#### 1.2
-
-* Redesign create box
-* Be able to add priority and due date at create time
-
 #### 1.3
 
 * Toggle to sort by priority, due date, creation order
+* Sync tasks across multiple devices and browsers
+* Collaborate on tasks with others by sharing
 
 #### 1.4
 
 * IE support
-* Sync using Chrome's native sync API
 
 ### Dependencies
 
