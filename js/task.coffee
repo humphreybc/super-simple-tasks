@@ -49,6 +49,17 @@ class Task
   @getAllTasks: ->
     allTasks = localStorage.getItem(DB.db_key)
     allTasks = JSON.parse(allTasks) || Arrays.default_data
+
+    # Migrate from < 1.2
+    # Checks to see if there is data without the priority attribute (hence < 1.2)
+    # Updates each task with a default priority and due date
+    # Then sets those in storage before continuing
+    if allTasks[1].priority == undefined
+      for task, i in allTasks
+        name = allTasks[i].name
+        allTasks[i] = @createTask(name)
+        @setAllTasks(allTasks)
+
     allTasks
 
   # Creates a new task object with some defaults if they're not set
