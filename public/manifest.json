@@ -1,5 +1,5 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
 
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
@@ -25,10 +25,11 @@
   },
 
   "browser_action": {
-    "default_icon": {                    // optional
-      "19": "img/icon19.png",           // optional
-      "38": "img/icon38.png"            // optional
+    "default_icon": {   
+      "19": "img/icon19.png",
+      "38": "img/icon38.png"
     },
+
     "default_title": "Super Simple Tasks"
   }
 }
