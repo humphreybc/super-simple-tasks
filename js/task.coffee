@@ -54,11 +54,12 @@ class Task
     # Checks to see if there is data without the priority attribute (hence < 1.2)
     # Updates each task with a default priority and due date
     # Then sets those in storage before continuing
-    if allTasks[1].priority == undefined
-      for task, i in allTasks
-        name = allTasks[i].name
-        allTasks[i] = @createTask(name)
-        @setAllTasks(allTasks)
+    unless allTasks.length == 0
+      if allTasks[1].priority == undefined
+        for task, i in allTasks
+          name = allTasks[i].name
+          allTasks[i] = @createTask(name)
+          @setAllTasks(allTasks)
 
     allTasks
 
