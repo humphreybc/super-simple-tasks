@@ -1,0 +1,120 @@
+tooltip-color = white
+tooltip-text = black
+tooltip-border-color = blue
+
+.tourbus-legs
+  display none
+
+.tourbus-leg
+  position absolute
+  visibility hidden
+  top 0
+  border-radius 6px
+  border 1px solid tooltip-border-color
+  box-shadow 0px 3px 6px rgba(0,0,0,0.05)
+  background tooltip-color
+  color tooltip-text
+
+.tourbus-leg-inner
+  padding 20px
+  position relative
+  zoom 1
+  &:after
+    clear both
+
+  p
+    padding 0px
+    margin 0px 0px 10px
+    font-size font-xsmall
+
+  a
+    font-weight 700
+
+.tourbus-leg-inner:before,
+.tourbus-leg-inner:after
+  content "\0020"
+  display block
+  height 0
+  overflow hidden
+
+.tourbus-leg h1,
+.tourbus-leg h2,
+.tourbus-leg h3,
+.tourbus-leg h4,
+.tourbus-leg h5,
+.tourbus-leg h6
+  margin-top 0
+  padding-top 0
+
+.tourbus-arrow:before,
+.tourbus-arrow:after
+  border solid rgba(0, 0, 0, 0)
+  content " "
+  height 0
+  width 0
+  position absolute
+  pointer-events none
+  border-color transparent
+
+.tourbus-arrow
+  &:after
+    border-width 10px
+  &:before
+    border-width 12px
+
+.tourbus-arrow-right
+  &:after
+    border-right-color tooltip-color
+    margin-top -14px
+    top 50%
+  &:before
+    border-right-color tooltip-border-color
+    margin-top -16px
+    top 50%
+
+.tourbus-arrow-left
+  &:after
+    border-left-color tooltip-color
+    margin-top -14px
+    top 50%
+  &:before
+    border-left-color tooltip-border-color
+    margin-top -16px
+    top 50%
+
+.tourbus-arrow-bottom
+  &:after
+    border-bottom-color tooltip-color
+    margin-left -14px
+    left 50%
+  &:before
+    border-bottom-color tooltip-border-color
+    margin-left -16px
+    left 50%
+
+.tourbus-arrow-top
+  &:after
+    border-top-color tooltip-color
+    margin-left -14px
+    left 50%
+  &:before
+    border-top-color tooltip-border-color
+    margin-left -16px
+    left 50%
+
+.tourbus-arrow-right:after,
+.tourbus-arrow-right:before
+  right 100%
+
+.tourbus-arrow-left:after,
+.tourbus-arrow-left:before
+  left 100%
+
+.tourbus-arrow-bottom:after,
+.tourbus-arrow-bottom:before
+  bottom 100%
+
+.tourbus-arrow-top:after,
+.tourbus-arrow-top:before
+  top 100%
+

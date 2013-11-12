@@ -1,201 +1,83 @@
 *
   box-sizing: border-box
 
+// Background stuff
+
 body
+  opacity 0
+  transition opacity 500ms
   background-color white
-  font-family "Open Sans", sans-serif
+  font-family "Roboto", sans-serif
   color gray
-  font-size font-small
-  font-weight 600
+  font-size 14px
   -webkit-font-smoothing antialiased
   padding 10px
 
 input, button, textarea
   -webkit-font-smoothing antialiased
-  font-family "Open Sans", sans-serif
-
-.wrapper
-  margin 0px auto
-  width 450px
-
-.content
-  margin 20px auto 20px
-  border-radius 6px
-  border 1px solid #ccc
-  box-shadow 0px 2px 3px #ddd
-  min-height 600px
-  background-color background-gray
-
-.header
-  padding 20px
-  box-shadow inset 0px 1px 0px white, 0px 1px 0px white
-  background-image linear-gradient(top, #f7f6f5, #eee)
-  border-top-left-radius 6px
-  border-top-right-radius 6px
-  border-bottom 1px solid #ccc
-
-#mark-all-done
-  float right
-  margin-top -17px
-  font-size font-xsmall
-  color light-gray
-
-  &:hover
-    color gray
-
-#undo
-  text-align center
-  background-color gray
-  color white
-  border-radius 3px
-  padding 2px 5px 1px
-  cursor pointer
-  font-size 13px
-  display none
-  position fixed
-  top 8px
-  left 50%
-  margin-left -100px
-  width 200px
-
-  &:hover
-    background-color black
-
-  .icon-history
-    margin-right 5px
-    vertical-align middle
+  font-family "Roboto", sans-serif
 
 // Fonts
 
 h1
   margin 0px
-  text-transform uppercase
   font-size font-large
-  color xlight-gray
+  font-weight 500
+  color blue
   text-shadow 0px 1px white
 
 a
-  color gray
+  color blue
   text-decoration none
-  text-shadow 0px 1px white
 
   &:hover
-    color black
+    color dark-blue
 
-// Add a new todo
-
-#new-todo-wrapper
-  margin-top 20px
-  overflow hidden
+p
+  font-size font-small
 
 // Inputs
 
 input[type='text']
   float left
-  margin-right 2%
-  padding 7px 8px
-  border-radius 3px
+  padding 10px
+  border-top-left-radius 3px
+  border-bottom-left-radius 3px
   border 1px solid xlight-gray
-  width 73%
+  border-right none
+  width 80%
   font-size font-small
 
-  &:focus
+  &:hover, &:focus
+    border 2px solid blue
+    padding 9px
+    border-right none
     outline none
-    border 1px solid light-gray
-    box-shadow 0px 1px 2px #ccc
-
 // Buttons
 
+// Shitty override for Firefox
+@-moz-document url-prefix()
+  .button
+    padding 9px !important
+
 .button
-  width 25%
+  width 20%
   float left
-  background-image linear-gradient(top, green, lighten(dark-green, 5))
-  box-shadow inset 0px 1px 0px lighten(green, 10)
-  border 1px solid dark-green
-  border-radius 3px
-  padding 7px 8px
+  background-color blue
+  border 1px solid dark-blue
+  border-top-right-radius 3px
+  border-bottom-right-radius 3px
+  padding 10px
   font-size font-small
-  font-weight 600
-  text-shadow 0px 2px dark-green
+  font-weight 700
   color white
   cursor pointer
+  outline none
 
   &:hover
-    box-shadow 0px 2px 3px #ddd, inset 0px 1px 0px lighten(green, 20)
-    background-image linear-gradient(top, lighten(green,10), green)
+    background-color lighten(blue, 5)
+    box-shadow inset 0px -2px 0px dark-blue
 
-// The todo list
-
-#todo-list
-  margin 0px
-  padding 0px
-  list-style-type none
-
-  li
-    padding 10px 20px 10px
-    border-bottom 1px solid #ddd
-    box-shadow 0px 1px 0px white
-    cursor pointer
-
-    &:hover
-      background-color #eee
-      box-shadow inset 0px 0px 3px #d9d9d9, 0px 1px 0px white
-
-    input[type='checkbox']
-      cursor pointer
-      width 28px
-      height 13px
-      padding 0px
-      margin 0px
-      position relative
-      overflow hidden
-
-    label
-      cursor pointer
-      display block
-      padding-left 25px
-      text-indent -30px
-
-// The footer
-
-.footer
-  margin 0px auto
-  width 450px
-  padding-bottom 20px
-
-  a
-    color green
-
-    &:hover
-      color dark-green
-
-  ul
-    list-style-type none
-    color light-gray
-    margin 0px
-    padding 0px
-    overflow hidden
-
-    li
-      float left
-      font-size font-xsmall
-      width 33%
-      text-align center
-
-
-// Responsive for mobile devices
-
-@media screen and (max-width: 500px)
-  .content, .footer
-    width 100%
-
-  #todo-submit, #new-todo
-    display block
-    float none
-    width 100%
-
-  #todo-submit
-    margin-top 10px
-
-  #mark-all-done
-    float none
+  &:active
+    background-color dark-blue
+    box-shadow inset 0px 2px 3px darken(dark-blue, 5)

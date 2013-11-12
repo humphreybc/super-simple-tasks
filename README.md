@@ -15,15 +15,12 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 
 #### 1.2
 
-* Add priority - minor, major, critical, blocker
-* Add due date - today, tomorrow, this week, next week, this month
-* Add description field
-* Edit tasks
+* Redesign create box
+* Be able to add priority and due date at create time
 
 #### 1.3
 
 * Toggle to sort by priority, due date, creation order
-* Simpler (hate to say it, 'flat') design
 
 #### 1.4
 

@@ -1,0 +1,58 @@
+// Responsive for mobile devices
+
+@media screen and (max-width: 600px)
+
+  body
+    font-size 12px
+    padding 0px
+  
+  .content
+    margin-top 0px
+
+  .content, .footer
+    width 100%
+
+  #task-submit, #new-task
+    display block
+    float none
+    width 100%
+
+  #task-submit
+    margin-top 10px
+
+  #mark-all-done
+    float none
+
+  input[type='text']
+    border 1px solid xlight-gray
+    border-radius 3px
+
+    &:hover, &:focus
+      border 2px solid blue
+
+  input[type='checkbox']
+    vertical-align middle
+
+  #task-list 
+
+    li
+      position relative
+      padding-right 90px
+
+      .priority
+        position absolute
+        top 10px
+        right 20px
+
+      .duedate
+        display block
+        width 100%
+        float left
+        margin-left 28px
+
+  .button
+    border-radius 3px
+
+  .footer ul li
+    width 100%
+    margin-bottom 5px
