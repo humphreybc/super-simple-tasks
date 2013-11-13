@@ -36,7 +36,7 @@ class Views
     timeout = setTimeout(->
       $('#undo').fadeOut()
       localStorage.removeItem('undo')
-    , 5000000)
+    , 5000)
 
   # When the user click on the undo tooltip
   # Update the page, stop the fade out timer and hide it straight away

@@ -785,7 +785,7 @@ Views = (function() {
     return timeout = setTimeout(function() {
       $('#undo').fadeOut();
       return localStorage.removeItem('undo');
-    }, 5000000);
+    }, 5000);
   };
 
   Views.undoUX = function(allTasks) {
