@@ -1,6 +1,6 @@
 # Mainly DOM manipulation
 $(document).ready ->
-  console.log 'Version: 1.3'
+  console.log 'Super Simple Tasks v1.3'
   console.log 'Like looking under the hood? Feel free to help make this site better at https://github.com/humphreybc/super-simple-tasks'
 
   new_task_input = $('#new-task')
