@@ -17,13 +17,14 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 
 ### 1.3 - released
 
-* *[DONE]* Updated visual style with header
-* *[DONE]* Change to green highlight colour
+* **[DONE]** Updated visual style with header
+* **[DONE]** Change to green highlight colour
 
 ### 1.4
 
 * Drag and drop to rearrange tasks
 * Show completed tasks at the bottom of the list
+* Export tasks
 
 ### 1.5
 
