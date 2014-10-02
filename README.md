@@ -15,10 +15,10 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 
 ## Backlog
 
-### 1.3
+### 1.3 - released
 
-* [DONE] Updated visual style with header
-* [DONE] Change to green highlight colour
+* *[DONE]* Updated visual style with header
+* *[DONE]* Change to green highlight colour
 
 ### 1.4
 
