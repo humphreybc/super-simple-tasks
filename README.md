@@ -1,10 +1,10 @@
-Super Simple Tasks
-==================
+# Super Simple Tasks
 [supersimpletasks.com](http://supersimpletasks.com)
 
 A very simple tasks app that uses localStorage to save the list. This exists mainly so I can teach myself Coffeescript and better programming in general.
 
-### Features
+
+## Features
 
 * No account required - close your browser and come back and your tasks will still be there
 * Mobile support
@@ -12,24 +12,36 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 * Priority and due date attributes
 * Bulk mark all tasks completed
 
-### To-do
 
-#### 1.4
+## Backlog
 
+### 1.3
+
+* Updated visual style with header
+* Change to green highlight colour
+
+### 1.4
+
+* Drag and drop to rearrange tasks
+* Show completed tasks at the bottom of the list
+
+### 1.5
+
+* Relative due dates
 * Toggle to sort by priority, due date, creation order
+
+### Future
+
+* Multiple lists
 * Sync tasks across multiple devices and browsers
 * Collaborate on tasks with others by sharing
 
-#### 1.5
 
-* IE support
-
-### Dependencies
+## Dependencies
 
 Uses [Coffeescript](http://coffeescript.org/) and [Stylus](http://learnboost.github.com/stylus/). I compile with [LiveReload](http://livereload.com/) which is pretty great, but any Coffeescript / Stylus compiler will do.
 
 There's currently an AngularJS port underway in the angular branch.
 
-### Forking and licensing
 
-All code  is licensed under [Creative Commons Attribution-NonCommercial-ShareAlike 3.0](http://creativecommons.org/licenses/by-nc-sa/3.0/), which means that you are free to fork or clone the repository, copy, modify, and redistribute the code for non-commercial projects only, and you must provide attribution. Suitable attribution is simply a link to my website, [humphreybc.com](http://humphreybc.com) or to this Github repository.
+

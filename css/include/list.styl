@@ -1,3 +1,9 @@
+.create-task
+  padding 10px 20px 20px
+
+  input, button
+    margin-top 10px
+
 // The task list
 
 #task-list
@@ -32,39 +38,36 @@
     .priority
       float right
       color white
-      background-color gray
+      background gray
       min-width 65px
       text-align center
       padding 2px 8px 2px
       font-size font-xsmall
       text-transform capitalize
       font-weight 700
-      border-radius 3px
+      border-radius radius
       cursor pointer
+      transition background transition-speed
 
     [priority='blocker']
-      background-color red
+      background red
 
       &:hover
-        background-color lighten(red, 5)
+        background lighten(red, 5)
 
     [priority='major']
-      background-color yellow
+      background yellow
 
       &:hover
-        background-color lighten(yellow, 5)  
+        background lighten(yellow, 5)  
 
     [priority='minor']
-      background-color green
+      background green
 
       &:hover
-        background-color lighten(green, 2)
+        background lighten(green, 2)
 
     .duedate
       color light-gray
       margin-left 10px
       font-size font-small
-
-      &:hover
-        color blue
-        cursor pointer

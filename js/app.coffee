@@ -1,5 +1,7 @@
 # Mainly DOM manipulation
 $(document).ready ->
+  console.log 'Version: 1.3'
+  console.log 'Like looking under the hood? Feel free to help make this site better at https://github.com/humphreybc/super-simple-tasks'
 
   new_task_input = $('#new-task')
 
@@ -8,7 +10,6 @@ $(document).ready ->
     allTasks = Task.getAllTasks()
     Views.showTasks(allTasks)
     new_task_input.focus()
-    $('body').css('opacity', '100')
 
     tour = $('#tour').tourbus({onStop: Views.finishTour})
 
@@ -50,6 +51,7 @@ $(document).ready ->
   # Click on .priority or .duedate
   # Depending on what it is, run the changeAttr() function and pass parameter
   $(document).on 'click', '.priority, .duedate', (e) ->
+    e.preventDefault()
     type_attr = $(e.currentTarget).attr('type')
     value = $(this).attr(type_attr)
     li = $(this).closest('li')

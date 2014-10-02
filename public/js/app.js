@@ -95,8 +95,8 @@ var __slice = [].slice;
       arrow: "50%"
     }
   };
-  /* Internal*/
 
+  /* Internal */
   Bus = (function() {
     function Bus(el, options) {
       this.id = uniqueId();
@@ -213,29 +213,30 @@ var __slice = [].slice;
     };
 
     Bus.prototype._buildLegs = function() {
-      var _this = this;
       if (this.legs) {
         $.each(this.legs, function(_, leg) {
           return leg.destroy();
         });
       }
-      return $.map(this.legEls, function(legEl, i) {
-        var $legEl, data, leg;
-        $legEl = $(legEl);
-        data = $legEl.data();
-        leg = new Leg({
-          content: $legEl.html(),
-          target: data.el || 'body',
-          bus: _this,
-          index: i,
-          rawData: data
-        });
-        leg.render();
-        _this.$target.append(leg.$el);
-        leg._position();
-        leg.hide();
-        return leg;
-      });
+      return $.map(this.legEls, (function(_this) {
+        return function(legEl, i) {
+          var $legEl, data, leg;
+          $legEl = $(legEl);
+          data = $legEl.data();
+          leg = new Leg({
+            content: $legEl.html(),
+            target: data.el || 'body',
+            bus: _this,
+            index: i,
+            rawData: data
+          });
+          leg.render();
+          _this.$target.append(leg.$el);
+          leg._position();
+          leg.hide();
+          return leg;
+        };
+      })(this));
     };
 
     Bus.prototype._log = function() {
@@ -534,13 +535,14 @@ var __slice = [].slice;
 
 $(document).ready(function() {
   var initialize, new_task_input;
+  console.log('Version: 1.3');
+  console.log('Like looking under the hood? Feel free to help make this site better at https://github.com/humphreybc/super-simple-tasks');
   new_task_input = $('#new-task');
   initialize = function() {
     var allTasks, tour;
     allTasks = Task.getAllTasks();
     Views.showTasks(allTasks);
     new_task_input.focus();
-    $('body').css('opacity', '100');
     tour = $('#tour').tourbus({
       onStop: Views.finishTour
     });
@@ -581,6 +583,7 @@ $(document).ready(function() {
   });
   $(document).on('click', '.priority, .duedate', function(e) {
     var li, type_attr, value;
+    e.preventDefault();
     type_attr = $(e.currentTarget).attr('type');
     value = $(this).attr(type_attr);
     li = $(this).closest('li');
@@ -763,7 +766,7 @@ Views = (function() {
     task_list = [];
     for (i = _i = 0, _len = allTasks.length; _i < _len; i = ++_i) {
       task = allTasks[i];
-      task_list[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><a class="duedate" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</a>' + '<a class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</a></li>';
+      task_list[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><a class="duedate" href="#" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</a>' + '<a class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</a></li>';
     }
     return task_list;
   };
