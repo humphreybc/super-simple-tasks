@@ -1,5 +1,7 @@
 tooltip-color = white
 tooltip-text = black
+tooltip-link = blue
+tooltip-link-hover = dark-blue
 tooltip-border-color = blue
 
 .tourbus-legs
@@ -10,7 +12,7 @@ tooltip-border-color = blue
   visibility hidden
   top 0
   border-radius 6px
-  border 1px solid tooltip-border-color
+  border 2px solid tooltip-border-color
   box-shadow 0px 3px 6px rgba(0,0,0,0.05)
   background tooltip-color
   color tooltip-text
@@ -19,16 +21,21 @@ tooltip-border-color = blue
   padding 20px
   position relative
   zoom 1
+
   &:after
     clear both
 
   p
     padding 0px
     margin 0px 0px 10px
-    font-size font-xsmall
+    font-size font-small
 
   a
     font-weight 700
+    color tooltip-link
+
+    &:hover
+      color tooltip-link-hover
 
 .tourbus-leg-inner:before,
 .tourbus-leg-inner:after
