@@ -22,12 +22,13 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 
 ### 1.4
 
+* **[DONE]** Export tasks
 * Drag and drop to rearrange tasks
 * Show completed tasks at the bottom of the list
-* Export tasks
 
 ### 1.5
 
+* Import tasks
 * Relative due dates
 * Toggle to sort by priority, due date, creation order
 
