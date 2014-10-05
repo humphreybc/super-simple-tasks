@@ -14,7 +14,7 @@ class Views
   @generateHTML: (allTasks) ->
     task_list = []
     for task, i in allTasks
-      task_list[i] = '<li><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><a class="duedate" href="#" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</a>' + '<a class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</a></li>'
+      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><a class="duedate" href="#" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</a>' + '<a class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</a></li>'
     task_list
 
   # Inserts the task list into ul #task-list

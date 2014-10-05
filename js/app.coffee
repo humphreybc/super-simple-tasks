@@ -36,7 +36,7 @@ $(document).ready ->
       else
         return
 
-  # Click Export tasks.
+  # Click Export tasks
   $('#export-tasks').click (e) ->
     e.preventDefault()
     allTasks = Task.getAllTasks()
@@ -63,6 +63,14 @@ $(document).ready ->
     li = $(this).closest('li')
     
     Task.changeAttr(li, type_attr, value)
+
+  # Make the task list sortable
+  $('.task').sortable
+    axis: 'y'
+    revert: true
+    scroll: false
+    placeholder: 'sortable-placeholder'
+    cursor: 'move'
 
   # Runs the initialize function when the page loads
   initialize()
