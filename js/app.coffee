@@ -36,6 +36,12 @@ $(document).ready ->
       else
         return
 
+  # Click Export tasks.
+  $('#export-tasks').click (e) ->
+    e.preventDefault()
+    allTasks = Task.getAllTasks()
+    Exporter(allTasks, 'super simple tasks backup', true)
+
   # If the user clicks on the undo thing, run Task.undoLast()
   $('#undo').click (e) ->
     Task.undoLast()

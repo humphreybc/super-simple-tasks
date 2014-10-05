@@ -571,6 +571,12 @@ $(document).ready(function() {
       }
     }
   });
+  $('#export-tasks').click(function(e) {
+    var allTasks;
+    e.preventDefault();
+    allTasks = Task.getAllTasks();
+    return Exporter(allTasks, 'super simple tasks backup', true);
+  });
   $('#undo').click(function(e) {
     return Task.undoLast();
   });
@@ -804,3 +810,20 @@ Views = (function() {
   return Views;
 
 })();
+
+var Exporter;
+
+Exporter = function(allTasks, FileTitle, ShowLabel) {
+  var exportData, fileName, link, uri;
+  exportData = JSON.stringify(allTasks);
+  fileName = '';
+  fileName += FileTitle.replace(RegExp(' ', 'g'), '_');
+  uri = 'data:text/json;charset=utf-8,' + escape(exportData);
+  link = document.createElement('a');
+  link.href = uri;
+  link.style = 'visibility:hidden';
+  link.download = fileName + '.json';
+  document.body.appendChild(link);
+  link.click();
+  return document.body.removeChild(link);
+};
