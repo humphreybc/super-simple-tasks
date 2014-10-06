@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     coffee: {
       scripts: {
         files: {
-          '.tmp/concat/js/app.js': ['js/app.coffee', 'js/task.coffee', 'js/views.coffee', 'js/export.coffee', 'js/tour.coffee']
+          '.tmp/concat/js/app.js': ['js/app.coffee', 'js/task.coffee', 'js/views.coffee', 'js/dragdrop.coffee', 'js/export.coffee', 'js/tour.coffee']
         },
         options: {
           bare: true
@@ -52,7 +52,7 @@ module.exports = function(grunt) {
     concat: {
       app: {
         files: {
-          'public/js/app.js': ['public/js/jquery.min.js', 'public/js/jquery-ui.min.js', 'public/js/bootstrap-tooltip.js', '.tmp/concat/js/app.js'],
+          'public/js/app.js': ['public/js/jquery.min.js', 'public/js/slip.js', 'public/js/bootstrap-tooltip.js', '.tmp/concat/js/app.js'],
         }
       }
     },

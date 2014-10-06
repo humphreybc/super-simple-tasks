@@ -64,14 +64,6 @@ $(document).ready ->
     
     Task.changeAttr(li, type_attr, value)
 
-  # Make the task list sortable
-  $('.task').sortable
-    axis: 'y'
-    revert: true
-    scroll: false
-    placeholder: 'sortable-placeholder'
-    cursor: 'move'
-
   # Runs the initialize function when the page loads
   initialize()
 

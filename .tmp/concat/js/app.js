@@ -60,13 +60,6 @@ $(document).ready(function() {
     li = $(this).closest('li');
     return Task.changeAttr(li, type_attr, value);
   });
-  $('.task').sortable({
-    axis: 'y',
-    revert: true,
-    scroll: false,
-    placeholder: 'sortable-placeholder',
-    cursor: 'move'
-  });
   return initialize();
 });
 
@@ -282,6 +275,20 @@ Views = (function() {
   return Views;
 
 })();
+
+var list;
+
+list = document.querySelector('#task-list');
+
+new Slip(list);
+
+list.addEventListener('slip:swipe', function(e) {
+  e.target.parentNode.removeChild(e.target);
+});
+
+list.addEventListener('slip:reorder', function(e) {
+  e.target.parentNode.insertBefore(e.target, e.detail.insertBefore);
+});
 
 var Exporter;
 

@@ -64,5 +64,11 @@ A Gruntfile with a 'dev' task is available for development.
 
     grunt build
 
+## Testing on mobile
 
+The easiest way to test on mobile locally is to start a HTTP server with Python:
+
+    python -m SimpleHTTPServer
+
+Now visit <youripaddress>:8000/public to see Super Simple Tasks on your phone.
 
