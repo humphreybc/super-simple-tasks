@@ -50,9 +50,10 @@ class Arrays
                     }]
 
 class Task
-
   # Updates the order upon drag and drop
   @updateOrder: (oldLocation, newLocation) ->
+    if oldLocation == newLocation
+      return
 
     # All the tasks from localStorage
     allTasks = @getAllTasks()
@@ -60,19 +61,16 @@ class Task
     # The task we want to move
     toMove = allTasks[oldLocation]
 
-    # Dragging the 'toMove' task below the -1nth position (ie. right to the top)
-    if newLocation == 0
-      newLocation = -1
+    # if the current position (oldLocation) is above (rendered on the screen) the new location
+    # the splice needs to take into account the existing toMove object and "jump" over it
+    if oldLocation < newLocation
+      newLocation += 1
+    allTasks.splice(newLocation, 0, toMove)
 
-    # Insert toMove into (1 below) the new location 
-    allTasks.splice((newLocation + 1), 0, toMove)
-
-    # Dragging the 'toMove' task above to where it is before
-    # Because you're removing the old item, taking into account the new item being part of allTasks
+    # if the newLocation is above (rendered on the screen) the old location
+    # the splice needs to take into account the new toMove object and "jump" over it
     if newLocation < oldLocation
       oldLocation += 1
-
-    # Remove the old copy of toMove
     allTasks.splice(oldLocation, 1)
     
     @setAllTasks(allTasks)
@@ -169,7 +167,9 @@ class Task
     localStorage.setItem('undo', JSON.stringify(toComplete))
     Views.undoFade()
 
-    @updateAttr(id, 'isDone', true)
+    # @updateAttr(id, 'isDone', true)
+    allTasks.splice(id, 1)
+    @setAllTasks(allTasks)
 
   # Clears storage and then runs Views.showTasks() to show the blank state message
   @markAllDone: ->

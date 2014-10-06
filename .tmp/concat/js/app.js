@@ -125,12 +125,15 @@ Task = (function() {
 
   Task.updateOrder = function(oldLocation, newLocation) {
     var allTasks, toMove;
+    if (oldLocation === newLocation) {
+      return;
+    }
     allTasks = this.getAllTasks();
     toMove = allTasks[oldLocation];
-    if (newLocation === 0) {
-      newLocation = -1;
+    if (oldLocation < newLocation) {
+      newLocation += 1;
     }
-    allTasks.splice(newLocation + 1, 0, toMove);
+    allTasks.splice(newLocation, 0, toMove);
     if (newLocation < oldLocation) {
       oldLocation += 1;
     }
@@ -222,7 +225,8 @@ Task = (function() {
     toComplete = allTasks[id];
     localStorage.setItem('undo', JSON.stringify(toComplete));
     Views.undoFade();
-    return this.updateAttr(id, 'isDone', true);
+    allTasks.splice(id, 1);
+    return this.setAllTasks(allTasks);
   };
 
   Task.markAllDone = function() {
@@ -251,75 +255,37 @@ Views = (function() {
     return parseInt(id);
   };
 
-  Views.generateTasksHTML = function(tasks) {
+  Views.generateHTML = function(allTasks) {
     var i, task, task_list, _i, _len;
     task_list = [];
-    for (i = _i = 0, _len = tasks.length; _i < _len; i = ++_i) {
-      task = tasks[i];
-      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + task.id + '" />' + task.name + '</label><span class="duedate" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</span>' + '<span class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
-    }
-    return task_list;
-  };
-
-  Views.generateCompletedTasksHTML = function(completedTasks) {
-    var i, task, task_list, _i, _len;
-    task_list = [];
-    for (i = _i = 0, _len = completedTasks.length; _i < _len; i = ++_i) {
-      task = completedTasks[i];
-      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + task.id + '" />' + task.name + '</label></li>';
+    for (i = _i = 0, _len = allTasks.length; _i < _len; i = ++_i) {
+      task = allTasks[i];
+      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><span class="duedate" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</span>' + '<span class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
     }
     return task_list;
   };
 
   Views.showTasks = function(allTasks) {
-    this.showUnCompleted(allTasks);
-    return this.showCompleted(allTasks);
-  };
-
-  Views.showUnCompleted = function(allTasks) {
-    var i, index, task_list, tasks;
-    tasks = allTasks;
+    var i, index, task_list;
     index = 0;
-    while (index < tasks.length) {
-      tasks[index].id = index;
+    while (index < allTasks.length) {
+      allTasks[index].id = index;
       ++index;
     }
-    i = tasks.length - 1;
+    i = allTasks.length - 1;
     while (i >= 0) {
-      if (tasks[i].isDone) {
-        tasks.splice(i, 1);
+      if (allTasks[i].isDone) {
+        allTasks.splice(i, 1);
       }
       i--;
     }
-    this.showEmptyState(tasks);
-    task_list = this.generateTasksHTML(tasks);
+    this.showEmptyState(allTasks);
+    task_list = this.generateHTML(allTasks);
     return $('#task-list').html(task_list);
   };
 
-  Views.showCompleted = function(allTasks) {
-    var completedTasks, i, index, task_list;
-    completedTasks = allTasks;
-    index = 0;
-    while (index < completedTasks.length) {
-      completedTasks[index].id = index;
-      ++index;
-    }
-    i = completedTasks.length - 1;
-    while (i >= 0) {
-      if (completedTasks[i].isDone === false) {
-        completedTasks.splice(i, 1);
-      }
-      i--;
-    }
-    if (completedTasks.length !== 0) {
-      $('#completed-tasks').show();
-    }
-    task_list = this.generateCompletedTasksHTML(completedTasks);
-    return $('#completed-task-list').html(task_list);
-  };
-
-  Views.showEmptyState = function(tasks) {
-    if (tasks.length === 0) {
+  Views.showEmptyState = function(allTasks) {
+    if (allTasks.length === 0) {
       $('#all-done').show();
       return $('#new-task').focus();
     } else {
