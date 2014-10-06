@@ -57,9 +57,9 @@ $(document).ready ->
     li.slideToggle ->
       Task.markDone(Views.getId(li))
 
-  # Click on .priority or .duedate
-  # Depending on what it is, run the changeAttr() function and pass parameter
-  $(document).on 'click', '.priority, .duedate', (e) ->
+  # Click on an attribute (in this case .priority)
+  # Run the changeAttr() function and pass parameter
+  $(document).on 'click', '.priority', (e) ->
     e.preventDefault()
     type_attr = $(e.currentTarget).attr('type')
     value = $(this).attr(type_attr)

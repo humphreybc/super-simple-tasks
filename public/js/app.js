@@ -840,7 +840,7 @@ $(document).ready(function() {
       return Task.markDone(Views.getId(li));
     });
   });
-  $(document).on('click', '.priority, .duedate', function(e) {
+  $(document).on('click', '.priority', function(e) {
     var li, type_attr, value;
     e.preventDefault();
     type_attr = $(e.currentTarget).attr('type');
@@ -867,39 +867,31 @@ Arrays = (function() {
 
   Arrays.priorities = ['minor', 'major', 'blocker'];
 
-  Arrays.duedates = ['today', 'tomorrow', 'this week', 'next week', 'this month'];
-
   Arrays.default_data = [
     {
       'isDone': false,
       'name': 'Add a new task above',
-      'priority': 'major',
-      'duedate': 'today'
+      'priority': 'major'
     }, {
       'isDone': false,
-      'name': 'Perhaps give it a priority or due date',
-      'priority': 'minor',
-      'duedate': 'today'
+      'name': 'Perhaps give it a priority',
+      'priority': 'minor'
     }, {
       'isDone': false,
       'name': 'Or even click and hold to reorder it',
-      'priority': 'minor',
-      'duedate': 'today'
+      'priority': 'minor'
     }, {
       'isDone': false,
       'name': 'Refresh to see that your task is still here',
-      'priority': 'minor',
-      'duedate': 'today'
+      'priority': 'minor'
     }, {
       'isDone': false,
       'name': 'Follow <a href="http://twitter.com/humphreybc" target="_blank">@humphreybc</a> on Twitter',
-      'priority': 'major',
-      'duedate': 'today'
+      'priority': 'major'
     }, {
       'isDone': false,
       'name': 'Click a task’s name to complete it',
-      'priority': 'minor',
-      'duedate': 'tomorrow'
+      'priority': 'minor'
     }
   ];
 
@@ -948,8 +940,7 @@ Task = (function() {
     return task = {
       isDone: false,
       name: name,
-      priority: 'minor',
-      duedate: 'today'
+      priority: 'minor'
     };
   };
 
@@ -972,8 +963,6 @@ Task = (function() {
     var array, currentIndex, id;
     if (attr === 'priority') {
       array = Arrays.priorities;
-    } else if (attr === 'duedate') {
-      array = Arrays.duedates;
     }
     currentIndex = $.inArray(value, array);
     id = Views.getId(li);
@@ -985,7 +974,6 @@ Task = (function() {
   };
 
   Task.updateAttr = function(id, attr, value) {
-    debugger;
     var allTasks, task;
     allTasks = this.getAllTasks();
     task = allTasks[id];
@@ -1047,7 +1035,7 @@ Views = (function() {
     task_list = [];
     for (i = _i = 0, _len = allTasks.length; _i < _len; i = ++_i) {
       task = allTasks[i];
-      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><span class="duedate" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</span>' + '<span class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
+      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label>' + '<span class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
     }
     return task_list;
   };

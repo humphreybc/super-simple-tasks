@@ -8,45 +8,38 @@ class DB
 
 class Arrays
 
-  # Arrays for priorities and due dates
+  # Arrays for priorities
   @priorities = ['minor', 'major', 'blocker']
-  @duedates = ['today', 'tomorrow', 'this week', 'next week', 'this month']
 
   @default_data = [{
                       'isDone':false,
                       'name':'Add a new task above', 
-                      'priority':'major', 
-                      'duedate':'today'
+                      'priority':'major'
                     },
                     {
                       'isDone':false,
-                      'name':'Perhaps give it a priority or due date', 
-                      'priority':'minor', 
-                      'duedate':'today'
+                      'name':'Perhaps give it a priority', 
+                      'priority':'minor'
                     },
                     {
                       'isDone':false,
                       'name':'Or even click and hold to reorder it', 
-                      'priority':'minor', 
-                      'duedate':'today'
+                      'priority':'minor'
                     },
                     {
                       'isDone':false,
                       'name':'Refresh to see that your task is still here', 
-                      'priority':'minor', 
-                      'duedate':'today'
+                      'priority':'minor'
                     },
                     {
                       'isDone':false,
                       'name':'Follow <a href="http://twitter.com/humphreybc" target="_blank">@humphreybc</a> on Twitter', 
-                      'priority':'major', 
-                      'duedate':'today'
+                      'priority':'major'
                     },
                     {
                       'isDone':false,
                       'name':'Click a task’s name to complete it', 
-                      'priority':'minor', 
-                      'duedate':'tomorrow'
+                      'priority':'minor'
                     }]
 
 class Task
@@ -97,7 +90,6 @@ class Task
       isDone: false
       name: name
       priority: 'minor'
-      duedate: 'today'
 
   # Receives name which is in the input
   # If the input is blank, doesn't save it
@@ -121,8 +113,6 @@ class Task
   @changeAttr: (li, attr, value) ->
     if attr == 'priority'
       array = Arrays.priorities
-    else if attr == 'duedate'
-      array = Arrays.duedates
 
     currentIndex = $.inArray(value, array)
     id = Views.getId(li)
@@ -135,7 +125,6 @@ class Task
 
   # Updates the attribute in storage
   @updateAttr: (id, attr, value) ->
-    debugger
     allTasks = @getAllTasks()
     task = allTasks[id]
     task[attr] = value
