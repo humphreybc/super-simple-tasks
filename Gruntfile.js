@@ -52,7 +52,7 @@ module.exports = function(grunt) {
     concat: {
       app: {
         files: {
-          'public/js/app.js': ['public/js/jquery.min.js', 'public/js/slip.js', 'public/js/bootstrap-tooltip.js', '.tmp/concat/js/app.js'],
+          'public/js/app.js': ['public/js/jquery-2.1.1.min.js', 'public/js/slip.js', 'public/js/bootstrap-tooltip.js', '.tmp/concat/js/app.js'],
         }
       }
     },

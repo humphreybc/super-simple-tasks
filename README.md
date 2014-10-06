@@ -24,8 +24,9 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 
 * **[DONE]** Export tasks
 * **[DONE]** Drag and drop to rearrange tasks
+* Update jQuery to latest
 * Show completed tasks at the bottom of the list
-* Mark all done uses undo pattern
+* Use undo pattern for 'mark all done'
 
 ### 1.5
 
