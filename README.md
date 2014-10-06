@@ -23,7 +23,7 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 ### 1.4
 
 * **[DONE]** Export tasks
-* Drag and drop to rearrange tasks
+* **[DONE]** Drag and drop to rearrange tasks
 * Show completed tasks at the bottom of the list
 * Mark all done uses undo pattern
 
