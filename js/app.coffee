@@ -20,9 +20,12 @@ $(document).ready ->
   # Triggers the setting of the new task when clicking the button
   $('#task-submit').click (e) ->
     e.preventDefault()
+
     name = new_task_input.val()
     Task.setNewTask(name)
+    
     $('#new-task').val('')
+    $('#new-task').focus()
 
   # Click Mark all done. If there are no tasks, gives you a different message.
   $('#mark-all-done').click (e) ->

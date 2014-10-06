@@ -804,7 +804,8 @@ $(document).ready(function() {
     e.preventDefault();
     name = new_task_input.val();
     Task.setNewTask(name);
-    return $('#new-task').val('');
+    $('#new-task').val('');
+    return $('#new-task').focus();
   });
   $('#mark-all-done').click(function(e) {
     var allTasks;
@@ -900,6 +901,21 @@ Arrays = (function() {
 
 Task = (function() {
   function Task() {}
+
+  Task.updateOrder = function(oldLocation, newLocation) {
+    var allTasks, toMove;
+    allTasks = this.getAllTasks();
+    toMove = allTasks[oldLocation];
+    if (newLocation === 0) {
+      newLocation = -1;
+    }
+    allTasks.splice(newLocation + 1, 0, toMove);
+    if (newLocation < oldLocation) {
+      oldLocation += 1;
+    }
+    allTasks.splice(oldLocation, 1);
+    return this.setAllTasks(allTasks);
+  };
 
   Task.getAllTasks = function() {
     var allTasks, i, name, task, _i, _len;
@@ -1021,7 +1037,7 @@ Views = (function() {
     task_list = [];
     for (i = _i = 0, _len = allTasks.length; _i < _len; i = ++_i) {
       task = allTasks[i];
-      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><a class="duedate" href="#" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</a>' + '<a class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</a></li>';
+      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><span class="duedate" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</span>' + '<span class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
     }
     return task_list;
   };
@@ -1068,10 +1084,15 @@ new Slip(list);
 
 list.addEventListener('slip:swipe', function(e) {
   e.target.parentNode.removeChild(e.target);
+  return Task.markDone(Views.getId(e.target));
 });
 
 list.addEventListener('slip:reorder', function(e) {
+  var newLocation, oldLocation;
   e.target.parentNode.insertBefore(e.target, e.detail.insertBefore);
+  oldLocation = e.detail.originalIndex;
+  newLocation = e.detail.spliceIndex;
+  return Task.updateOrder(oldLocation, newLocation);
 });
 
 var Exporter;

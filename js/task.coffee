@@ -45,14 +45,40 @@ class Arrays
 
 class Task
 
+  # Updates the order upon drag and drop
+  @updateOrder: (oldLocation, newLocation) ->
+
+    # All the tasks from localStorage
+    allTasks = @getAllTasks()
+
+    # The task we want to move
+    toMove = allTasks[oldLocation]
+
+    # Dragging the 'toMove' task below the -1nth position (ie. right to the top)
+    if newLocation == 0
+      newLocation = -1
+
+    # Insert toMove into (1 below) the new location 
+    allTasks.splice((newLocation + 1), 0, toMove)
+
+    # Dragging the 'toMove' task above to where it is before
+    # Because you're removing the old item, taking into account the new item being part of allTasks
+    if newLocation < oldLocation
+      oldLocation += 1
+
+    # Remove the old copy of toMove
+    allTasks.splice(oldLocation, 1)
+    
+    @setAllTasks(allTasks)
+
   # Returns what we have in storage
   @getAllTasks: ->
     allTasks = localStorage.getItem(DB.db_key)
     allTasks = JSON.parse(allTasks) || Arrays.default_data
 
     # Migrate from < 1.2
-
     # Only run if there are tasks, and if the first one has no priority attribute (hence < 1.2)
+    
     if (allTasks.length > 0) and (allTasks[0].priority == undefined) # Only run if there
       for task, i in allTasks # Updates each task with a default priority and due date
         name = allTasks[i].name
