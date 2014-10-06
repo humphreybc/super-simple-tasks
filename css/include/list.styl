@@ -6,6 +6,8 @@
   input, button
     margin-top 10px
 
+// Styles for dragging & dropping
+
 .slip-reordering
   z-index 500
   border 2px solid blue !important
@@ -16,9 +18,9 @@
 .slip-swiping-container
   overflow-x hidden
 
-// The task list
+// The main task list
 
-#task-list
+#task-list, #completed-task-list
   margin 0px
   padding 0px
   list-style-type none
@@ -85,3 +87,9 @@
       color light-gray
       margin-left 10px
       font-size font-small
+
+// The completed task bucket
+
+#completed-tasks
+  display none
+

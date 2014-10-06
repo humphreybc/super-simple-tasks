@@ -26,6 +26,12 @@ class Arrays
                     },
                     {
                       'isDone':false,
+                      'name':'Or even click and hold to reorder it', 
+                      'priority':'minor', 
+                      'duedate':'today'
+                    },
+                    {
+                      'isDone':false,
                       'name':'Refresh to see that your task is still here', 
                       'priority':'minor', 
                       'duedate':'today'
@@ -78,7 +84,7 @@ class Task
 
     # Migrate from < 1.2
     # Only run if there are tasks, and if the first one has no priority attribute (hence < 1.2)
-    
+
     if (allTasks.length > 0) and (allTasks[0].priority == undefined) # Only run if there
       for task, i in allTasks # Updates each task with a default priority and due date
         name = allTasks[i].name
@@ -121,16 +127,17 @@ class Task
       array = Arrays.duedates
 
     currentIndex = $.inArray(value, array)
+    id = Views.getId(li)
 
     if currentIndex == array.length - 1
       currentIndex = -1
     value = array[currentIndex + 1]
 
-    @updateAttr(li, attr, value)
+    @updateAttr(id, attr, value)
 
   # Updates the attribute in storage
-  @updateAttr: (li, attr, value) ->
-    id = Views.getId(li)
+  @updateAttr: (id, attr, value) ->
+    debugger
     allTasks = @getAllTasks()
     task = allTasks[id]
     task[attr] = value
@@ -156,16 +163,13 @@ class Task
   # Removes the selected task from the list and passes that to setAllTasks to update storage
   @markDone: (id) ->
     allTasks = @getAllTasks()
-    toDelete = allTasks[id]
-    toDelete['position'] = id
+    toComplete = allTasks[id]
 
     # Sets the item we're removing in localStorage as 'undo' just in case
-    localStorage.setItem('undo', JSON.stringify(toDelete))
+    localStorage.setItem('undo', JSON.stringify(toComplete))
     Views.undoFade()
 
-    allTasks = @getAllTasks()
-    allTasks.splice(id,1)
-    @setAllTasks(allTasks)
+    @updateAttr(id, 'isDone', true)
 
   # Clears storage and then runs Views.showTasks() to show the blank state message
   @markAllDone: ->

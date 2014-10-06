@@ -95,6 +95,11 @@ Arrays = (function() {
       'duedate': 'today'
     }, {
       'isDone': false,
+      'name': 'Or even click and hold to reorder it',
+      'priority': 'minor',
+      'duedate': 'today'
+    }, {
+      'isDone': false,
       'name': 'Refresh to see that your task is still here',
       'priority': 'minor',
       'duedate': 'today'
@@ -174,23 +179,24 @@ Task = (function() {
   };
 
   Task.changeAttr = function(li, attr, value) {
-    var array, currentIndex;
+    var array, currentIndex, id;
     if (attr === 'priority') {
       array = Arrays.priorities;
     } else if (attr === 'duedate') {
       array = Arrays.duedates;
     }
     currentIndex = $.inArray(value, array);
+    id = Views.getId(li);
     if (currentIndex === array.length - 1) {
       currentIndex = -1;
     }
     value = array[currentIndex + 1];
-    return this.updateAttr(li, attr, value);
+    return this.updateAttr(id, attr, value);
   };
 
-  Task.updateAttr = function(li, attr, value) {
-    var allTasks, id, task;
-    id = Views.getId(li);
+  Task.updateAttr = function(id, attr, value) {
+    debugger;
+    var allTasks, task;
     allTasks = this.getAllTasks();
     task = allTasks[id];
     task[attr] = value;
@@ -211,15 +217,12 @@ Task = (function() {
   };
 
   Task.markDone = function(id) {
-    var allTasks, toDelete;
+    var allTasks, toComplete;
     allTasks = this.getAllTasks();
-    toDelete = allTasks[id];
-    toDelete['position'] = id;
-    localStorage.setItem('undo', JSON.stringify(toDelete));
+    toComplete = allTasks[id];
+    localStorage.setItem('undo', JSON.stringify(toComplete));
     Views.undoFade();
-    allTasks = this.getAllTasks();
-    allTasks.splice(id, 1);
-    return this.setAllTasks(allTasks);
+    return this.updateAttr(id, 'isDone', true);
   };
 
   Task.markAllDone = function() {
@@ -248,21 +251,75 @@ Views = (function() {
     return parseInt(id);
   };
 
-  Views.generateHTML = function(allTasks) {
+  Views.generateTasksHTML = function(tasks) {
     var i, task, task_list, _i, _len;
     task_list = [];
-    for (i = _i = 0, _len = allTasks.length; _i < _len; i = ++_i) {
-      task = allTasks[i];
-      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label><span class="duedate" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</span>' + '<span class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
+    for (i = _i = 0, _len = tasks.length; _i < _len; i = ++_i) {
+      task = tasks[i];
+      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + task.id + '" />' + task.name + '</label><span class="duedate" type="duedate" duedate="' + task.duedate + '">' + task.duedate + '</span>' + '<span class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
+    }
+    return task_list;
+  };
+
+  Views.generateCompletedTasksHTML = function(completedTasks) {
+    var i, task, task_list, _i, _len;
+    task_list = [];
+    for (i = _i = 0, _len = completedTasks.length; _i < _len; i = ++_i) {
+      task = completedTasks[i];
+      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + task.id + '" />' + task.name + '</label></li>';
     }
     return task_list;
   };
 
   Views.showTasks = function(allTasks) {
-    var task_list;
-    task_list = this.generateHTML(allTasks);
-    $('#task-list').html(task_list);
-    if (allTasks.length === 0) {
+    this.showUnCompleted(allTasks);
+    return this.showCompleted(allTasks);
+  };
+
+  Views.showUnCompleted = function(allTasks) {
+    var i, index, task_list, tasks;
+    tasks = allTasks;
+    index = 0;
+    while (index < tasks.length) {
+      tasks[index].id = index;
+      ++index;
+    }
+    i = tasks.length - 1;
+    while (i >= 0) {
+      if (tasks[i].isDone) {
+        tasks.splice(i, 1);
+      }
+      i--;
+    }
+    this.showEmptyState(tasks);
+    task_list = this.generateTasksHTML(tasks);
+    return $('#task-list').html(task_list);
+  };
+
+  Views.showCompleted = function(allTasks) {
+    var completedTasks, i, index, task_list;
+    completedTasks = allTasks;
+    index = 0;
+    while (index < completedTasks.length) {
+      completedTasks[index].id = index;
+      ++index;
+    }
+    i = completedTasks.length - 1;
+    while (i >= 0) {
+      if (completedTasks[i].isDone === false) {
+        completedTasks.splice(i, 1);
+      }
+      i--;
+    }
+    if (completedTasks.length !== 0) {
+      $('#completed-tasks').show();
+    }
+    task_list = this.generateCompletedTasksHTML(completedTasks);
+    return $('#completed-task-list').html(task_list);
+  };
+
+  Views.showEmptyState = function(tasks) {
+    if (tasks.length === 0) {
       $('#all-done').show();
       return $('#new-task').focus();
     } else {
