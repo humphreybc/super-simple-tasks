@@ -14,7 +14,7 @@ $(document).ready(function() {
     if ((localStorage.getItem('sst-tour') === null) && ($(window).width() > 600) && (allTasks.length > 0)) {
       tour.trigger('depart.tourbus');
     }
-    if ((localStorage.getItem('sst-tour') !== null) && (localStorage.getItem('whats-new') === null) && (allTasks.length > 0)) {
+    if ((localStorage.getItem('sst-tour') !== null) && (localStorage.getItem('whats-new') !== null) && (allTasks.length > 0)) {
       return $('.whats-new').show();
     }
   };

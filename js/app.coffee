@@ -19,7 +19,7 @@ $(document).ready ->
       tour.trigger 'depart.tourbus'
 
     # Show the What's new dialog if the user has seen the tour, hasn't seen the dialog, and has tasks
-    if (localStorage.getItem('sst-tour') != null) and (localStorage.getItem('whats-new') == null) and (allTasks.length > 0)
+    if (localStorage.getItem('sst-tour') != null) and (localStorage.getItem('whats-new') != null) and (allTasks.length > 0)
       $('.whats-new').show()
 
   # Dismissing the what's new dialog
