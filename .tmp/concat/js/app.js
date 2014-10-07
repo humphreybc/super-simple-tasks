@@ -1,6 +1,6 @@
 $(document).ready(function() {
   var $new_task_input, initialize, tourRunning;
-  console.log('Super Simple Tasks v1.4');
+  console.log('Super Simple Tasks v1.4.2');
   console.log('Like looking under the hood? Feel free to help make this site better at https://github.com/humphreybc/super-simple-tasks');
   $new_task_input = $('#new-task');
   tourRunning = false;
