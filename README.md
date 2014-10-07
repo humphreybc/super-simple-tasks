@@ -30,6 +30,7 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 
 ### 2.0
 
+* Add link to Chrome web store in footer
 * Multiple lists
 * Show completed tasks
 * Replace 'mark all done' with 'Clear completed' 
