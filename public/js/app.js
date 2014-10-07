@@ -1075,6 +1075,8 @@ Views = (function() {
     if (allTasks.length === 0) {
       $('#all-done').show();
       return $('#new-task').focus();
+    } else {
+      return $('#all-done').hide();
     }
   };
 

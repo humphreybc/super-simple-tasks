@@ -48,6 +48,8 @@ class Views
     if allTasks.length == 0
       $('#all-done').show()
       $('#new-task').focus()
+    else
+      $('#all-done').hide()
 
   # Fades in the undo thing
   @undoFade: ->
