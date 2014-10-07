@@ -1,15 +1,16 @@
 # Mainly DOM manipulation
+
 $(document).ready ->
   console.log 'Super Simple Tasks v1.4'
   console.log 'Like looking under the hood? Feel free to help make this site better at https://github.com/humphreybc/super-simple-tasks'
 
-  new_task_input = $('#new-task')
+  $new_task_input = $('#new-task')
 
   # Runs functions on page load
   initialize = ->
     allTasks = Task.getAllTasks()
     Views.showTasks(allTasks)
-    new_task_input.focus()
+    $new_task_input.focus()
 
     tour = $('#tour').tourbus({onStop: Views.finishTour})
 
@@ -21,7 +22,7 @@ $(document).ready ->
   $('#task-submit').click (e) ->
     e.preventDefault()
 
-    name = new_task_input.val()
+    name = $new_task_input.val()
     Task.setNewTask(name)
     
     $('#new-task').val('')
@@ -66,6 +67,13 @@ $(document).ready ->
     li = $(this).closest('li')
     
     Task.changeAttr(li, type_attr, value)
+
+  # When hovering over a task, unfocus the new task input field
+  $(document).on
+    mouseenter: ->
+      $new_task_input.blur()
+
+  , '.task'
 
   # Runs the initialize function when the page loads
   initialize()

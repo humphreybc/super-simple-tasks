@@ -1,13 +1,13 @@
 $(document).ready(function() {
-  var initialize, new_task_input;
+  var $new_task_input, initialize;
   console.log('Super Simple Tasks v1.4');
   console.log('Like looking under the hood? Feel free to help make this site better at https://github.com/humphreybc/super-simple-tasks');
-  new_task_input = $('#new-task');
+  $new_task_input = $('#new-task');
   initialize = function() {
     var allTasks, tour;
     allTasks = Task.getAllTasks();
     Views.showTasks(allTasks);
-    new_task_input.focus();
+    $new_task_input.focus();
     tour = $('#tour').tourbus({
       onStop: Views.finishTour
     });
@@ -18,7 +18,7 @@ $(document).ready(function() {
   $('#task-submit').click(function(e) {
     var name;
     e.preventDefault();
-    name = new_task_input.val();
+    name = $new_task_input.val();
     Task.setNewTask(name);
     $('#new-task').val('');
     return $('#new-task').focus();
@@ -61,6 +61,11 @@ $(document).ready(function() {
     li = $(this).closest('li');
     return Task.changeAttr(li, type_attr, value);
   });
+  $(document).on({
+    mouseenter: function() {
+      return $new_task_input.blur();
+    }
+  }, '.task');
   return initialize();
 });
 
@@ -248,7 +253,7 @@ Views = (function() {
     task_list = [];
     for (i = _i = 0, _len = allTasks.length; _i < _len; i = ++_i) {
       task = allTasks[i];
-      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label>' + '<span class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
+      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
     }
     return task_list;
   };
@@ -321,6 +326,12 @@ list.addEventListener('slip:reorder', function(e) {
   newLocation = e.detail.spliceIndex;
   return Task.updateOrder(oldLocation, newLocation);
 });
+
+list.addEventListener('slip:beforewait', (function(e) {
+  if (e.target.className.indexOf('drag-handle') > -1) {
+    return e.preventDefault();
+  }
+}), false);
 
 var Exporter;
 

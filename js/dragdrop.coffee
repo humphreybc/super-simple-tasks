@@ -15,3 +15,8 @@ list.addEventListener 'slip:reorder', (e) ->
   newLocation = e.detail.spliceIndex
 
   Task.updateOrder(oldLocation, newLocation)
+
+list.addEventListener 'slip:beforewait', ((e) ->
+  if e.target.className.indexOf('drag-handle') > -1
+    e.preventDefault()
+), false

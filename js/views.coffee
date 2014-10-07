@@ -14,7 +14,7 @@ class Views
   @generateHTML: (allTasks) ->
     task_list = []
     for task, i in allTasks
-      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label>' + '<span class="priority" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>'
+      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>'
     task_list
 
   # If there are no tasks, shows the #all-done blank state div
