@@ -786,22 +786,26 @@ window['Slip'] = (function(){
 })();
 
 $(document).ready(function() {
-  var $new_task_input, initialize;
+  var $new_task_input, initialize, tourRunning;
   console.log('Super Simple Tasks v1.4');
   console.log('Like looking under the hood? Feel free to help make this site better at https://github.com/humphreybc/super-simple-tasks');
   $new_task_input = $('#new-task');
+  tourRunning = false;
   initialize = function() {
     var allTasks, tour;
     allTasks = Task.getAllTasks();
     Views.showTasks(allTasks);
     $new_task_input.focus();
     tour = $('#tour').tourbus({
-      onStop: Views.finishTour
+      onStop: Views.finishTour,
+      onLegStart: function(leg, bus) {
+        return tourRunning = bus.running;
+      }
     });
     if ((localStorage.getItem('sst-tour') === null) && ($(window).width() > 600) && (allTasks.length > 0)) {
       tour.trigger('depart.tourbus');
     }
-    if ((localStorage.getItem('sst-tour') !== null) && (localStorage.getItem('whats-new') === null)) {
+    if ((localStorage.getItem('whats-new') === null) && (tourRunning === false)) {
       return $('.whats-new').show();
     }
   };

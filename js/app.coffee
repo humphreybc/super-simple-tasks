@@ -5,6 +5,7 @@ $(document).ready ->
   console.log 'Like looking under the hood? Feel free to help make this site better at https://github.com/humphreybc/super-simple-tasks'
 
   $new_task_input = $('#new-task')
+  tourRunning = false
 
   # Runs functions on page load
   initialize = ->
@@ -12,15 +13,19 @@ $(document).ready ->
     Views.showTasks(allTasks)
     $new_task_input.focus()
 
-    tour = $('#tour').tourbus({onStop: Views.finishTour})
+    tour = $('#tour').tourbus
+      onStop: Views.finishTour
+      onLegStart: (leg, bus) ->
+        tourRunning = bus.running
 
     # Start the tour if it hasn't run before and the window is wider than 600px
     if (localStorage.getItem('sst-tour') == null) and ($(window).width() > 600) and (allTasks.length > 0)
       tour.trigger 'depart.tourbus'
 
     # Show the What's new dialog if the user has seen the tour, hasn't seen the dialog
-    if (localStorage.getItem('sst-tour') != null) and (localStorage.getItem('whats-new') == null)
+    if (localStorage.getItem('whats-new') == null) and (tourRunning == false)
       $('.whats-new').show()
+
 
   # Dismissing the what's new dialog
   $('#whats-new-close').click (e) ->
