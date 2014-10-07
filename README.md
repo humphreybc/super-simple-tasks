@@ -1,16 +1,18 @@
-# Super Simple Tasks v1.3
+# Super Simple Tasks v1.4
 [supersimpletasks.com](http://supersimpletasks.com)
 
-A very simple tasks app that uses localStorage to save the list. This exists mainly so I can teach myself Coffeescript and better programming in general.
+A very simple, 100% client-side tasks app that uses localStorage to save the list and Slip.js for reordering. This exists mainly so I can teach myself Coffeescript and better programming in general.
 
 
 ## Features
 
-* No account required - close your browser and come back and your tasks will still be there
+* Completely free (as in beer and in freedom)
+* No account required
+* Works offline thorugh localStorage
+* 100% client-side
+* Easy to use
+* Drag and drop to reorder tasks (even works on mobile!)
 * Mobile support
-* Extremely simple UI
-* Priority and due date attributes
-* Bulk mark all tasks completed
 
 
 ## Backlog
@@ -20,28 +22,29 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 * **[DONE]** Updated visual style with header
 * **[DONE]** Change to green highlight colour
 
-### 1.4
+### 1.4 - released
 
 * **[DONE]** Export tasks
 * **[DONE]** Drag and drop to rearrange tasks
 * **[DONE]** Update jQuery to latest
 
-### 1.5
+### 2.0
 
-* Show completed tasks at the bottom of the list
-* Use undo pattern for 'mark all done'
-* Import tasks
+* Multiple lists
+* Show completed tasks
+* Replace 'mark all done' with 'Clear completed' 
+* Import tasks from JSON
+* Simple animations for onboarding tour tooltips
 
 ### Future
 
-* Multiple lists
 * Sync tasks across multiple devices and browsers
 * Collaborate on tasks with others by sharing
 
 
 ## Dependencies
 
-Uses [Coffeescript](http://coffeescript.org/) and [Stylus](http://learnboost.github.com/stylus/). I compile with [LiveReload](http://livereload.com/) which is pretty great, but any Coffeescript / Stylus compiler will do.
+Uses [Coffeescript](http://coffeescript.org/) and [Stylus](http://learnboost.github.com/stylus/) along with a few other bits and pieces. Have a look in package.json to see what you'll need, and install with npm install.
 
 
 ## Development
