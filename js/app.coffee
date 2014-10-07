@@ -18,8 +18,8 @@ $(document).ready ->
     if (localStorage.getItem('sst-tour') == null) and ($(window).width() > 600) and (allTasks.length > 0)
       tour.trigger 'depart.tourbus'
 
-    # Show the What's new dialog if the user has seen the tour, hasn't seen the dialog, and has tasks
-    if (localStorage.getItem('sst-tour') != null) and (localStorage.getItem('whats-new') != null) and (allTasks.length > 0)
+    # Show the What's new dialog if the user has seen the tour, hasn't seen the dialog
+    if (localStorage.getItem('sst-tour') != null) and (localStorage.getItem('whats-new') == null)
       $('.whats-new').show()
 
   # Dismissing the what's new dialog
