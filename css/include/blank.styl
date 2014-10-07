@@ -1,11 +1,32 @@
 // Blank state message
 
 #all-done
+  display none
   margin-top 60px
   text-align center
-  color xlight-gray
+  color light-gray
 
-  .icon-trophy
+.whats-new
+  display none
+  border 2px solid blue
+  border-radius radius
+  margin 0px 15px
+  padding 20px
+
+  h2
+    margin-top 0px
+
+  #whats-new-close
+    padding 5px
     display block
-    font-size 8em
-    margin-bottom 20px
+    text-align center
+    line-height 8px
+    cursor pointer
+    float right
+    font-size 1.75em
+
+    &:hover
+      color blue
+
+  #whats-new-close:before
+    content "×"

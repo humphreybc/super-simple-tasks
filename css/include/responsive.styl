@@ -1,34 +1,19 @@
 // Responsive for mobile devices
 
-@media screen and (max-width: 600px)
+@media screen and (max-width: 500px)
 
   body
     font-size 12px
-    padding 0px
-  
-  .content
-    margin-top 0px
 
-  .content, .footer
+  #title
+    display none
+
+  .content, .footer, #task-submit, #new-task
     width 100%
 
   #task-submit, #new-task
     display block
     float none
-    width 100%
-
-  #task-submit
-    margin-top 10px
-
-  #mark-all-done
-    float none
-
-  input[type='text']
-    border 1px solid xlight-gray
-    border-radius 3px
-
-    &:hover, &:focus
-      border 2px solid blue
 
   input[type='checkbox']
     vertical-align middle
@@ -37,21 +22,15 @@
 
     li
       position relative
-      padding-right 90px
+      padding-right 100px
 
       .priority
         position absolute
         top 10px
-        right 20px
+        right 10px
 
-      .duedate
-        display block
-        width 100%
-        float left
-        margin-left 28px
-
-  .button
-    border-radius 3px
+      .drag-handle
+        display none
 
   .footer ul li
     width 100%

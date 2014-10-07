@@ -1,6 +1,6 @@
 {
   "name": "uxdesignday",
-  "version": "0.0.0",
+  "version": "1.4.0",
   "devDependencies": {
     "coffee-script": "latest",
     "grunt": "latest",
@@ -9,6 +9,7 @@
     "grunt-coffeelint": "latest",
     "grunt-contrib-stylus": "latest",
     "grunt-contrib-cssmin": "latest",
+    "grunt-contrib-concat": "latest",
     "grunt-contrib-uglify": "latest"
   }
 }

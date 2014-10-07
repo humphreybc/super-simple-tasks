@@ -4,27 +4,29 @@ light-gray = #888
 xlight-gray = #ccc
 background-gray = #f7f6f5
 
-blue = #33B5E5
-purple = #AA66CC
-green = #99CC00
+blue = #00a2ff
+green = #67ab49
 yellow = #FFBB33
 red = #FF4444
 
-dark-blue = #0099CC
-dark-purple = #9933CC
-dark-green = #669900
-dark-yellow = #FF8800
-dark-red = #CC0000
+dark-blue = darken(blue, 5)
+dark-green = darken(green, 5)
+dark-yellow = darken(yellow, 5)
+dark-red = darken(red, 5)
 
 font-xsmall = 1em
 font-small = 1.2em
 font-large = 1.6em
 
+radius = 3px
+
+transition-speed = 150ms
+
 @import 'nib'
 
-@import 'include/icons'
-
+@import 'include/helpers'
 @import 'include/basic'
+@import 'include/header'
 @import 'include/ui'
 @import 'include/list'
 @import 'include/footer'

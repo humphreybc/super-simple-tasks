@@ -4,18 +4,17 @@
 // Background stuff
 
 body
-  opacity 0
-  transition opacity 500ms
   background-color white
-  font-family "Roboto", sans-serif
+  font-family 'Roboto', sans-serif
   color gray
   font-size 14px
   -webkit-font-smoothing antialiased
-  padding 10px
+  padding 0px 0px 20px
+  margin 0px
 
 input, button, textarea
   -webkit-font-smoothing antialiased
-  font-family "Roboto", sans-serif
+  font-family 'Roboto', sans-serif
 
 // Fonts
 
@@ -23,15 +22,19 @@ h1
   margin 0px
   font-size font-large
   font-weight 500
-  color blue
-  text-shadow 0px 1px white
+
+h2
+  margin 40px 0px 10px
+  text-transform uppercase
+  font-size font-xsmall
+  color light-gray
 
 a
-  color blue
+  color green
   text-decoration none
 
   &:hover
-    color dark-blue
+    color dark-green
 
 p
   font-size font-small
@@ -41,43 +44,38 @@ p
 input[type='text']
   float left
   padding 10px
-  border-top-left-radius 3px
-  border-bottom-left-radius 3px
+  border-radius radius
   border 1px solid xlight-gray
-  border-right none
-  width 80%
+  width 78%
   font-size font-small
 
   &:hover, &:focus
-    border 2px solid blue
+    border 2px solid green
     padding 9px
-    border-right none
     outline none
+
 // Buttons
 
-// Shitty override for Firefox
+// Override for Firefox, without this the button is 1px higher than it should be
 @-moz-document url-prefix()
   .button
-    padding 9px !important
+    padding 10px !important
 
 .button
   width 20%
-  float left
-  background-color blue
-  border 1px solid dark-blue
-  border-top-right-radius 3px
-  border-bottom-right-radius 3px
-  padding 10px
+  background green
+  border none
+  border-radius radius
+  padding 10px 10px 11px
   font-size font-small
   font-weight 700
   color white
   cursor pointer
   outline none
+  transition background transition-speed
 
   &:hover
-    background-color lighten(blue, 5)
-    box-shadow inset 0px -2px 0px dark-blue
+    background lighten(green, 5)
 
   &:active
-    background-color dark-blue
-    box-shadow inset 0px 2px 3px darken(dark-blue, 5)
+    box-shadow inset 0px 2px 3px darken(dark-green, 5)

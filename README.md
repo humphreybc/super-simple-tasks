@@ -1,10 +1,10 @@
-Super Simple Tasks
-==================
+# Super Simple Tasks v1.3
 [supersimpletasks.com](http://supersimpletasks.com)
 
 A very simple tasks app that uses localStorage to save the list. This exists mainly so I can teach myself Coffeescript and better programming in general.
 
-### Features
+
+## Features
 
 * No account required - close your browser and come back and your tasks will still be there
 * Mobile support
@@ -12,24 +12,63 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 * Priority and due date attributes
 * Bulk mark all tasks completed
 
-### To-do
 
-#### 1.4
+## Backlog
 
-* Toggle to sort by priority, due date, creation order
+### 1.3 - released
+
+* **[DONE]** Updated visual style with header
+* **[DONE]** Change to green highlight colour
+
+### 1.4
+
+* **[DONE]** Export tasks
+* **[DONE]** Drag and drop to rearrange tasks
+* **[DONE]** Update jQuery to latest
+
+### 1.5
+
+* Show completed tasks at the bottom of the list
+* Use undo pattern for 'mark all done'
+* Import tasks
+
+### Future
+
+* Multiple lists
 * Sync tasks across multiple devices and browsers
 * Collaborate on tasks with others by sharing
 
-#### 1.5
 
-* IE support
-
-### Dependencies
+## Dependencies
 
 Uses [Coffeescript](http://coffeescript.org/) and [Stylus](http://learnboost.github.com/stylus/). I compile with [LiveReload](http://livereload.com/) which is pretty great, but any Coffeescript / Stylus compiler will do.
 
-There's currently an AngularJS port underway in the angular branch.
 
-### Forking and licensing
+## Development
 
-All code  is licensed under [Creative Commons Attribution-NonCommercial-ShareAlike 3.0](http://creativecommons.org/licenses/by-nc-sa/3.0/), which means that you are free to fork or clone the repository, copy, modify, and redistribute the code for non-commercial projects only, and you must provide attribution. Suitable attribution is simply a link to my website, [humphreybc.com](http://humphreybc.com) or to this Github repository.
+A Gruntfile with a 'dev' task is available for development.
+
+#### Install grunt-cli (may need to use sudo)
+
+    npm install -g grunt-cli
+
+#### Install the node prerequisites
+
+    npm install
+
+#### Run 'grunt dev' to watch for changes in the JS and Stylus files.
+
+    grunt dev
+
+#### Rebuilding JS and CSS from scratch
+
+    grunt build
+
+## Testing on mobile
+
+The easiest way to test on mobile locally is to start a HTTP server with Python:
+
+    python -m SimpleHTTPServer
+
+Now visit <youripaddress>:8000/public to see Super Simple Tasks on your phone.
+

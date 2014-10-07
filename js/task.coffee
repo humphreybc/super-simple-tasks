@@ -8,42 +8,65 @@ class DB
 
 class Arrays
 
-  # Arrays for priorities and due dates
+  # Arrays for priorities
   @priorities = ['minor', 'major', 'blocker']
-  @duedates = ['today', 'tomorrow', 'this week', 'next week', 'this month']
 
   @default_data = [{
                       'isDone':false,
                       'name':'Add a new task above', 
-                      'priority':'major', 
-                      'duedate':'today'
+                      'priority':'major'
                     },
                     {
                       'isDone':false,
-                      'name':'Perhaps give it a priority or due date', 
-                      'priority':'minor', 
-                      'duedate':'today'
+                      'name':'Perhaps give it a priority', 
+                      'priority':'minor'
+                    },
+                    {
+                      'isDone':false,
+                      'name':'Or even click and hold to reorder it', 
+                      'priority':'minor'
                     },
                     {
                       'isDone':false,
                       'name':'Refresh to see that your task is still here', 
-                      'priority':'minor', 
-                      'duedate':'today'
+                      'priority':'minor'
                     },
                     {
                       'isDone':false,
                       'name':'Follow <a href="http://twitter.com/humphreybc" target="_blank">@humphreybc</a> on Twitter', 
-                      'priority':'major', 
-                      'duedate':'today'
+                      'priority':'major'
                     },
                     {
                       'isDone':false,
                       'name':'Click a task’s name to complete it', 
-                      'priority':'minor', 
-                      'duedate':'tomorrow'
+                      'priority':'minor'
                     }]
 
 class Task
+  # Updates the order upon drag and drop
+  @updateOrder: (oldLocation, newLocation) ->
+    if oldLocation == newLocation
+      return
+
+    # All the tasks from localStorage
+    allTasks = @getAllTasks()
+
+    # The task we want to move
+    toMove = allTasks[oldLocation]
+
+    # if the current position (oldLocation) is above (rendered on the screen) the new location
+    # the splice needs to take into account the existing toMove object and "jump" over it
+    if oldLocation < newLocation
+      newLocation += 1
+    allTasks.splice(newLocation, 0, toMove)
+
+    # if the newLocation is above (rendered on the screen) the old location
+    # the splice needs to take into account the new toMove object and "jump" over it
+    if newLocation < oldLocation
+      oldLocation += 1
+    allTasks.splice(oldLocation, 1)
+    
+    @setAllTasks(allTasks)
 
   # Returns what we have in storage
   @getAllTasks: ->
@@ -51,8 +74,8 @@ class Task
     allTasks = JSON.parse(allTasks) || Arrays.default_data
 
     # Migrate from < 1.2
-
     # Only run if there are tasks, and if the first one has no priority attribute (hence < 1.2)
+
     if (allTasks.length > 0) and (allTasks[0].priority == undefined) # Only run if there
       for task, i in allTasks # Updates each task with a default priority and due date
         name = allTasks[i].name
@@ -67,7 +90,6 @@ class Task
       isDone: false
       name: name
       priority: 'minor'
-      duedate: 'today'
 
   # Receives name which is in the input
   # If the input is blank, doesn't save it
@@ -91,20 +113,18 @@ class Task
   @changeAttr: (li, attr, value) ->
     if attr == 'priority'
       array = Arrays.priorities
-    else if attr == 'duedate'
-      array = Arrays.duedates
 
     currentIndex = $.inArray(value, array)
+    id = Views.getId(li)
 
     if currentIndex == array.length - 1
       currentIndex = -1
     value = array[currentIndex + 1]
 
-    @updateAttr(li, attr, value)
+    @updateAttr(id, attr, value)
 
   # Updates the attribute in storage
-  @updateAttr: (li, attr, value) ->
-    id = Views.getId(li)
+  @updateAttr: (id, attr, value) ->
     allTasks = @getAllTasks()
     task = allTasks[id]
     task[attr] = value
@@ -130,15 +150,14 @@ class Task
   # Removes the selected task from the list and passes that to setAllTasks to update storage
   @markDone: (id) ->
     allTasks = @getAllTasks()
-    toDelete = allTasks[id]
-    toDelete['position'] = id
+    toComplete = allTasks[id]
 
     # Sets the item we're removing in localStorage as 'undo' just in case
-    localStorage.setItem('undo', JSON.stringify(toDelete))
+    localStorage.setItem('undo', JSON.stringify(toComplete))
     Views.undoFade()
 
-    allTasks = @getAllTasks()
-    allTasks.splice(id,1)
+    # @updateAttr(id, 'isDone', true)
+    allTasks.splice(id, 1)
     @setAllTasks(allTasks)
 
   # Clears storage and then runs Views.showTasks() to show the blank state message

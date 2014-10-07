@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     coffee: {
       scripts: {
         files: {
-          'public/js/app.js': ['js/tour.coffee', 'js/app.coffee', 'js/task.coffee', 'js/views.coffee']
+          '.tmp/concat/js/app.js': ['js/app.coffee', 'js/task.coffee', 'js/views.coffee', 'js/dragdrop.coffee', 'js/export.coffee', 'js/tour.coffee']
         },
         options: {
           bare: true
@@ -33,7 +33,7 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: 'js/*.coffee',
-        tasks: ['coffeelint', 'coffee:scripts', 'uglify:app']
+        tasks: ['coffeelint', 'coffee:scripts', 'concat:app', 'uglify:app']
       },
       styles: {
         files: 'css/**/*.styl',
@@ -41,13 +41,25 @@ module.exports = function(grunt) {
       },
       livereload: {
         options: { livereload: true },
-        files: ['public/**/*']
+        files: ['public/**/*'],
+        tasks: []
+      },
+      options: {
+        tasks: ['build'],
+        atBegin: true
+      },
+    },
+    concat: {
+      app: {
+        files: {
+          'public/js/app.js': ['public/js/jquery-2.1.1.min.js', 'public/js/slip.js', 'public/js/bootstrap-tooltip.js', '.tmp/concat/js/app.js'],
+        }
       }
     },
     uglify: {
       app: {
         files: {
-          'public/js/app.min.js': ['public/js/app.js', 'public/js/bootstrap-tooltip.js'],
+          'public/js/app.min.js': ['public/js/app.js'],
         }
       }
     }
@@ -58,6 +70,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-stylus');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('default', []);
@@ -70,6 +83,7 @@ module.exports = function(grunt) {
     'coffeelint',
     'coffee',
     'stylus',
+    'concat',
     'uglify'
   ]);
 };
