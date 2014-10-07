@@ -12,9 +12,16 @@ $(document).ready(function() {
       onStop: Views.finishTour
     });
     if ((localStorage.getItem('sst-tour') === null) && ($(window).width() > 600) && (allTasks.length > 0)) {
-      return tour.trigger('depart.tourbus');
+      tour.trigger('depart.tourbus');
+    }
+    if ((localStorage.getItem('sst-tour') !== null) && (localStorage.getItem('whats-new') === null) && (allTasks.length > 0)) {
+      return $('.whats-new').show();
     }
   };
+  $('#whats-new-close').click(function(e) {
+    $('.whats-new').hide();
+    return Views.closeWhatsNew();
+  });
   $('#task-submit').click(function(e) {
     var name;
     e.preventDefault();
@@ -302,6 +309,10 @@ Views = (function() {
 
   Views.finishTour = function() {
     return localStorage.setItem('sst-tour', 1);
+  };
+
+  Views.closeWhatsNew = function() {
+    return localStorage.setItem('whats-new', 1);
   };
 
   return Views;

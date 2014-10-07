@@ -25,14 +25,12 @@ A very simple tasks app that uses localStorage to save the list. This exists mai
 * **[DONE]** Export tasks
 * **[DONE]** Drag and drop to rearrange tasks
 * **[DONE]** Update jQuery to latest
-* Show completed tasks at the bottom of the list
-* Use undo pattern for 'mark all done'
 
 ### 1.5
 
+* Show completed tasks at the bottom of the list
+* Use undo pattern for 'mark all done'
 * Import tasks
-* Relative due dates
-* Toggle to sort by priority, due date, creation order
 
 ### Future
 

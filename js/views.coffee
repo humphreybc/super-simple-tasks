@@ -71,3 +71,7 @@ class Views
   @finishTour: ->
     localStorage.setItem('sst-tour', 1)
 
+  # Saves a state in storage when the user has closed the What's new dialog
+  @closeWhatsNew: ->
+    localStorage.setItem('whats-new', 1)
+
