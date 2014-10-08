@@ -28,19 +28,36 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 * **[DONE]** Drag and drop to rearrange tasks
 * **[DONE]** Update jQuery to latest
 
+### 1.4.3 - released
+
+* **[DONE]** Remove tabs permission from Chrome Web Store manifest file
+* **[DONE]** Fix up web app icons
+* **[DONE]** Add link to the Chrome Web Store in the footer
+* **[DONE]** Add comments and clean up code
+* **[DONE]** Refactor showNewTasks() method
+
+### 1.4.4
+
+* Slide & fade animation for onboarding tour tooltips
+* Import tasks from JSON
+
 ### 2.0
 
-* Add link to Chrome web store in footer
+* Migrate to a [Chrome App](https://developer.chrome.com/apps/about_apps)
+* Write [Storage API](http://stackoverflow.com/q/26249133/1105159) for handling different storage types
+* Personal task sync with Google account and chrome.storage.sync
+
+### 2.1
+
 * Multiple lists
+* List names
 * Show completed tasks
 * Replace 'mark all done' with 'Clear completed' 
-* Import tasks from JSON
-* Simple animations for onboarding tour tooltips
 
-### Future
+### The distant future
 
-* Sync tasks across multiple devices and browsers
-* Collaborate on tasks with others by sharing
+* Share lists with others
+* Collaborate on task lists in real time
 
 
 ## Dependencies
@@ -75,4 +92,32 @@ The easiest way to test on mobile locally is to start a HTTP server with Python:
     python -m SimpleHTTPServer
 
 Now visit <youripaddress>:8000/public to see Super Simple Tasks on your phone.
+
+
+## Deployment
+
+All development happens on the 'develop' branch. Master is for main releases only. The server pulls down from GitHub every 10 minutes. There is no compilation on the server so everything must be compiled and minified locally before a release.
+
+* 'master' = supersimpletasks.com
+* 'develop' = dev.supersimpletasks.com
+
+
+## Release workflow
+
+So I don't forget :)
+
+1. JavaScript source in index.html is pointing at app.min.js
+2. Manifest.json for Chrome Web Store has an updated version number
+3. app.coffee has an updated version number
+4. README has an updated version number
+5. Google Analytics commented out
+6. Create a .zip of /public for the Chrome Web Store
+7. Test .zip in Chrome Apps & Extensions Developer Tool
+8. Uncomment Google Analytics
+9. Commit and push to develop
+10. Pull request into master
+11. Create a GitHub release and tags with changelog
+12. Upload .zip file to Chrome Web Store developer dashboard
+
+
 
