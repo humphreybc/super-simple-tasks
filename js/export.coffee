@@ -4,6 +4,10 @@ Exporter = (allTasks, FileTitle) ->
 
   exportData = JSON.stringify(allTasks);
 
+  # Add a newline after comma
+  reg = /(\,)/g
+  exportData = exportData.replace(reg, '$1\n')
+
   # Remove the blank spaces from the title and replace them with an underscore
   fileName = ''
   fileName += FileTitle.replace(RegExp(' ', 'g'), '_')

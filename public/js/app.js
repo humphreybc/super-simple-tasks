@@ -1139,8 +1139,10 @@ list.addEventListener('slip:beforewait', (function(e) {
 var Exporter;
 
 Exporter = function(allTasks, FileTitle) {
-  var exportData, fileName, link, uri;
+  var exportData, fileName, link, reg, uri;
   exportData = JSON.stringify(allTasks);
+  reg = /(\,)/g;
+  exportData = exportData.replace(reg, '$1\n');
   fileName = '';
   fileName += FileTitle.replace(RegExp(' ', 'g'), '_');
   uri = 'data:text/json;charset=utf-8,' + escape(exportData);
