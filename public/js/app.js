@@ -787,7 +787,7 @@ window['Slip'] = (function(){
 
 $(document).ready(function() {
   var $new_task_input, initialize, tourRunning;
-  console.log('Super Simple Tasks v1.4.2');
+  console.log('Super Simple Tasks v1.4.3');
   console.log('Like looking under the hood? Feel free to help make this site better at https://github.com/humphreybc/super-simple-tasks');
   $new_task_input = $('#new-task');
   tourRunning = false;
@@ -818,28 +818,8 @@ $(document).ready(function() {
     e.preventDefault();
     name = $new_task_input.val();
     Task.setNewTask(name);
-    $('#new-task').val('');
-    return $('#new-task').focus();
-  });
-  $('#mark-all-done').click(function(e) {
-    var allTasks;
-    e.preventDefault();
-    allTasks = Task.getAllTasks();
-    if (allTasks.length === 0) {
-      return confirm('No tasks to mark done!');
-    } else {
-      if (confirm('Are you sure you want to mark all tasks as done?')) {
-        return Task.markAllDone();
-      } else {
-
-      }
-    }
-  });
-  $('#export-tasks').click(function(e) {
-    var allTasks;
-    e.preventDefault();
-    allTasks = Task.getAllTasks();
-    return Exporter(allTasks, 'super simple tasks backup', true);
+    $new_task_input.val('');
+    return $new_task_input.focus();
   });
   $('#undo').click(function(e) {
     return Task.undoLast();
@@ -858,6 +838,24 @@ $(document).ready(function() {
     value = $(this).attr(type_attr);
     li = $(this).closest('li');
     return Task.changeAttr(li, type_attr, value);
+  });
+  $('#mark-all-done').click(function(e) {
+    var allTasks;
+    e.preventDefault();
+    allTasks = Task.getAllTasks();
+    if (allTasks.length === 0) {
+      return confirm('No tasks to mark done!');
+    } else {
+      if (confirm('Are you sure you want to mark all tasks as done?')) {
+        return Task.markAllDone();
+      }
+    }
+  });
+  $('#export-tasks').click(function(e) {
+    var allTasks;
+    e.preventDefault();
+    allTasks = Task.getAllTasks();
+    return Exporter(allTasks, 'super simple tasks backup');
   });
   $(document).on({
     mouseenter: function() {
@@ -918,37 +916,16 @@ Arrays = (function() {
 Task = (function() {
   function Task() {}
 
-  Task.updateOrder = function(oldLocation, newLocation) {
-    var allTasks, toMove;
-    if (oldLocation === newLocation) {
-      return;
-    }
-    allTasks = this.getAllTasks();
-    toMove = allTasks[oldLocation];
-    if (oldLocation < newLocation) {
-      newLocation += 1;
-    }
-    allTasks.splice(newLocation, 0, toMove);
-    if (newLocation < oldLocation) {
-      oldLocation += 1;
-    }
-    allTasks.splice(oldLocation, 1);
-    return this.setAllTasks(allTasks);
-  };
-
   Task.getAllTasks = function() {
-    var allTasks, i, name, task, _i, _len;
+    var allTasks;
     allTasks = localStorage.getItem(DB.db_key);
     allTasks = JSON.parse(allTasks) || Arrays.default_data;
-    if ((allTasks.length > 0) && (allTasks[0].priority === void 0)) {
-      for (i = _i = 0, _len = allTasks.length; _i < _len; i = ++_i) {
-        task = allTasks[i];
-        name = allTasks[i].name;
-        allTasks[i] = this.createTask(name);
-        this.setAllTasks(allTasks);
-      }
-    }
     return allTasks;
+  };
+
+  Task.setAllTasks = function(allTasks) {
+    localStorage.setItem(DB.db_key, JSON.stringify(allTasks));
+    return Views.showTasks(allTasks);
   };
 
   Task.createTask = function(name) {
@@ -970,9 +947,54 @@ Task = (function() {
     }
   };
 
-  Task.setAllTasks = function(allTasks) {
-    localStorage.setItem(DB.db_key, JSON.stringify(allTasks));
-    return Views.showTasks(allTasks);
+  Task.markDone = function(id) {
+    var allTasks, toComplete;
+    allTasks = this.getAllTasks();
+    toComplete = allTasks[id];
+    localStorage.setItem('undo', JSON.stringify(toComplete));
+    Views.undoFade();
+    allTasks.splice(id, 1);
+    return this.setAllTasks(allTasks);
+  };
+
+  Task.updateOrder = function(oldLocation, newLocation) {
+    var allTasks, toMove;
+    if (oldLocation === newLocation) {
+      return;
+    }
+    allTasks = this.getAllTasks();
+    toMove = allTasks[oldLocation];
+    if (oldLocation < newLocation) {
+      newLocation += 1;
+    }
+    allTasks.splice(newLocation, 0, toMove);
+    if (newLocation < oldLocation) {
+      oldLocation += 1;
+    }
+    allTasks.splice(oldLocation, 1);
+    return this.setAllTasks(allTasks);
+  };
+
+  Task.updateTaskId = function(allTasks) {
+    var index;
+    index = 0;
+    while (index < allTasks.length) {
+      allTasks[index].id = index;
+      ++index;
+    }
+    return allTasks;
+  };
+
+  Task.removeDoneTasks = function(allTasks) {
+    var index;
+    index = allTasks.length - 1;
+    while (index >= 0) {
+      if (allTasks[index].isDone) {
+        allTasks.splice(index, 1);
+      }
+      index--;
+    }
+    return allTasks;
   };
 
   Task.changeAttr = function(li, attr, value) {
@@ -1002,22 +1024,12 @@ Task = (function() {
     redo = localStorage.getItem('undo');
     redo = JSON.parse(redo);
     allTasks = this.getAllTasks();
-    position = redo.position;
-    delete redo['position'];
+    position = allTasks.length;
     allTasks.splice(position, 0, redo);
     this.setAllTasks(allTasks);
     localStorage.removeItem('undo');
-    return Views.undoUX(allTasks);
-  };
-
-  Task.markDone = function(id) {
-    var allTasks, toComplete;
-    allTasks = this.getAllTasks();
-    toComplete = allTasks[id];
-    localStorage.setItem('undo', JSON.stringify(toComplete));
-    Views.undoFade();
-    allTasks.splice(id, 1);
-    return this.setAllTasks(allTasks);
+    Views.showTasks(allTasks);
+    return Views.undoUX();
   };
 
   Task.markAllDone = function() {
@@ -1046,6 +1058,15 @@ Views = (function() {
     return parseInt(id);
   };
 
+  Views.showTasks = function(allTasks) {
+    var task_list;
+    Task.updateTaskId(allTasks);
+    Task.removeDoneTasks(allTasks);
+    this.showEmptyState(allTasks);
+    task_list = this.generateHTML(allTasks);
+    return $('#task-list').html(task_list);
+  };
+
   Views.generateHTML = function(allTasks) {
     var i, task, task_list, _i, _len;
     task_list = [];
@@ -1054,25 +1075,6 @@ Views = (function() {
       task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
     }
     return task_list;
-  };
-
-  Views.showTasks = function(allTasks) {
-    var i, index, task_list;
-    index = 0;
-    while (index < allTasks.length) {
-      allTasks[index].id = index;
-      ++index;
-    }
-    i = allTasks.length - 1;
-    while (i >= 0) {
-      if (allTasks[i].isDone) {
-        allTasks.splice(i, 1);
-      }
-      i--;
-    }
-    this.showEmptyState(allTasks);
-    task_list = this.generateHTML(allTasks);
-    return $('#task-list').html(task_list);
   };
 
   Views.showEmptyState = function(allTasks) {
@@ -1092,8 +1094,7 @@ Views = (function() {
     }, 5000);
   };
 
-  Views.undoUX = function(allTasks) {
-    this.showTasks(allTasks);
+  Views.undoUX = function() {
     clearTimeout(timeout);
     return $('#undo').fadeOut();
   };
@@ -1137,9 +1138,11 @@ list.addEventListener('slip:beforewait', (function(e) {
 
 var Exporter;
 
-Exporter = function(allTasks, FileTitle, ShowLabel) {
-  var exportData, fileName, link, uri;
+Exporter = function(allTasks, FileTitle) {
+  var exportData, fileName, link, reg, uri;
   exportData = JSON.stringify(allTasks);
+  reg = /(\,)/g;
+  exportData = exportData.replace(reg, '$1\n');
   fileName = '';
   fileName += FileTitle.replace(RegExp(' ', 'g'), '_');
   uri = 'data:text/json;charset=utf-8,' + escape(exportData);
