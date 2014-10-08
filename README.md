@@ -38,6 +38,7 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 
 ### 1.4.4
 
+* Investigate [Chrome Platform Analytics](https://github.com/GoogleChrome/chrome-platform-analytics/wiki)
 * Slide & fade animation for onboarding tour tooltips
 * Import tasks from JSON
 
