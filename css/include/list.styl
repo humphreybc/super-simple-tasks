@@ -33,7 +33,7 @@
     user-select none
 
     &:hover
-      background-color #f7f6f5
+      background-color background-gray
 
     input[type='checkbox']
       cursor pointer
@@ -61,21 +61,22 @@
 
     .priority
       color white
-      min-width 65px
+      min-width 60px
       text-align center
-      padding 1px 4px 1px
+      padding 2px 6px 2px
       font-size font-xsmall
       text-transform capitalize
       font-weight 700
-      border 2px solid transparent
       border-radius radius
       cursor pointer
       transition background transition-speed
 
     [priority='none']
-      background transparent
+      background background-gray
       color xlight-gray
-      border 2px solid xlight-gray
+
+      &:hover
+        background white
 
     [priority='blocker']
       background red

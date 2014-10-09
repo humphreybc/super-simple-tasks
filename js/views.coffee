@@ -80,6 +80,7 @@ class Views
 
   # Saves a state in storage when the tour is over
   @finishTour: ->
+    $('.tourbus-leg').hide()
     localStorage.setItem('sst-tour', 1)
 
 

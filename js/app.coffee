@@ -8,6 +8,15 @@ $(document).ready ->
   $new_task_input = $('#new-task')
   tourRunning = false
 
+  # Create a new tourbus
+  # When the tour stops, run Views.finishTour to set a localStorage item
+  # When each leg starts, update tourRunning to true or false
+  tour = $('#tour').tourbus
+    onStop: Views.finishTour
+    onLegStart: (leg, bus) ->
+      tourRunning = bus.running
+      leg.$el.addClass('animated fadeInDown')
+
 
   # Runs functions on page load
   initialize = ->
@@ -20,14 +29,6 @@ $(document).ready ->
     # Focus the create task input
     $new_task_input.focus()
 
-    # Create a new tourbus
-    # When the tour stops, run Views.finishTour to set a localStorage item
-    # When each leg starts, update tourRunning to true or false
-    tour = $('#tour').tourbus
-      onStop: Views.finishTour
-      onLegStart: (leg, bus) ->
-        tourRunning = bus.running
-
     # Start the tour if it hasn't run before and the window is wider than 600px
     if (localStorage.getItem('sst-tour') == null) and ($(window).width() > 600) and (allTasks.length > 0)
       tour.trigger 'depart.tourbus'
@@ -36,7 +37,11 @@ $(document).ready ->
     if (localStorage.getItem('whats-new') == null) and (tourRunning == false)
       $('.whats-new').show()
 
-    # End of initialize function
+
+  # Triggers the next step of the onboarding tour
+  nextTourBus = ->
+    if tourRunning
+      tour.trigger('next.tourbus')
 
 
   # Hide the what's new dialog when clicking on the x
@@ -50,6 +55,9 @@ $(document).ready ->
   $('#task-submit').click (e) ->
     e.preventDefault()
 
+    # Move on to the next onboarding tooltip if the tour is running
+    nextTourBus()
+
     # Get the name from the input value
     name = $new_task_input.val()
 
@@ -61,27 +69,56 @@ $(document).ready ->
     $new_task_input.focus()
 
 
+  # We'll manage checking the checkbox thank you very much
+  $(document).on 'click', '.task > label', (e) ->
+    e.preventDefault()
+
+
+  # Clicking on the checkbox or label to mark a task as completed
+  $(document).on 'mousedown', '.task > label', ->
+    
+    holding = false
+    
+    # If they haven't released the mouse after 250 milliseconds,
+    # then they're probably dragging and we don't want to (un)check
+    setTimeout (->
+      holding = true
+    ), 250
+    
+    $(this).one 'mouseup', ->
+      checkbox = undefined
+      
+      unless holding
+        
+        # They're not dragging, check the checkbox
+        checkbox = $('input', this)
+        checkbox.prop 'checked', not checkbox.prop('checked')
+
+        # Move on to the next onboarding tooltip if the tour is running
+        nextTourBus()
+
+        # Get the task li
+        li = $(this).closest('li')
+        
+        # Slide it up and hide it
+        # Use Views.getId(li) to get the task id
+        # Then pass it to Task.markDone() to get checked off
+        li.slideToggle ->
+          Task.markDone(Views.getId(li))
+
+
   # If the user clicks on the undo toast notification, run Task.undoLast()
   $('#undo').click (e) ->
     Task.undoLast()
 
 
-  # Click the checkbox or the label of a task to mark it as completed 
-  $(document).on 'click', '#task-list li label input', (e) ->
-
-    # Get the task li
-    li = $(this).closest('li')
-    
-    # Slide it up and hide it
-    # Use Views.getId(li) to get the task id
-    # Then pass it to Task.markDone() to get checked off
-    li.slideToggle ->
-      Task.markDone(Views.getId(li))
-
   # Click on an attribute (in this case .priority)
   # Run the changeAttr() function and pass parameter
   $(document).on 'click', '.priority', (e) ->
     e.preventDefault()
+
+    # Move on to the next onboarding tooltip if the tour is running
+    nextTourBus()
 
     # Get the type of attribute (at the moment there's only priority)
     type_attr = $(e.currentTarget).attr('type')
@@ -134,4 +171,3 @@ $(document).ready ->
 
   # Runs the initialize function when the page loads
   initialize()
-
