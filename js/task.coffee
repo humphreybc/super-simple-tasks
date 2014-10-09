@@ -15,7 +15,7 @@ class Arrays
   # This class contains default arrays
 
   # Arrays for priorities
-  @priorities = ['minor', 'major', 'blocker']
+  @priorities = ['none', 'minor', 'major', 'blocker']
 
   # Default task data for new users
   @default_data = [{
@@ -80,7 +80,7 @@ class Task
     task =
       isDone: false
       name: name
-      priority: 'minor'
+      priority: 'none'
 
 
   # Sets a new task

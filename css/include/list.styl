@@ -51,7 +51,7 @@
       font-size font-small
 
     .drag-handle
-      margin 2px -2px 0px 10px
+      margin 4px -2px 0px 10px
       background-image url('../img/drag.svg')
       width 16px
       height 16px
@@ -61,16 +61,21 @@
 
     .priority
       color white
-      background gray
       min-width 65px
       text-align center
-      padding 2px 8px 2px
+      padding 1px 4px 1px
       font-size font-xsmall
       text-transform capitalize
       font-weight 700
+      border 2px solid transparent
       border-radius radius
       cursor pointer
       transition background transition-speed
+
+    [priority='none']
+      background transparent
+      color xlight-gray
+      border 2px solid xlight-gray
 
     [priority='blocker']
       background red

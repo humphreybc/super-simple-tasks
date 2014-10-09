@@ -879,7 +879,7 @@ DB = (function() {
 Arrays = (function() {
   function Arrays() {}
 
-  Arrays.priorities = ['minor', 'major', 'blocker'];
+  Arrays.priorities = ['none', 'minor', 'major', 'blocker'];
 
   Arrays.default_data = [
     {
@@ -933,7 +933,7 @@ Task = (function() {
     return task = {
       isDone: false,
       name: name,
-      priority: 'minor'
+      priority: 'none'
     };
   };
 
