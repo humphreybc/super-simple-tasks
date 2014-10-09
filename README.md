@@ -1,4 +1,4 @@
-# Super Simple Tasks v1.4.3
+# Super Simple Tasks v1.4.4
 [supersimpletasks.com](http://supersimpletasks.com)
 
 A very simple, 100% client-side tasks app that uses localStorage to save the list and Slip.js for reordering. This exists mainly so I can teach myself Coffeescript and better programming in general.
@@ -38,6 +38,11 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 
 ### 1.4.4
 
+* Fix a bug where long tasks don't wrap the text correctly
+* Fix a bug where onboarding tooltips stay in the DOM after completing the onboarding
+* Checkbox to complete task only
+* Support for no priority
+* Auto advance to the next step when the user completes an onboarding action
 * Investigate [Chrome Platform Analytics](https://github.com/GoogleChrome/chrome-platform-analytics/wiki)
 * Slide & fade animation for onboarding tour tooltips
 * Import tasks from JSON

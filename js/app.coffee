@@ -1,7 +1,7 @@
 # Mainly user interaction with the DOM
 
 $(document).ready ->
-  console.log 'Super Simple Tasks v1.4.3'
+  console.log 'Super Simple Tasks v1.4.4'
   console.log 'Like looking under the hood? Feel free to help make this site
               better at https://github.com/humphreybc/super-simple-tasks'
 
