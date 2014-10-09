@@ -1,25 +1,31 @@
 $(document).ready(function() {
-  var $new_task_input, initialize, tourRunning;
-  console.log('Super Simple Tasks v1.4.3');
+  var $new_task_input, initialize, nextTourBus, tour, tourRunning;
+  console.log('Super Simple Tasks v1.4.4');
   console.log('Like looking under the hood? Feel free to help make this site better at https://github.com/humphreybc/super-simple-tasks');
   $new_task_input = $('#new-task');
   tourRunning = false;
+  tour = $('#tour').tourbus({
+    onStop: Views.finishTour,
+    onLegStart: function(leg, bus) {
+      tourRunning = bus.running;
+      return leg.$el.addClass('animated fadeInDown');
+    }
+  });
   initialize = function() {
-    var allTasks, tour;
+    var allTasks;
     allTasks = Task.getAllTasks();
     Views.showTasks(allTasks);
     $new_task_input.focus();
-    tour = $('#tour').tourbus({
-      onStop: Views.finishTour,
-      onLegStart: function(leg, bus) {
-        return tourRunning = bus.running;
-      }
-    });
     if ((localStorage.getItem('sst-tour') === null) && ($(window).width() > 600) && (allTasks.length > 0)) {
       tour.trigger('depart.tourbus');
     }
     if ((localStorage.getItem('whats-new') === null) && (tourRunning === false)) {
       return $('.whats-new').show();
+    }
+  };
+  nextTourBus = function() {
+    if (tourRunning) {
+      return tour.trigger('next.tourbus');
     }
   };
   $('#whats-new-close').click(function(e) {
@@ -29,24 +35,42 @@ $(document).ready(function() {
   $('#task-submit').click(function(e) {
     var name;
     e.preventDefault();
+    nextTourBus();
     name = $new_task_input.val();
     Task.setNewTask(name);
     $new_task_input.val('');
     return $new_task_input.focus();
   });
+  $(document).on('click', '.task > label', function(e) {
+    return e.preventDefault();
+  });
+  $(document).on('mousedown', '.task > label', function() {
+    var holding;
+    holding = false;
+    setTimeout((function() {
+      return holding = true;
+    }), 250);
+    return $(this).one('mouseup', function() {
+      var checkbox, li;
+      checkbox = void 0;
+      if (!holding) {
+        checkbox = $('input', this);
+        checkbox.prop('checked', !checkbox.prop('checked'));
+        nextTourBus();
+        li = $(this).closest('li');
+        return li.slideToggle(function() {
+          return Task.markDone(Views.getId(li));
+        });
+      }
+    });
+  });
   $('#undo').click(function(e) {
     return Task.undoLast();
-  });
-  $(document).on('click', '#task-list li label input', function(e) {
-    var li;
-    li = $(this).closest('li');
-    return li.slideToggle(function() {
-      return Task.markDone(Views.getId(li));
-    });
   });
   $(document).on('click', '.priority', function(e) {
     var li, type_attr, value;
     e.preventDefault();
+    nextTourBus();
     type_attr = $(e.currentTarget).attr('type');
     value = $(this).attr(type_attr);
     li = $(this).closest('li');
@@ -92,20 +116,16 @@ DB = (function() {
 Arrays = (function() {
   function Arrays() {}
 
-  Arrays.priorities = ['minor', 'major', 'blocker'];
+  Arrays.priorities = ['none', 'minor', 'major', 'blocker'];
 
   Arrays.default_data = [
     {
       'isDone': false,
       'name': 'Add a new task above',
-      'priority': 'major'
+      'priority': 'blocker'
     }, {
       'isDone': false,
-      'name': 'Perhaps give it a priority',
-      'priority': 'minor'
-    }, {
-      'isDone': false,
-      'name': 'Or even click and hold to reorder it',
+      'name': 'Perhaps give it a priority or reorder it',
       'priority': 'minor'
     }, {
       'isDone': false,
@@ -117,8 +137,8 @@ Arrays = (function() {
       'priority': 'major'
     }, {
       'isDone': false,
-      'name': 'Click a task’s name to complete it',
-      'priority': 'minor'
+      'name': 'Lastly, check this task off!',
+      'priority': 'none'
     }
   ];
 
@@ -146,7 +166,7 @@ Task = (function() {
     return task = {
       isDone: false,
       name: name,
-      priority: 'minor'
+      priority: 'none'
     };
   };
 
@@ -285,7 +305,7 @@ Views = (function() {
     task_list = [];
     for (i = _i = 0, _len = allTasks.length; _i < _len; i = ++_i) {
       task = allTasks[i];
-      task_list[i] = '<li class="task"><label><input type="checkbox" id="task' + i + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
+      task_list[i] = '<li class="task"><label class="left"><input type="checkbox" id="task' + i + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
     }
     return task_list;
   };
@@ -313,6 +333,7 @@ Views = (function() {
   };
 
   Views.finishTour = function() {
+    $('.tourbus-leg').hide();
     return localStorage.setItem('sst-tour', 1);
   };
 

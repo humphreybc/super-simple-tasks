@@ -15,22 +15,17 @@ class Arrays
   # This class contains default arrays
 
   # Arrays for priorities
-  @priorities = ['minor', 'major', 'blocker']
+  @priorities = ['none', 'minor', 'major', 'blocker']
 
   # Default task data for new users
   @default_data = [{
                       'isDone':false,
                       'name':'Add a new task above', 
-                      'priority':'major'
+                      'priority':'blocker'
                     },
                     {
                       'isDone':false,
-                      'name':'Perhaps give it a priority', 
-                      'priority':'minor'
-                    },
-                    {
-                      'isDone':false,
-                      'name':'Or even click and hold to reorder it', 
+                      'name':'Perhaps give it a priority or reorder it', 
                       'priority':'minor'
                     },
                     {
@@ -45,8 +40,8 @@ class Arrays
                     },
                     {
                       'isDone':false,
-                      'name':'Click a task’s name to complete it', 
-                      'priority':'minor'
+                      'name':'Lastly, check this task off!', 
+                      'priority':'none'
                     }]
 
 
@@ -80,7 +75,7 @@ class Task
     task =
       isDone: false
       name: name
-      priority: 'minor'
+      priority: 'none'
 
 
   # Sets a new task
