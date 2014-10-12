@@ -1,7 +1,7 @@
 # Mainly user interaction with the DOM
 
 $(document).ready ->
-  console.log 'Super Simple Tasks v1.4.4'
+  console.log 'Super Simple Tasks v2.0'
   console.log 'Like looking under the hood? Feel free to help make this site
               better at https://github.com/humphreybc/super-simple-tasks'
 
@@ -9,7 +9,7 @@ $(document).ready ->
   tourRunning = false
 
   # Create a new tourbus
-  # When the tour stops, run Views.finishTour to set a localStorage item
+  # When the tour stops, run Views.finishTour to set a storage item
   # When each leg starts, update tourRunning to true or false
   tour = $('#tour').tourbus
     onStop: Views.finishTour
@@ -17,11 +17,20 @@ $(document).ready ->
       tourRunning = bus.running
       leg.$el.addClass('animated fadeInDown')
 
+  # Decide which storage method we're using
+  window.storageType = LocalStorage
+
 
   # Runs functions on page load
   initialize = ->
-    # Get all the tasks from Task.getAllTasks()
-    allTasks = Task.getAllTasks()
+
+    # Get all the tasks
+    allTasks = window.storageType.get(DB.db_key)
+
+    # If there's nothing there, seed with sample tasks and save
+    if allTasks == null
+      allTasks = Arrays.default_data
+      window.storageType.set(DB.db_key, allTasks)
 
     # Run Views.showTasks to show them on the page
     Views.showTasks(allTasks)
@@ -30,11 +39,11 @@ $(document).ready ->
     $new_task_input.focus()
 
     # Start the tour if it hasn't run before and the window is wider than 600px
-    if (localStorage.getItem('sst-tour') == null) and ($(window).width() > 600) and (allTasks.length > 0)
+    if (window.storageType.get('sst-tour') == null) and ($(window).width() > 600) and (allTasks.length > 0)
       tour.trigger 'depart.tourbus'
 
     # Show the what's new dialog if the user has seen the tour, hasn't seen the dialog
-    if (localStorage.getItem('whats-new') == null) and (tourRunning == false)
+    if (window.storageType.get('whats-new') == null) and (tourRunning == false)
       $('.whats-new').show()
 
 
@@ -45,7 +54,7 @@ $(document).ready ->
 
 
   # Hide the what's new dialog when clicking on the x
-  # Run Views.closeWhatsNew() which sets a localStorage item
+  # Run Views.closeWhatsNew() which sets a storage item
   $('#whats-new-close').click (e) ->
     $('.whats-new').hide()
     Views.closeWhatsNew()
@@ -115,6 +124,7 @@ $(document).ready ->
   # Click on an attribute (in this case .priority)
   # Run the changeAttr() function and pass parameter
   $(document).on 'click', '.priority', (e) ->
+    debugger
     e.preventDefault()
 
     # Move on to the next onboarding tooltip if the tour is running
@@ -139,10 +149,10 @@ $(document).ready ->
     e.preventDefault()
 
     # Get the tasks
-    allTasks = Task.getAllTasks()
+    allTasks = window.storageType.get(DB.db_key)
 
     # If there are no tasks, show a message, otherwise show a confirm
-    # dialog and then run Task.markAllDone() which clears localStorage
+    # dialog and then run Task.markAllDone() which clears all tasks in storage
     if allTasks.length == 0
       confirm 'No tasks to mark done!'
     else
@@ -155,7 +165,7 @@ $(document).ready ->
     e.preventDefault()
 
     # Get the tasks
-    allTasks = Task.getAllTasks()
+    allTasks = window.storageType.get(DB.db_key)
 
     # Run the code in export.coffee, passing through the tasks to export and the file name 
     Exporter(allTasks, 'super simple tasks backup')

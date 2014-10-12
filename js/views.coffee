@@ -63,10 +63,10 @@ class Views
   @undoFade: ->
     $('#undo').fadeIn()
 
-    # Sets a 5 second timeout, after which time it will fade out and remove the item from localStorage
+    # Sets a 5 second timeout, after which time it will fade out and remove the item from storage
     timeout = setTimeout(->
       $('#undo').fadeOut()
-      localStorage.removeItem('undo')
+      window.storageType.remove('undo')
     , 5000)
 
 
@@ -81,10 +81,10 @@ class Views
   # Saves a state in storage when the tour is over
   @finishTour: ->
     $('.tourbus-leg').hide()
-    localStorage.setItem('sst-tour', 1)
+    window.storageType.set('sst-tour', 1)
 
 
   # Saves a state in storage when the user has closed the What's new dialog
   @closeWhatsNew: ->
-    localStorage.setItem('whats-new', 1)
+    window.storageType.set('whats-new', 1)
 

@@ -787,7 +787,7 @@ window['Slip'] = (function(){
 
 $(document).ready(function() {
   var $new_task_input, initialize, nextTourBus, tour, tourRunning;
-  console.log('Super Simple Tasks v1.4.4');
+  console.log('Super Simple Tasks v2.0');
   console.log('Like looking under the hood? Feel free to help make this site better at https://github.com/humphreybc/super-simple-tasks');
   $new_task_input = $('#new-task');
   tourRunning = false;
@@ -798,15 +798,20 @@ $(document).ready(function() {
       return leg.$el.addClass('animated fadeInDown');
     }
   });
+  window.storageType = LocalStorage;
   initialize = function() {
     var allTasks;
-    allTasks = Task.getAllTasks();
+    allTasks = window.storageType.get(DB.db_key);
+    if (allTasks === null) {
+      allTasks = Arrays.default_data;
+      window.storageType.set(DB.db_key, allTasks);
+    }
     Views.showTasks(allTasks);
     $new_task_input.focus();
-    if ((localStorage.getItem('sst-tour') === null) && ($(window).width() > 600) && (allTasks.length > 0)) {
+    if ((window.storageType.get('sst-tour') === null) && ($(window).width() > 600) && (allTasks.length > 0)) {
       tour.trigger('depart.tourbus');
     }
-    if ((localStorage.getItem('whats-new') === null) && (tourRunning === false)) {
+    if ((window.storageType.get('whats-new') === null) && (tourRunning === false)) {
       return $('.whats-new').show();
     }
   };
@@ -855,6 +860,7 @@ $(document).ready(function() {
     return Task.undoLast();
   });
   $(document).on('click', '.priority', function(e) {
+    debugger;
     var li, type_attr, value;
     e.preventDefault();
     nextTourBus();
@@ -866,7 +872,7 @@ $(document).ready(function() {
   $('#mark-all-done').click(function(e) {
     var allTasks;
     e.preventDefault();
-    allTasks = Task.getAllTasks();
+    allTasks = window.storageType.get(DB.db_key);
     if (allTasks.length === 0) {
       return confirm('No tasks to mark done!');
     } else {
@@ -878,7 +884,7 @@ $(document).ready(function() {
   $('#export-tasks').click(function(e) {
     var allTasks;
     e.preventDefault();
-    allTasks = Task.getAllTasks();
+    allTasks = window.storageType.get(DB.db_key);
     return Exporter(allTasks, 'super simple tasks backup');
   });
   $(document).on({
@@ -889,7 +895,7 @@ $(document).ready(function() {
   return initialize();
 });
 
-var Arrays, DB, Task;
+var DB, LocalStorage;
 
 DB = (function() {
   function DB() {}
@@ -899,6 +905,32 @@ DB = (function() {
   return DB;
 
 })();
+
+LocalStorage = (function() {
+  function LocalStorage() {}
+
+  LocalStorage.get = function(key, callback) {
+    var item;
+    item = localStorage.getItem(key);
+    item = JSON.parse(item);
+    return item;
+  };
+
+  LocalStorage.set = function(key, item, callback) {
+    item = JSON.stringify(item);
+    localStorage.setItem(key, item);
+    return item;
+  };
+
+  LocalStorage.remove = function(key, callback) {
+    return localStorage.removeItem(key);
+  };
+
+  return LocalStorage;
+
+})();
+
+var Arrays, Task;
 
 Arrays = (function() {
   function Arrays() {}
@@ -936,18 +968,6 @@ Arrays = (function() {
 Task = (function() {
   function Task() {}
 
-  Task.getAllTasks = function() {
-    var allTasks;
-    allTasks = localStorage.getItem(DB.db_key);
-    allTasks = JSON.parse(allTasks) || Arrays.default_data;
-    return allTasks;
-  };
-
-  Task.setAllTasks = function(allTasks) {
-    localStorage.setItem(DB.db_key, JSON.stringify(allTasks));
-    return Views.showTasks(allTasks);
-  };
-
   Task.createTask = function(name) {
     var task;
     return task = {
@@ -961,20 +981,21 @@ Task = (function() {
     var allTasks, newTask;
     if (name !== '') {
       newTask = this.createTask(name);
-      allTasks = this.getAllTasks();
+      allTasks = window.storageType.get(DB.db_key);
       allTasks.push(newTask);
-      return this.setAllTasks(allTasks);
+      window.storageType.set(DB.db_key, allTasks);
+      return Views.showTasks(allTasks);
     }
   };
 
   Task.markDone = function(id) {
     var allTasks, toComplete;
-    allTasks = this.getAllTasks();
+    allTasks = window.storageType.get(DB.db_key);
     toComplete = allTasks[id];
-    localStorage.setItem('undo', JSON.stringify(toComplete));
+    window.storageType.set('undo', toComplete);
     Views.undoFade();
     allTasks.splice(id, 1);
-    return this.setAllTasks(allTasks);
+    return window.storageType.set(DB.db_key, allTasks);
   };
 
   Task.updateOrder = function(oldLocation, newLocation) {
@@ -982,7 +1003,7 @@ Task = (function() {
     if (oldLocation === newLocation) {
       return;
     }
-    allTasks = this.getAllTasks();
+    allTasks = window.storageType.get(DB.db_key);
     toMove = allTasks[oldLocation];
     if (oldLocation < newLocation) {
       newLocation += 1;
@@ -992,7 +1013,7 @@ Task = (function() {
       oldLocation += 1;
     }
     allTasks.splice(oldLocation, 1);
-    return this.setAllTasks(allTasks);
+    return window.storageType.set(DB.db_key, allTasks);
   };
 
   Task.updateTaskId = function(allTasks) {
@@ -1033,21 +1054,21 @@ Task = (function() {
 
   Task.updateAttr = function(id, attr, value) {
     var allTasks, task;
-    allTasks = this.getAllTasks();
+    allTasks = window.storageType.get(DB.db_key);
     task = allTasks[id];
     task[attr] = value;
-    return this.setAllTasks(allTasks);
+    window.storageType.set(DB.db_key, allTasks);
+    return Views.showTasks(allTasks);
   };
 
   Task.undoLast = function() {
     var allTasks, position, redo;
-    redo = localStorage.getItem('undo');
-    redo = JSON.parse(redo);
-    allTasks = this.getAllTasks();
+    redo = window.storageType.get('undo');
+    allTasks = window.storageType.get(DB.db_key);
     position = allTasks.length;
     allTasks.splice(position, 0, redo);
-    this.setAllTasks(allTasks);
-    localStorage.removeItem('undo');
+    window.storageType.set(DB.db_key, allTasks);
+    window.storageType.remove('undo');
     Views.showTasks(allTasks);
     return Views.undoUX();
   };
@@ -1055,7 +1076,7 @@ Task = (function() {
   Task.markAllDone = function() {
     var allTasks;
     this.setAllTasks([]);
-    allTasks = this.getAllTasks();
+    allTasks = window.storageType.get(DB.db_key);
     return Views.showTasks(allTasks);
   };
 
@@ -1110,7 +1131,7 @@ Views = (function() {
     $('#undo').fadeIn();
     return timeout = setTimeout(function() {
       $('#undo').fadeOut();
-      return localStorage.removeItem('undo');
+      return window.storageType.remove('undo');
     }, 5000);
   };
 
@@ -1121,11 +1142,11 @@ Views = (function() {
 
   Views.finishTour = function() {
     $('.tourbus-leg').hide();
-    return localStorage.setItem('sst-tour', 1);
+    return window.storageType.set('sst-tour', 1);
   };
 
   Views.closeWhatsNew = function() {
-    return localStorage.setItem('whats-new', 1);
+    return window.storageType.set('whats-new', 1);
   };
 
   return Views;

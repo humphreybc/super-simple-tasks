@@ -5,7 +5,7 @@
 
   "name": "Super Simple Tasks",
   "description": "The world’s simplest tasks app with offline support, an elegant design, and no account required!",
-  "version": "1.4.4",
+  "version": "2.0",
 
   "icons": {
     "16": "img/icon16.png",

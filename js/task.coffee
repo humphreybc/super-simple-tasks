@@ -1,14 +1,4 @@
-# Saving and manipulating tasks
-
-class DB
-
-  # DO NOT CHANGE
-
-  # This is the key used to save tasks in localStorage
-  # If this is changed, tasks will be lost on upgrade
-
-  @db_key = 'todo'
-
+# Manipulating tasks
 
 class Arrays
 
@@ -49,27 +39,6 @@ class Task
 
   # This class contains most of the logic for manipulating tasks and saving them
 
-
-  # Returns what we have in storage
-  @getAllTasks: ->
-
-    # Get the tasks from localStorage using the db_key
-    allTasks = localStorage.getItem(DB.db_key)
-
-    # Parse it as JSON, or if there's nothing there, use the default data
-    allTasks = JSON.parse(allTasks) || Arrays.default_data
-
-    # Return allTasks
-    allTasks
-
-
-  # Updates the storage and runs Views.showTasks() again to update the HTML list
-  # DB.db_key is a variable set at the top of this file for the storage key
-  @setAllTasks: (allTasks) ->
-    localStorage.setItem(DB.db_key, JSON.stringify(allTasks))
-    Views.showTasks(allTasks)
-
-
   # Creates a new task object with some defaults if they're not set
   @createTask: (name) ->
     task =
@@ -89,26 +58,29 @@ class Task
       newTask = @createTask(name)
 
       # Get all the tasks
-      allTasks = @getAllTasks()
+      allTasks = window.storageType.get(DB.db_key)
 
       # Adds that new task to the end of the array
       allTasks.push newTask
 
       # Save all the tasks
-      @setAllTasks(allTasks)
+      window.storageType.set(DB.db_key, allTasks)
+
+      # Show the tasks
+      Views.showTasks(allTasks)
 
 
   # Removes the selected task from the list
   @markDone: (id) ->
 
     # Get all the tasks
-    allTasks = @getAllTasks()
+    allTasks = window.storageType.get(DB.db_key)
 
     # Identify the one we want to remove / complete
     toComplete = allTasks[id]
 
-    # Sets the item we're removing in localStorage as 'undo' just in case
-    localStorage.setItem('undo', JSON.stringify(toComplete))
+    # Sets the item we're removing in storage as 'undo' just in case
+    window.storageType.set('undo', toComplete)
 
     # Fades in the undo toast notification
     Views.undoFade()
@@ -122,7 +94,7 @@ class Task
     allTasks.splice(id, 1)
 
     # Save all the tasks
-    @setAllTasks(allTasks)
+    window.storageType.set(DB.db_key, allTasks)
 
 
   # Updates the order upon drag and drop
@@ -134,7 +106,7 @@ class Task
       return
 
     # Get the tasks
-    allTasks = @getAllTasks()
+    allTasks = window.storageType.get(DB.db_key)
 
     # The task we want to move
     toMove = allTasks[oldLocation]
@@ -152,7 +124,7 @@ class Task
     allTasks.splice(oldLocation, 1)
     
     # Save the tasks
-    @setAllTasks(allTasks)
+    window.storageType.set(DB.db_key, allTasks)
 
 
   # Add attribute 'id' to all objects in allTasks
@@ -215,7 +187,7 @@ class Task
   @updateAttr: (id, attr, value) ->
 
     # Get all the tasks
-    allTasks = @getAllTasks()
+    allTasks = window.storageType.get(DB.db_key)
 
     # Find the particular task to update
     task = allTasks[id]
@@ -224,17 +196,19 @@ class Task
     task[attr] = value
 
     # Save all the tasks
-    @setAllTasks(allTasks)
+    window.storageType.set(DB.db_key, allTasks)
+
+    # Show the tasks!
+    Views.showTasks(allTasks)
 
 
   # Grab the last task from storage 'undo' and add it back to storage using @setAllTasks()
   # Then remove that entry from storage 'undo' 
   @undoLast: ->
-    redo = localStorage.getItem('undo')
-    redo = JSON.parse(redo)
+    redo = window.storageType.get('undo')
 
     # Get all the tasks
-    allTasks = @getAllTasks()
+    allTasks = window.storageType.get(DB.db_key)
 
     # For now, set the new position to the end of the array (bottom of the list)
     position = allTasks.length
@@ -243,10 +217,10 @@ class Task
     allTasks.splice(position, 0, redo)
 
     # Save all the tasks
-    @setAllTasks(allTasks)
+    window.storageType.set(DB.db_key, allTasks)
 
-    # Remove the 'undo' item from localStorage
-    localStorage.removeItem('undo')
+    # Remove the 'undo' item from storage
+    window.storageType.remove('undo')
 
     # Show the tasks
     Views.showTasks(allTasks)
@@ -262,7 +236,7 @@ class Task
     @setAllTasks([])
 
     # Gets the (now empty) list of tasks
-    allTasks = @getAllTasks()
+    allTasks = window.storageType.get(DB.db_key)
 
     # Shows the (now empty) list of tasks
     Views.showTasks(allTasks)
