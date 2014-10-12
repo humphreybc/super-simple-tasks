@@ -1,35 +1,37 @@
 $(document).ready(function() {
-  var $new_task_input, initialize, nextTourBus, tour, tourRunning;
+  var $new_task_input, initialize, nextTourBus, tour;
   console.log('Super Simple Tasks v2.0');
   console.log('Like looking under the hood? Feel free to help make this site better at https://github.com/humphreybc/super-simple-tasks');
   $new_task_input = $('#new-task');
-  tourRunning = false;
+  window.tourRunning = false;
   tour = $('#tour').tourbus({
     onStop: Views.finishTour,
     onLegStart: function(leg, bus) {
-      tourRunning = bus.running;
+      window.tourRunning = bus.running;
       return leg.$el.addClass('animated fadeInDown');
     }
   });
-  window.storageType = LocalStorage;
+  if (chrome && chrome.storage) {
+    console.log('Using chrome.storage.sync to save');
+    window.storageType = ChromeStorage;
+  } else {
+    console.log('Using localStorage to save');
+    window.storageType = LocalStorage;
+  }
   initialize = function() {
-    var allTasks;
-    allTasks = window.storageType.get(DB.db_key);
-    if (allTasks === null) {
-      allTasks = Arrays.default_data;
-      window.storageType.set(DB.db_key, allTasks);
-    }
-    Views.showTasks(allTasks);
-    $new_task_input.focus();
-    if ((window.storageType.get('sst-tour') === null) && ($(window).width() > 600) && (allTasks.length > 0)) {
-      tour.trigger('depart.tourbus');
-    }
-    if ((window.storageType.get('whats-new') === null) && (tourRunning === false)) {
-      return $('.whats-new').show();
-    }
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      if (allTasks === null) {
+        allTasks = Arrays.default_data;
+        window.storageType.set(DB.db_key, allTasks);
+      }
+      Views.showTasks(allTasks);
+      $new_task_input.focus();
+      Views.checkOnboarding(allTasks, tour);
+      return Views.checkWhatsNew();
+    });
   };
   nextTourBus = function() {
-    if (tourRunning) {
+    if (window.tourRunning) {
       return tour.trigger('next.tourbus');
     }
   };
@@ -73,7 +75,6 @@ $(document).ready(function() {
     return Task.undoLast();
   });
   $(document).on('click', '.priority', function(e) {
-    debugger;
     var li, type_attr, value;
     e.preventDefault();
     nextTourBus();
@@ -83,22 +84,22 @@ $(document).ready(function() {
     return Task.changeAttr(li, type_attr, value);
   });
   $('#mark-all-done').click(function(e) {
-    var allTasks;
     e.preventDefault();
-    allTasks = window.storageType.get(DB.db_key);
-    if (allTasks.length === 0) {
-      return confirm('No tasks to mark done!');
-    } else {
-      if (confirm('Are you sure you want to mark all tasks as done?')) {
-        return Task.markAllDone();
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      if (allTasks.length === 0) {
+        return confirm('No tasks to mark done!');
+      } else {
+        if (confirm('Are you sure you want to mark all tasks as done?')) {
+          return Task.markAllDone();
+        }
       }
-    }
+    });
   });
   $('#export-tasks').click(function(e) {
-    var allTasks;
     e.preventDefault();
-    allTasks = window.storageType.get(DB.db_key);
-    return Exporter(allTasks, 'super simple tasks backup');
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      return Exporter(allTasks, 'super simple tasks backup');
+    });
   });
   $(document).on({
     mouseenter: function() {
@@ -108,7 +109,7 @@ $(document).ready(function() {
   return initialize();
 });
 
-var DB, LocalStorage;
+var ChromeStorage, DB, LocalStorage;
 
 DB = (function() {
   function DB() {}
@@ -123,23 +124,53 @@ LocalStorage = (function() {
   function LocalStorage() {}
 
   LocalStorage.get = function(key, callback) {
-    var item;
-    item = localStorage.getItem(key);
-    item = JSON.parse(item);
-    return item;
+    var value;
+    value = localStorage.getItem(key);
+    value = JSON.parse(value);
+    return callback(value);
   };
 
-  LocalStorage.set = function(key, item, callback) {
-    item = JSON.stringify(item);
-    localStorage.setItem(key, item);
-    return item;
+  LocalStorage.getSync = function(key) {
+    var value;
+    value = localStorage.getItem(key);
+    return JSON.parse(value);
   };
 
-  LocalStorage.remove = function(key, callback) {
+  LocalStorage.set = function(key, value) {
+    value = JSON.stringify(value);
+    return localStorage.setItem(key, value);
+  };
+
+  LocalStorage.remove = function(key) {
     return localStorage.removeItem(key);
   };
 
   return LocalStorage;
+
+})();
+
+ChromeStorage = (function() {
+  function ChromeStorage() {}
+
+  ChromeStorage.get = function(key, callback) {
+    return chrome.storage.sync.get(key, function(value) {
+      value = value[key] || null || LocalStorage.getSync(key);
+      return callback(value);
+    });
+  };
+
+  ChromeStorage.set = function(key, value, callback) {
+    var params;
+    params = {};
+    params[key] = value;
+    return chrome.storage.sync.set(params, function() {});
+  };
+
+  ChromeStorage.remove = function(key) {
+    return chrome.storage.sync.remove(key, function() {});
+  };
+
+  return ChromeStorage;
 
 })();
 
@@ -191,46 +222,52 @@ Task = (function() {
   };
 
   Task.setNewTask = function(name) {
-    var allTasks, newTask;
+    var newTask;
     if (name !== '') {
       newTask = this.createTask(name);
-      allTasks = window.storageType.get(DB.db_key);
-      allTasks.push(newTask);
-      window.storageType.set(DB.db_key, allTasks);
-      return Views.showTasks(allTasks);
+      return window.storageType.get(DB.db_key, function(allTasks) {
+        allTasks.push(newTask);
+        window.storageType.set(DB.db_key, allTasks);
+        return Views.showTasks(allTasks);
+      });
     }
   };
 
   Task.markDone = function(id) {
-    var allTasks, toComplete;
-    allTasks = window.storageType.get(DB.db_key);
-    toComplete = allTasks[id];
-    window.storageType.set('undo', toComplete);
-    Views.undoFade();
-    allTasks.splice(id, 1);
-    return window.storageType.set(DB.db_key, allTasks);
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      var toComplete;
+      toComplete = allTasks[id];
+      window.storageType.set('undo', toComplete);
+      Views.undoFade();
+      allTasks.splice(id, 1);
+      return window.storageType.set(DB.db_key, allTasks);
+    });
   };
 
   Task.updateOrder = function(oldLocation, newLocation) {
-    var allTasks, toMove;
     if (oldLocation === newLocation) {
       return;
     }
-    allTasks = window.storageType.get(DB.db_key);
-    toMove = allTasks[oldLocation];
-    if (oldLocation < newLocation) {
-      newLocation += 1;
-    }
-    allTasks.splice(newLocation, 0, toMove);
-    if (newLocation < oldLocation) {
-      oldLocation += 1;
-    }
-    allTasks.splice(oldLocation, 1);
-    return window.storageType.set(DB.db_key, allTasks);
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      var toMove;
+      toMove = allTasks[oldLocation];
+      if (oldLocation < newLocation) {
+        newLocation += 1;
+      }
+      allTasks.splice(newLocation, 0, toMove);
+      if (newLocation < oldLocation) {
+        oldLocation += 1;
+      }
+      allTasks.splice(oldLocation, 1);
+      return window.storageType.set(DB.db_key, allTasks);
+    });
   };
 
   Task.updateTaskId = function(allTasks) {
     var index;
+    if (allTasks === null) {
+      return;
+    }
     index = 0;
     while (index < allTasks.length) {
       allTasks[index].id = index;
@@ -241,6 +278,9 @@ Task = (function() {
 
   Task.removeDoneTasks = function(allTasks) {
     var index;
+    if (allTasks === null) {
+      return;
+    }
     index = allTasks.length - 1;
     while (index >= 0) {
       if (allTasks[index].isDone) {
@@ -266,31 +306,34 @@ Task = (function() {
   };
 
   Task.updateAttr = function(id, attr, value) {
-    var allTasks, task;
-    allTasks = window.storageType.get(DB.db_key);
-    task = allTasks[id];
-    task[attr] = value;
-    window.storageType.set(DB.db_key, allTasks);
-    return Views.showTasks(allTasks);
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      var task;
+      task = allTasks[id];
+      task[attr] = value;
+      window.storageType.set(DB.db_key, allTasks);
+      return Views.showTasks(allTasks);
+    });
   };
 
   Task.undoLast = function() {
-    var allTasks, position, redo;
-    redo = window.storageType.get('undo');
-    allTasks = window.storageType.get(DB.db_key);
-    position = allTasks.length;
-    allTasks.splice(position, 0, redo);
-    window.storageType.set(DB.db_key, allTasks);
-    window.storageType.remove('undo');
-    Views.showTasks(allTasks);
-    return Views.undoUX();
+    return window.storageType.get('undo', function(redo) {
+      return window.storageType.get(DB.db_key, function(allTasks) {
+        var position;
+        position = allTasks.length;
+        allTasks.splice(position, 0, redo);
+        window.storageType.set(DB.db_key, allTasks);
+        window.storageType.remove('undo');
+        Views.showTasks(allTasks);
+        return Views.undoUX();
+      });
+    });
   };
 
   Task.markAllDone = function() {
-    var allTasks;
-    this.setAllTasks([]);
-    allTasks = window.storageType.get(DB.db_key);
-    return Views.showTasks(allTasks);
+    window.storageType.set(DB.db_key, []);
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      return Views.showTasks(allTasks);
+    });
   };
 
   return Task;
@@ -353,8 +396,25 @@ Views = (function() {
     return $('#undo').fadeOut();
   };
 
+  Views.checkOnboarding = function(allTasks, tour) {
+    return window.storageType.get('sst-tour', function(sstTour) {
+      if ((sstTour === null) && ($(window).width() > 600) && (allTasks.length > 0)) {
+        return tour.trigger('depart.tourbus');
+      }
+    });
+  };
+
+  Views.checkWhatsNew = function() {
+    return window.storageType.get('whats-new', function(whatsNew) {
+      if ((whatsNew === null) && (window.tourRunning === false)) {
+        return $('.whats-new').show();
+      }
+    });
+  };
+
   Views.finishTour = function() {
     $('.tourbus-leg').hide();
+    history.pushState('', document.title, window.location.pathname);
     return window.storageType.set('sst-tour', 1);
   };
 

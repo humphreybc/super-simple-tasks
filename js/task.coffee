@@ -58,43 +58,43 @@ class Task
       newTask = @createTask(name)
 
       # Get all the tasks
-      allTasks = window.storageType.get(DB.db_key)
+      window.storageType.get DB.db_key, (allTasks) ->
 
-      # Adds that new task to the end of the array
-      allTasks.push newTask
+        # Adds that new task to the end of the array
+        allTasks.push newTask
 
-      # Save all the tasks
-      window.storageType.set(DB.db_key, allTasks)
+        # Save all the tasks
+        window.storageType.set(DB.db_key, allTasks)
 
-      # Show the tasks
-      Views.showTasks(allTasks)
+        # Show the tasks
+        Views.showTasks(allTasks)
 
 
   # Removes the selected task from the list
   @markDone: (id) ->
 
     # Get all the tasks
-    allTasks = window.storageType.get(DB.db_key)
+    window.storageType.get DB.db_key, (allTasks) ->
 
-    # Identify the one we want to remove / complete
-    toComplete = allTasks[id]
+      # Identify the one we want to remove / complete
+      toComplete = allTasks[id]
 
-    # Sets the item we're removing in storage as 'undo' just in case
-    window.storageType.set('undo', toComplete)
+      # Sets the item we're removing in storage as 'undo' just in case
+      window.storageType.set('undo', toComplete)
 
-    # Fades in the undo toast notification
-    Views.undoFade()
+      # Fades in the undo toast notification
+      Views.undoFade()
 
-    # TODO: Instead of removing completed tasks entirely, we want to update the attribute
-    # 'isDone' to be true, so completed tasks can still be shown in the UI
+      # TODO: Instead of removing completed tasks entirely, we want to update the attribute
+      # 'isDone' to be true, so completed tasks can still be shown in the UI
 
-    # @updateAttr(id, 'isDone', true)
+      # @updateAttr(id, 'isDone', true)
 
-    # Removes the task from the allTasks array
-    allTasks.splice(id, 1)
+      # Removes the task from the allTasks array
+      allTasks.splice(id, 1)
 
-    # Save all the tasks
-    window.storageType.set(DB.db_key, allTasks)
+      # Save all the tasks
+      window.storageType.set(DB.db_key, allTasks)
 
 
   # Updates the order upon drag and drop
@@ -106,29 +106,32 @@ class Task
       return
 
     # Get the tasks
-    allTasks = window.storageType.get(DB.db_key)
+    window.storageType.get DB.db_key, (allTasks) ->
 
-    # The task we want to move
-    toMove = allTasks[oldLocation]
+      # The task we want to move
+      toMove = allTasks[oldLocation]
 
-    # If the current position (oldLocation) is above (rendered on the screen) the new location
-    # the splice needs to take into account the existing toMove object and "jump" over it
-    if oldLocation < newLocation
-      newLocation += 1
-    allTasks.splice(newLocation, 0, toMove)
+      # If the current position (oldLocation) is above (rendered on the screen) the new location
+      # the splice needs to take into account the existing toMove object and "jump" over it
+      if oldLocation < newLocation
+        newLocation += 1
+      allTasks.splice(newLocation, 0, toMove)
 
-    # If the newLocation is above (rendered on the screen) the old location
-    # the splice needs to take into account the new toMove object and "jump" over it
-    if newLocation < oldLocation
-      oldLocation += 1
-    allTasks.splice(oldLocation, 1)
-    
-    # Save the tasks
-    window.storageType.set(DB.db_key, allTasks)
+      # If the newLocation is above (rendered on the screen) the old location
+      # the splice needs to take into account the new toMove object and "jump" over it
+      if newLocation < oldLocation
+        oldLocation += 1
+      allTasks.splice(oldLocation, 1)
+      
+      # Save the tasks
+      window.storageType.set(DB.db_key, allTasks)
 
 
   # Add attribute 'id' to all objects in allTasks
   @updateTaskId: (allTasks) ->
+
+    if allTasks == null
+      return
 
     # Set id to object's current index (position in the array)
     index = 0
@@ -144,6 +147,9 @@ class Task
 
   # Remove tasks with isDone: true from the array
   @removeDoneTasks: (allTasks) ->
+
+    if allTasks == null
+      return
 
     # Start from the bottom
     index = allTasks.length - 1
@@ -187,58 +193,58 @@ class Task
   @updateAttr: (id, attr, value) ->
 
     # Get all the tasks
-    allTasks = window.storageType.get(DB.db_key)
+    window.storageType.get DB.db_key, (allTasks) ->
 
-    # Find the particular task to update
-    task = allTasks[id]
+      # Find the particular task to update
+      task = allTasks[id]
 
-    # Set the new attribute
-    task[attr] = value
+      # Set the new attribute
+      task[attr] = value
 
-    # Save all the tasks
-    window.storageType.set(DB.db_key, allTasks)
+      # Save all the tasks
+      window.storageType.set(DB.db_key, allTasks)
 
-    # Show the tasks!
-    Views.showTasks(allTasks)
+      # Show the tasks!
+      Views.showTasks(allTasks)
 
 
   # Grab the last task from storage 'undo' and add it back to storage using @setAllTasks()
   # Then remove that entry from storage 'undo' 
   @undoLast: ->
-    redo = window.storageType.get('undo')
+    window.storageType.get 'undo', (redo) ->
 
-    # Get all the tasks
-    allTasks = window.storageType.get(DB.db_key)
+      # Get all the tasks
+      window.storageType.get DB.db_key, (allTasks) ->
 
-    # For now, set the new position to the end of the array (bottom of the list)
-    position = allTasks.length
+        # For now, set the new position to the end of the array (bottom of the list)
+        position = allTasks.length
 
-    # Add the task back in at the bottom
-    allTasks.splice(position, 0, redo)
+        # Add the task back in at the bottom
+        allTasks.splice(position, 0, redo)
 
-    # Save all the tasks
-    window.storageType.set(DB.db_key, allTasks)
+        # Save all the tasks
+        window.storageType.set(DB.db_key, allTasks)
 
-    # Remove the 'undo' item from storage
-    window.storageType.remove('undo')
+        # Remove the 'undo' item from storage
+        window.storageType.remove('undo')
 
-    # Show the tasks
-    Views.showTasks(allTasks)
+        # Show the tasks
+        Views.showTasks(allTasks)
 
-    # Remove the undo toast notification
-    Views.undoUX()
+        # Remove the undo toast notification
+        Views.undoUX()
 
 
   # Clears storage and then runs Views.showTasks() to show the blank state message
   @markAllDone: ->
 
     # Save all the tasks with an empty array
-    @setAllTasks([])
+    window.storageType.set(DB.db_key, [])
 
     # Gets the (now empty) list of tasks
-    allTasks = window.storageType.get(DB.db_key)
+    window.storageType.get DB.db_key, (allTasks) ->
 
-    # Shows the (now empty) list of tasks
-    Views.showTasks(allTasks)
+      # Shows the (now empty) list of tasks
+      Views.showTasks(allTasks)
 
     

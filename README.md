@@ -47,11 +47,9 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 
 ### 2.0
 
-* Import tasks from JSON
-* Investigate [Chrome Platform Analytics](https://github.com/GoogleChrome/chrome-platform-analytics/wiki)
-* Migrate to a [Chrome App](https://developer.chrome.com/apps/about_apps)
 * Write [Storage API](http://stackoverflow.com/q/26249133/1105159) for handling different storage types
 * Personal task sync with Google account and chrome.storage.sync
+* Investigate [Chrome Platform Analytics](https://github.com/GoogleChrome/chrome-platform-analytics/wiki)
 
 ### 2.1
 
@@ -62,6 +60,7 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 
 ### The distant future
 
+* Import tasks from JSON
 * Share lists with others
 * Collaborate on task lists in real time
 
