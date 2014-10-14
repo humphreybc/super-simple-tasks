@@ -798,7 +798,7 @@ $(document).ready(function() {
       return leg.$el.addClass('animated fadeInDown');
     }
   });
-  if (chrome && chrome.storage) {
+  if (!!window.chrome && chrome.storage) {
     console.log('Using chrome.storage.sync to save');
     window.storageType = ChromeStorage;
   } else {
@@ -853,13 +853,15 @@ $(document).ready(function() {
         nextTourBus();
         li = $(this).closest('li');
         return li.slideToggle(function() {
-          return Task.markDone(Views.getId(li));
+          Task.markDone(Views.getId(li));
+          return Views.undoFade();
         });
       }
     });
   });
   $('#undo').click(function(e) {
-    return Task.undoLast();
+    Task.undoLast();
+    return Views.undoUX();
   });
   $(document).on('click', '.priority', function(e) {
     var li, type_attr, value;
@@ -957,6 +959,18 @@ ChromeStorage = (function() {
     return chrome.storage.sync.remove(key, function() {});
   };
 
+  if (!!window.chrome && chrome.storage) {
+    chrome.storage.onChanged.addListener(function(changes, namespace) {
+      var key, storageChange, _results;
+      _results = [];
+      for (key in changes) {
+        storageChange = changes[key];
+        _results.push(Views.showTasks(storageChange.newValue));
+      }
+      return _results;
+    });
+  }
+
   return ChromeStorage;
 
 })();
@@ -1025,7 +1039,6 @@ Task = (function() {
       var toComplete;
       toComplete = allTasks[id];
       window.storageType.set('undo', toComplete);
-      Views.undoFade();
       allTasks.splice(id, 1);
       return window.storageType.set(DB.db_key, allTasks);
     });
@@ -1110,8 +1123,7 @@ Task = (function() {
         allTasks.splice(position, 0, redo);
         window.storageType.set(DB.db_key, allTasks);
         window.storageType.remove('undo');
-        Views.showTasks(allTasks);
-        return Views.undoUX();
+        return Views.showTasks(allTasks);
       });
     });
   };

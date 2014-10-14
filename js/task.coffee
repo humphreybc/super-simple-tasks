@@ -82,9 +82,6 @@ class Task
       # Sets the item we're removing in storage as 'undo' just in case
       window.storageType.set('undo', toComplete)
 
-      # Fades in the undo toast notification
-      Views.undoFade()
-
       # TODO: Instead of removing completed tasks entirely, we want to update the attribute
       # 'isDone' to be true, so completed tasks can still be shown in the UI
 
@@ -230,9 +227,6 @@ class Task
 
         # Show the tasks
         Views.showTasks(allTasks)
-
-        # Remove the undo toast notification
-        Views.undoUX()
 
 
   # Clears storage and then runs Views.showTasks() to show the blank state message

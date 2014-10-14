@@ -72,5 +72,15 @@ class ChromeStorage
     chrome.storage.sync.remove key, () ->
 
 
+  # Listen for changes and run Views.showTasks when a change happens
+  if !!window.chrome and chrome.storage
+
+    chrome.storage.onChanged.addListener (changes, namespace) ->
+      for key of changes
+        storageChange = changes[key]
+        Views.showTasks(storageChange.newValue)
+
+
+
 
 

@@ -20,7 +20,7 @@ $(document).ready ->
       leg.$el.addClass('animated fadeInDown')
 
   # Decide which storage method we're using
-  if chrome and chrome.storage
+  if !!window.chrome and chrome.storage
     console.log 'Using chrome.storage.sync to save'
     window.storageType = ChromeStorage
   else
@@ -119,10 +119,16 @@ $(document).ready ->
         li.slideToggle ->
           Task.markDone(Views.getId(li))
 
+          # Fades in the undo toast notification
+          Views.undoFade()
+
 
   # If the user clicks on the undo toast notification, run Task.undoLast()
   $('#undo').click (e) ->
     Task.undoLast()
+
+    # Remove the undo toast notification
+    Views.undoUX()
 
 
   # Click on an attribute (in this case .priority)
