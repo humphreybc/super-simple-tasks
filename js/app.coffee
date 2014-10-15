@@ -2,7 +2,7 @@
 
 $(document).ready ->
   console.log 'Super Simple Tasks v2.0'
-  console.log 'Like looking under the hood? Feel free to help make this site
+  console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 
   $new_task_input = $('#new-task')
@@ -119,16 +119,10 @@ $(document).ready ->
         li.slideToggle ->
           Task.markDone(Views.getId(li))
 
-          # Fades in the undo toast notification
-          Views.undoFade()
-
 
   # If the user clicks on the undo toast notification, run Task.undoLast()
   $('#undo').click (e) ->
     Task.undoLast()
-
-    # Remove the undo toast notification
-    Views.undoUX()
 
 
   # Click on an attribute (in this case .priority)

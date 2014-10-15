@@ -77,8 +77,9 @@ class ChromeStorage
 
     chrome.storage.onChanged.addListener (changes, namespace) ->
       for key of changes
-        storageChange = changes[key]
-        Views.showTasks(storageChange.newValue)
+        if key == DB.db_key
+          storageChange = changes[key]
+          Views.showTasks(storageChange.newValue)
 
 
 

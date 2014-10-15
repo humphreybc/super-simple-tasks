@@ -9,26 +9,31 @@ class Arrays
 
   # Default task data for new users
   @default_data = [{
+                      'id':0,
                       'isDone':false,
                       'name':'Add a new task above', 
                       'priority':'blocker'
                     },
                     {
+                      'id':1,
                       'isDone':false,
                       'name':'Perhaps give it a priority or reorder it', 
                       'priority':'minor'
                     },
                     {
+                      'id':2,
                       'isDone':false,
                       'name':'Refresh to see that your task is still here', 
                       'priority':'minor'
                     },
                     {
+                      'id':3,
                       'isDone':false,
                       'name':'Follow <a href="http://twitter.com/humphreybc" target="_blank">@humphreybc</a> on Twitter', 
                       'priority':'major'
                     },
                     {
+                      'id':4,
                       'isDone':false,
                       'name':'Lastly, check this task off!', 
                       'priority':'none'
@@ -42,6 +47,7 @@ class Task
   # Creates a new task object with some defaults if they're not set
   @createTask: (name) ->
     task =
+      id: null
       isDone: false
       name: name
       priority: 'none'
@@ -85,13 +91,19 @@ class Task
       # TODO: Instead of removing completed tasks entirely, we want to update the attribute
       # 'isDone' to be true, so completed tasks can still be shown in the UI
 
-      # @updateAttr(id, 'isDone', true)
+      # Task.updateAttr(id, 'isDone', true)
 
       # Removes the task from the allTasks array
       allTasks.splice(id, 1)
 
       # Save all the tasks
       window.storageType.set(DB.db_key, allTasks)
+
+      # Show the tasks
+      Views.showTasks(allTasks)
+
+      # Fades in the undo toast notification
+      Views.undoFade()
 
 
   # Updates the order upon drag and drop
@@ -119,9 +131,15 @@ class Task
       if newLocation < oldLocation
         oldLocation += 1
       allTasks.splice(oldLocation, 1)
+
+      # Update the task id to reflect the new world order
+      Task.updateTaskId(allTasks)
       
       # Save the tasks
       window.storageType.set(DB.db_key, allTasks)
+
+      # Show the tasks again
+      Views.showTasks(allTasks)
 
 
   # Add attribute 'id' to all objects in allTasks
@@ -227,6 +245,9 @@ class Task
 
         # Show the tasks
         Views.showTasks(allTasks)
+
+        # Remove the undo toast notification
+        Views.undoUX()
 
 
   # Clears storage and then runs Views.showTasks() to show the blank state message
