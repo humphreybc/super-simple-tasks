@@ -1,30 +1,37 @@
 $(document).ready(function() {
-  var $new_task_input, initialize, nextTourBus, tour, tourRunning;
-  console.log('Super Simple Tasks v1.4.4');
-  console.log('Like looking under the hood? Feel free to help make this site better at https://github.com/humphreybc/super-simple-tasks');
+  var $new_task_input, initialize, nextTourBus, tour;
+  console.log('Super Simple Tasks v2.0');
+  console.log('Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks');
   $new_task_input = $('#new-task');
-  tourRunning = false;
+  window.tourRunning = false;
   tour = $('#tour').tourbus({
     onStop: Views.finishTour,
     onLegStart: function(leg, bus) {
-      tourRunning = bus.running;
+      window.tourRunning = bus.running;
       return leg.$el.addClass('animated fadeInDown');
     }
   });
+  if (!!window.chrome && chrome.storage) {
+    console.log('Using chrome.storage.sync to save');
+    window.storageType = ChromeStorage;
+  } else {
+    console.log('Using localStorage to save');
+    window.storageType = LocalStorage;
+  }
   initialize = function() {
-    var allTasks;
-    allTasks = Task.getAllTasks();
-    Views.showTasks(allTasks);
-    $new_task_input.focus();
-    if ((localStorage.getItem('sst-tour') === null) && ($(window).width() > 600) && (allTasks.length > 0)) {
-      tour.trigger('depart.tourbus');
-    }
-    if ((localStorage.getItem('whats-new') === null) && (tourRunning === false)) {
-      return $('.whats-new').show();
-    }
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      if (allTasks === null) {
+        allTasks = Arrays.default_data;
+        window.storageType.set(DB.db_key, allTasks);
+      }
+      Views.showTasks(allTasks);
+      $new_task_input.focus();
+      Views.checkOnboarding(allTasks, tour);
+      return Views.checkWhatsNew();
+    });
   };
   nextTourBus = function() {
-    if (tourRunning) {
+    if (window.tourRunning) {
       return tour.trigger('next.tourbus');
     }
   };
@@ -77,22 +84,22 @@ $(document).ready(function() {
     return Task.changeAttr(li, type_attr, value);
   });
   $('#mark-all-done').click(function(e) {
-    var allTasks;
     e.preventDefault();
-    allTasks = Task.getAllTasks();
-    if (allTasks.length === 0) {
-      return confirm('No tasks to mark done!');
-    } else {
-      if (confirm('Are you sure you want to mark all tasks as done?')) {
-        return Task.markAllDone();
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      if (allTasks.length === 0) {
+        return confirm('No tasks to mark done!');
+      } else {
+        if (confirm('Are you sure you want to mark all tasks as done?')) {
+          return Task.markAllDone();
+        }
       }
-    }
+    });
   });
   $('#export-tasks').click(function(e) {
-    var allTasks;
     e.preventDefault();
-    allTasks = Task.getAllTasks();
-    return Exporter(allTasks, 'super simple tasks backup');
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      return Exporter(allTasks, 'super simple tasks backup');
+    });
   });
   $(document).on({
     mouseenter: function() {
@@ -102,7 +109,7 @@ $(document).ready(function() {
   return initialize();
 });
 
-var Arrays, DB, Task;
+var ChromeStorage, DB, LocalStorage;
 
 DB = (function() {
   function DB() {}
@@ -113,6 +120,78 @@ DB = (function() {
 
 })();
 
+LocalStorage = (function() {
+  function LocalStorage() {}
+
+  LocalStorage.get = function(key, callback) {
+    var value;
+    value = localStorage.getItem(key);
+    value = JSON.parse(value);
+    return callback(value);
+  };
+
+  LocalStorage.getSync = function(key) {
+    var value;
+    value = localStorage.getItem(key);
+    return JSON.parse(value);
+  };
+
+  LocalStorage.set = function(key, value) {
+    value = JSON.stringify(value);
+    return localStorage.setItem(key, value);
+  };
+
+  LocalStorage.remove = function(key) {
+    return localStorage.removeItem(key);
+  };
+
+  return LocalStorage;
+
+})();
+
+ChromeStorage = (function() {
+  function ChromeStorage() {}
+
+  ChromeStorage.get = function(key, callback) {
+    return chrome.storage.sync.get(key, function(value) {
+      value = value[key] || null || LocalStorage.getSync(key);
+      return callback(value);
+    });
+  };
+
+  ChromeStorage.set = function(key, value, callback) {
+    var params;
+    params = {};
+    params[key] = value;
+    return chrome.storage.sync.set(params, function() {});
+  };
+
+  ChromeStorage.remove = function(key) {
+    return chrome.storage.sync.remove(key, function() {});
+  };
+
+  if (!!window.chrome && chrome.storage) {
+    chrome.storage.onChanged.addListener(function(changes, namespace) {
+      var key, storageChange, _results;
+      _results = [];
+      for (key in changes) {
+        if (key === DB.db_key) {
+          storageChange = changes[key];
+          _results.push(Views.showTasks(storageChange.newValue));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    });
+  }
+
+  return ChromeStorage;
+
+})();
+
+var Arrays, Task;
+
 Arrays = (function() {
   function Arrays() {}
 
@@ -120,22 +199,27 @@ Arrays = (function() {
 
   Arrays.default_data = [
     {
+      'id': 0,
       'isDone': false,
       'name': 'Add a new task above',
       'priority': 'blocker'
     }, {
+      'id': 1,
       'isDone': false,
       'name': 'Perhaps give it a priority or reorder it',
       'priority': 'minor'
     }, {
+      'id': 2,
       'isDone': false,
       'name': 'Refresh to see that your task is still here',
       'priority': 'minor'
     }, {
+      'id': 3,
       'isDone': false,
       'name': 'Follow <a href="http://twitter.com/humphreybc" target="_blank">@humphreybc</a> on Twitter',
       'priority': 'major'
     }, {
+      'id': 4,
       'isDone': false,
       'name': 'Lastly, check this task off!',
       'priority': 'none'
@@ -149,21 +233,10 @@ Arrays = (function() {
 Task = (function() {
   function Task() {}
 
-  Task.getAllTasks = function() {
-    var allTasks;
-    allTasks = localStorage.getItem(DB.db_key);
-    allTasks = JSON.parse(allTasks) || Arrays.default_data;
-    return allTasks;
-  };
-
-  Task.setAllTasks = function(allTasks) {
-    localStorage.setItem(DB.db_key, JSON.stringify(allTasks));
-    return Views.showTasks(allTasks);
-  };
-
   Task.createTask = function(name) {
     var task;
     return task = {
+      id: null,
       isDone: false,
       name: name,
       priority: 'none'
@@ -171,45 +244,55 @@ Task = (function() {
   };
 
   Task.setNewTask = function(name) {
-    var allTasks, newTask;
+    var newTask;
     if (name !== '') {
       newTask = this.createTask(name);
-      allTasks = this.getAllTasks();
-      allTasks.push(newTask);
-      return this.setAllTasks(allTasks);
+      return window.storageType.get(DB.db_key, function(allTasks) {
+        allTasks.push(newTask);
+        window.storageType.set(DB.db_key, allTasks);
+        return Views.showTasks(allTasks);
+      });
     }
   };
 
   Task.markDone = function(id) {
-    var allTasks, toComplete;
-    allTasks = this.getAllTasks();
-    toComplete = allTasks[id];
-    localStorage.setItem('undo', JSON.stringify(toComplete));
-    Views.undoFade();
-    allTasks.splice(id, 1);
-    return this.setAllTasks(allTasks);
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      var toComplete;
+      toComplete = allTasks[id];
+      window.storageType.set('undo', toComplete);
+      allTasks.splice(id, 1);
+      window.storageType.set(DB.db_key, allTasks);
+      Views.showTasks(allTasks);
+      return Views.undoFade();
+    });
   };
 
   Task.updateOrder = function(oldLocation, newLocation) {
-    var allTasks, toMove;
     if (oldLocation === newLocation) {
       return;
     }
-    allTasks = this.getAllTasks();
-    toMove = allTasks[oldLocation];
-    if (oldLocation < newLocation) {
-      newLocation += 1;
-    }
-    allTasks.splice(newLocation, 0, toMove);
-    if (newLocation < oldLocation) {
-      oldLocation += 1;
-    }
-    allTasks.splice(oldLocation, 1);
-    return this.setAllTasks(allTasks);
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      var toMove;
+      toMove = allTasks[oldLocation];
+      if (oldLocation < newLocation) {
+        newLocation += 1;
+      }
+      allTasks.splice(newLocation, 0, toMove);
+      if (newLocation < oldLocation) {
+        oldLocation += 1;
+      }
+      allTasks.splice(oldLocation, 1);
+      Task.updateTaskId(allTasks);
+      window.storageType.set(DB.db_key, allTasks);
+      return Views.showTasks(allTasks);
+    });
   };
 
   Task.updateTaskId = function(allTasks) {
     var index;
+    if (allTasks === null) {
+      return;
+    }
     index = 0;
     while (index < allTasks.length) {
       allTasks[index].id = index;
@@ -220,6 +303,9 @@ Task = (function() {
 
   Task.removeDoneTasks = function(allTasks) {
     var index;
+    if (allTasks === null) {
+      return;
+    }
     index = allTasks.length - 1;
     while (index >= 0) {
       if (allTasks[index].isDone) {
@@ -245,31 +331,34 @@ Task = (function() {
   };
 
   Task.updateAttr = function(id, attr, value) {
-    var allTasks, task;
-    allTasks = this.getAllTasks();
-    task = allTasks[id];
-    task[attr] = value;
-    return this.setAllTasks(allTasks);
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      var task;
+      task = allTasks[id];
+      task[attr] = value;
+      window.storageType.set(DB.db_key, allTasks);
+      return Views.showTasks(allTasks);
+    });
   };
 
   Task.undoLast = function() {
-    var allTasks, position, redo;
-    redo = localStorage.getItem('undo');
-    redo = JSON.parse(redo);
-    allTasks = this.getAllTasks();
-    position = allTasks.length;
-    allTasks.splice(position, 0, redo);
-    this.setAllTasks(allTasks);
-    localStorage.removeItem('undo');
-    Views.showTasks(allTasks);
-    return Views.undoUX();
+    return window.storageType.get('undo', function(redo) {
+      return window.storageType.get(DB.db_key, function(allTasks) {
+        var position;
+        position = allTasks.length;
+        allTasks.splice(position, 0, redo);
+        window.storageType.set(DB.db_key, allTasks);
+        window.storageType.remove('undo');
+        Views.showTasks(allTasks);
+        return Views.undoUX();
+      });
+    });
   };
 
   Task.markAllDone = function() {
-    var allTasks;
-    this.setAllTasks([]);
-    allTasks = this.getAllTasks();
-    return Views.showTasks(allTasks);
+    window.storageType.set(DB.db_key, []);
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      return Views.showTasks(allTasks);
+    });
   };
 
   return Task;
@@ -287,12 +376,15 @@ Views = (function() {
 
   Views.getId = function(li) {
     var id;
-    id = $(li).find('input').attr('id').replace('task', '');
+    id = $(li).find('input').data('id');
     return parseInt(id);
   };
 
   Views.showTasks = function(allTasks) {
     var task_list;
+    if (allTasks === void 0) {
+      allTasks = [];
+    }
     Task.updateTaskId(allTasks);
     Task.removeDoneTasks(allTasks);
     this.showEmptyState(allTasks);
@@ -305,7 +397,7 @@ Views = (function() {
     task_list = [];
     for (i = _i = 0, _len = allTasks.length; _i < _len; i = ++_i) {
       task = allTasks[i];
-      task_list[i] = '<li class="task"><label class="left"><input type="checkbox" id="task' + i + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
+      task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
     }
     return task_list;
   };
@@ -323,7 +415,7 @@ Views = (function() {
     $('#undo').fadeIn();
     return timeout = setTimeout(function() {
       $('#undo').fadeOut();
-      return localStorage.removeItem('undo');
+      return window.storageType.remove('undo');
     }, 5000);
   };
 
@@ -332,13 +424,31 @@ Views = (function() {
     return $('#undo').fadeOut();
   };
 
+  Views.checkOnboarding = function(allTasks, tour) {
+    return window.storageType.get('sst-tour', function(sstTour) {
+      if ((sstTour === null) && ($(window).width() > 600) && (allTasks.length > 0)) {
+        return tour.trigger('depart.tourbus');
+      }
+    });
+  };
+
+  Views.checkWhatsNew = function() {
+    return window.storageType.get('whats-new-2-0', function(whatsNew) {
+      if ((whatsNew === null) && (window.tourRunning === false)) {
+        return $('.whats-new').show();
+      }
+    });
+  };
+
   Views.finishTour = function() {
+    window.tourRunning = false;
     $('.tourbus-leg').hide();
-    return localStorage.setItem('sst-tour', 1);
+    history.pushState('', document.title, window.location.pathname);
+    return window.storageType.set('sst-tour', 1);
   };
 
   Views.closeWhatsNew = function() {
-    return localStorage.setItem('whats-new', 1);
+    return window.storageType.set('whats-new-2-0', 1);
   };
 
   return Views;

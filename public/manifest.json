@@ -4,8 +4,9 @@
   "content_security_policy": "script-src 'self'; object-src 'self'",
 
   "name": "Super Simple Tasks",
+  "short_name": "Tasks",
   "description": "The world’s simplest tasks app with offline support, an elegant design, and no account required!",
-  "version": "1.4.4",
+  "version": "2.0",
 
   "icons": {
     "16": "img/icon16.png",

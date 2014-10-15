@@ -1,51 +1,64 @@
 # Mainly user interaction with the DOM
 
 $(document).ready ->
-  console.log 'Super Simple Tasks v1.4.4'
-  console.log 'Like looking under the hood? Feel free to help make this site
+  console.log 'Super Simple Tasks v2.0'
+  console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 
   $new_task_input = $('#new-task')
-  tourRunning = false
+
+  # Create a global variable to save whether the onboarding tour is running or not
+  window.tourRunning = false
 
   # Create a new tourbus
-  # When the tour stops, run Views.finishTour to set a localStorage item
-  # When each leg starts, update tourRunning to true or false
+  # When the tour stops, run Views.finishTour to set a storage item
+  # When each leg starts, update window.tourRunning to true or false
   tour = $('#tour').tourbus
     onStop: Views.finishTour
     onLegStart: (leg, bus) ->
-      tourRunning = bus.running
+      window.tourRunning = bus.running
       leg.$el.addClass('animated fadeInDown')
 
+  # Decide which storage method we're using
+  if !!window.chrome and chrome.storage
+    console.log 'Using chrome.storage.sync to save'
+    window.storageType = ChromeStorage
+  else
+    console.log 'Using localStorage to save'
+    window.storageType = LocalStorage
 
   # Runs functions on page load
   initialize = ->
-    # Get all the tasks from Task.getAllTasks()
-    allTasks = Task.getAllTasks()
 
-    # Run Views.showTasks to show them on the page
-    Views.showTasks(allTasks)
+    # Get all the tasks
+    window.storageType.get DB.db_key, (allTasks) ->
 
-    # Focus the create task input
-    $new_task_input.focus()
+      # If there's nothing there, seed with sample tasks and save
+      if allTasks == null
+        allTasks = Arrays.default_data
+        window.storageType.set(DB.db_key, allTasks)
 
-    # Start the tour if it hasn't run before and the window is wider than 600px
-    if (localStorage.getItem('sst-tour') == null) and ($(window).width() > 600) and (allTasks.length > 0)
-      tour.trigger 'depart.tourbus'
+      # Run Views.showTasks to show them on the page
+      Views.showTasks(allTasks)
 
-    # Show the what's new dialog if the user has seen the tour, hasn't seen the dialog
-    if (localStorage.getItem('whats-new') == null) and (tourRunning == false)
-      $('.whats-new').show()
+      # Focus the create task input
+      $new_task_input.focus()
+
+      # Check to see if we need to show onboarding
+      Views.checkOnboarding(allTasks, tour)
+
+      # Check to see if we need to show the what's new dialog
+      Views.checkWhatsNew()
 
 
   # Triggers the next step of the onboarding tour
   nextTourBus = ->
-    if tourRunning
+    if window.tourRunning
       tour.trigger('next.tourbus')
 
 
   # Hide the what's new dialog when clicking on the x
-  # Run Views.closeWhatsNew() which sets a localStorage item
+  # Run Views.closeWhatsNew() which sets a storage item
   $('#whats-new-close').click (e) ->
     $('.whats-new').hide()
     Views.closeWhatsNew()
@@ -139,15 +152,15 @@ $(document).ready ->
     e.preventDefault()
 
     # Get the tasks
-    allTasks = Task.getAllTasks()
+    window.storageType.get DB.db_key, (allTasks) ->
 
-    # If there are no tasks, show a message, otherwise show a confirm
-    # dialog and then run Task.markAllDone() which clears localStorage
-    if allTasks.length == 0
-      confirm 'No tasks to mark done!'
-    else
-      if confirm 'Are you sure you want to mark all tasks as done?'
-        Task.markAllDone()
+      # If there are no tasks, show a message, otherwise show a confirm
+      # dialog and then run Task.markAllDone() which clears all tasks in storage
+      if allTasks.length == 0
+        confirm 'No tasks to mark done!'
+      else
+        if confirm 'Are you sure you want to mark all tasks as done?'
+          Task.markAllDone()
 
 
   # Click 'Export tasks'
@@ -155,10 +168,10 @@ $(document).ready ->
     e.preventDefault()
 
     # Get the tasks
-    allTasks = Task.getAllTasks()
+    window.storageType.get DB.db_key, (allTasks) ->
 
-    # Run the code in export.coffee, passing through the tasks to export and the file name 
-    Exporter(allTasks, 'super simple tasks backup')
+      # Run the code in export.coffee, passing through the tasks to export and the file name 
+      Exporter(allTasks, 'super simple tasks backup')
 
 
   # When hovering over a task, unfocus the new task input field

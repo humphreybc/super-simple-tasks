@@ -1,4 +1,4 @@
-# Super Simple Tasks v1.4.4
+# Super Simple Tasks v2.0
 [supersimpletasks.com](http://supersimpletasks.com)
 
 A very simple, 100% client-side tasks app that uses localStorage to save the list and Slip.js for reordering. This exists mainly so I can teach myself Coffeescript and better programming in general.
@@ -36,7 +36,7 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 * **[DONE]** Add comments and clean up code
 * **[DONE]** Refactor showNewTasks() method
 
-### 1.4.4
+### 1.4.4 - released
 
 * **[DONE]** Fix a bug where long tasks don't wrap the text correctly
 * **[DONE]** Fix a bug where onboarding tooltips stay in the DOM after completing the onboarding
@@ -47,21 +47,21 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 
 ### 2.0
 
-* Import tasks from JSON
-* Investigate [Chrome Platform Analytics](https://github.com/GoogleChrome/chrome-platform-analytics/wiki)
-* Migrate to a [Chrome App](https://developer.chrome.com/apps/about_apps)
-* Write [Storage API](http://stackoverflow.com/q/26249133/1105159) for handling different storage types
-* Personal task sync with Google account and chrome.storage.sync
+* **[DONE]** Write [Storage API](http://stackoverflow.com/q/26249133/1105159) for handling different storage types
+* **[DONE]** Personal task sync with Google account and chrome.storage.sync
+* **[DONE]** Fix a bug where reordering a task and changing its priority sometimes wouldn't work
 
 ### 2.1
 
-* Multiple lists
-* List names
+* Investigate [Chrome Platform Analytics](https://github.com/GoogleChrome/chrome-platform-analytics/wiki)
 * Show completed tasks
 * Replace 'mark all done' with 'Clear completed' 
 
 ### The distant future
 
+* Multiple lists
+* List names
+* Import tasks from JSON
 * Share lists with others
 * Collaborate on task lists in real time
 
@@ -116,14 +116,15 @@ So I don't forget :)
 2. Manifest.json for Chrome Web Store has an updated version number
 3. app.coffee has an updated version number
 4. README has an updated version number
-5. Google Analytics commented out
-6. Create a .zip of /public for the Chrome Web Store
-7. Test .zip in Chrome Apps & Extensions Developer Tool
-8. Uncomment Google Analytics
-9. Commit and push to develop
-10. Pull request into master
-11. Create a GitHub release and tags with changelog
-12. Upload .zip file to Chrome Web Store developer dashboard
+6. package.json has updated version number
+7. Google Analytics commented out
+8. Create a .zip of /public for the Chrome Web Store
+9. Test .zip in Chrome Apps & Extensions Developer Tool
+10. Uncomment Google Analytics
+11. Commit and push to develop
+12. Pull request into master
+13. Create a GitHub release and tags with changelog
+14. Upload .zip file to Chrome Web Store developer dashboard
 
 
 
