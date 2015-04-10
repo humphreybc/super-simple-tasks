@@ -1,11 +1,24 @@
 // Add link inline dialog
 
-#add-link-input td
-  padding 3px
+.link-active // The button
   background blue
-  border-radius radius
   
-  input
-    border none
-    font-size font-xsmall
-    padding 5px
+  #link-icon
+    fill white
+    
+  &:hover
+    background blue !important
+
+#add-link-input-wrapper
+  opacity 0
+  transition opacity 250ms
+    
+#add-link-input
+  color blue
+  background-image url('../img/link.svg')
+  background-repeat no-repeat
+  background-size 16px
+  background-position 0 50%
+  border none
+  font-size font-xsmall
+  padding 5px 5px 5px 20px

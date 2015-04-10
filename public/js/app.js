@@ -835,6 +835,23 @@ $(document).ready(function() {
     $new_task_input.val('');
     return $new_task_input.focus();
   });
+  $('#add-link').click(function(e) {
+    e.preventDefault();
+    if ($('#add-link').hasClass('link-active')) {
+      $('#add-link').removeClass('link-active');
+      $('#add-link-input-wrapper').css('opacity', '0');
+      return setTimeout((function() {
+        return $('#task-list').css('margin-top', '-40px');
+      }), 150);
+    } else {
+      $('#add-link').addClass('link-active');
+      $('#task-list').css('margin-top', '0px');
+      setTimeout((function() {
+        return $('#add-link-input-wrapper').css('opacity', '1');
+      }), 150);
+      return $('#add-link-input').focus();
+    }
+  });
   $(document).on('click', '.task > label', function(e) {
     return e.preventDefault();
   });

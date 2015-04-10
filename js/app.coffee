@@ -82,6 +82,28 @@ $(document).ready ->
     $new_task_input.focus()
 
 
+  # Clicking add link - needs refactoring probably
+  $('#add-link').click (e) ->
+    e.preventDefault()
+
+    if $('#add-link').hasClass('link-active')
+      $('#add-link').removeClass('link-active')
+      $('#add-link-input-wrapper').css('opacity', '0')
+      setTimeout (->
+        $('#task-list').css('margin-top', '-40px')
+      ), 150
+    else
+      $('#add-link').addClass('link-active')
+
+      $('#task-list').css('margin-top', '0px')
+
+      setTimeout (->
+        $('#add-link-input-wrapper').css('opacity', '1')
+      ), 150
+
+      $('#add-link-input').focus()
+
+
   # We'll manage checking the checkbox thank you very much
   $(document).on 'click', '.task > label', (e) ->
     e.preventDefault()
