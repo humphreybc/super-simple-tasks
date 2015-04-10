@@ -172,17 +172,17 @@ ChromeStorage = (function() {
 
   if (!!window.chrome && chrome.storage) {
     chrome.storage.onChanged.addListener(function(changes, namespace) {
-      var key, storageChange, _results;
-      _results = [];
+      var key, results, storageChange;
+      results = [];
       for (key in changes) {
         if (key === DB.db_key) {
           storageChange = changes[key];
-          _results.push(Views.showTasks(storageChange.newValue));
+          results.push(Views.showTasks(storageChange.newValue));
         } else {
-          _results.push(void 0);
+          results.push(void 0);
         }
       }
-      return _results;
+      return results;
     });
   }
 
@@ -393,9 +393,9 @@ Views = (function() {
   };
 
   Views.generateHTML = function(allTasks) {
-    var i, task, task_list, _i, _len;
+    var i, j, len, task, task_list;
     task_list = [];
-    for (i = _i = 0, _len = allTasks.length; _i < _len; i = ++_i) {
+    for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
       task = allTasks[i];
       task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
     }
@@ -499,13 +499,13 @@ Exporter = function(allTasks, FileTitle) {
   return document.body.removeChild(link);
 };
 
-var __slice = [].slice;
+var slice = [].slice;
 
 (function($) {
-  var Bus, Leg, methods, tourbus, uniqueId, _addRule, _assemble, _busses, _dataProp, _include, _tours;
+  var Bus, Leg, _addRule, _assemble, _busses, _dataProp, _include, _tours, methods, tourbus, uniqueId;
   tourbus = $.tourbus = function() {
     var args, method;
-    args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
     method = args[0];
     if (methods.hasOwnProperty(method)) {
       args = args.slice(1);
@@ -521,10 +521,10 @@ var __slice = [].slice;
   };
   $.fn.tourbus = function() {
     var args;
-    args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
     return this.each(function() {
       args.unshift($(this));
-      tourbus.apply(null, ['build'].concat(__slice.call(args)));
+      tourbus.apply(null, ['build'].concat(slice.call(args)));
       return this;
     });
   };
@@ -543,7 +543,7 @@ var __slice = [].slice;
         return built.push(_assemble(this, options));
       });
       if (built.length === 0) {
-        $.error("" + el.selector + " was not found!");
+        $.error(el.selector + " was not found!");
       }
       if (built.length === 1) {
         return built[0];
@@ -551,13 +551,13 @@ var __slice = [].slice;
       return built;
     },
     destroyAll: function() {
-      var bus, index, _results;
-      _results = [];
+      var bus, index, results;
+      results = [];
       for (index in _busses) {
         bus = _busses[index];
-        _results.push(bus.destroy());
+        results.push(bus.destroy());
       }
-      return _results;
+      return results;
     },
     expose: function(global) {
       return global.tourbus = {
@@ -744,7 +744,7 @@ var __slice = [].slice;
       if (!this.options.debug) {
         return;
       }
-      return console.log.apply(console, ["TOURBUS " + this.id + ":"].concat(__slice.call(arguments)));
+      return console.log.apply(console, ["TOURBUS " + this.id + ":"].concat(slice.call(arguments)));
     };
 
     Bus.prototype._setupEvents = function() {
@@ -770,7 +770,7 @@ var __slice = [].slice;
       this.options = options;
       this.$target = $(options.target);
       if (this.$target.length === 0) {
-        throw "" + this.$target.selector + " is not an element!";
+        throw this.$target.selector + " is not an element!";
       }
       this._setupOptions();
       this._configureElement();
@@ -817,7 +817,7 @@ var __slice = [].slice;
         rule[keys[this.options.orientation]] = this.options.arrow;
         selector = "#" + this.id + ".tourbus-arrow";
         this.bus._log("adding rule for " + this.id, rule);
-        _addRule("" + selector + ":before, " + selector + ":after", rule);
+        _addRule(selector + ":before, " + selector + ":after", rule);
       }
       css = this._offsets();
       this.bus._log('setting offsets on leg', css);
@@ -1014,18 +1014,18 @@ var __slice = [].slice;
     return function(selector, css) {
       var key, propText;
       propText = $.map((function() {
-        var _results;
-        _results = [];
+        var results;
+        results = [];
         for (key in css) {
-          _results.push(key);
+          results.push(key);
         }
-        return _results;
+        return results;
       })(), function(p) {
-        return "" + p + ":" + css[p];
+        return p + ":" + css[p];
       }).join(';');
       try {
         if (sheet.insertRule) {
-          sheet.insertRule("" + selector + " { " + propText + " }", (sheet.cssRules || sheet.rules).length);
+          sheet.insertRule(selector + " { " + propText + " }", (sheet.cssRules || sheet.rules).length);
         } else {
           sheet.addRule(selector, propText);
         }

@@ -49,10 +49,26 @@
     </div>
 
     <div class="create-task">
-      <form id="new-task-wrapper">
-        <input type="text" autocomplete="on" autocorrect="on" autocapitalize="on" spellcheck="true" placeholder="Type your task here..." id="new-task" class="left"></input>
-        <button type="submit" class="button right" id="task-submit">Add task</button>
-      </form>
+      <div id="new-task-wrapper">
+        <table>
+          <tr>
+            <td>
+              <input type="text" autocomplete="on" autocorrect="on" autocapitalize="on" spellcheck="true" placeholder="Type your task here..." id="new-task">
+            </td>
+            <td>
+              <button class="button button-gray" id="add-link" title="Attach a link"><img src="img/link.svg" width="20" height="20"/></button>
+            </td>
+            <td>
+              <button class="button button-green" id="task-submit" title="Add task"><img src="img/plus.svg" width="20" height="20"/></button>
+            </td>
+          </tr>
+          <tr id="add-link-input">
+            <td colspan="3">
+              <input type="text" placeholder="Paste a URL...">
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
 
     <ul id="task-list"></ul>
