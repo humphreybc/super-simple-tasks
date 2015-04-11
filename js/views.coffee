@@ -46,7 +46,7 @@ class Views
     # For each task in allTasks
     # Create the HTML markup and add it to the array
     for task, i in allTasks
-      task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>'
+      task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span><div class="task-link"><a href="' + task.link + '" target="_blank">' + task.link + '</a></div></li>'
     
     # Return the now full task list
     task_list

@@ -786,10 +786,11 @@ window['Slip'] = (function(){
 })();
 
 $(document).ready(function() {
-  var $new_task_input, initialize, nextTourBus, tour;
+  var $link_input, $new_task_input, addLinkTriggered, addTaskTriggered, initialize, nextTourBus, tour;
   console.log('Super Simple Tasks v2.0');
   console.log('Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks');
   $new_task_input = $('#new-task');
+  $link_input = $('#add-link-input');
   window.tourRunning = false;
   tour = $('#tour').tourbus({
     onStop: Views.finishTour,
@@ -826,30 +827,43 @@ $(document).ready(function() {
     $('.whats-new').hide();
     return Views.closeWhatsNew();
   });
-  $('#task-submit').click(function(e) {
-    var name;
+  addTaskTriggered = function(e) {
+    var link, name;
     e.preventDefault();
     nextTourBus();
     name = $new_task_input.val();
-    Task.setNewTask(name);
+    link = $link_input.val();
+    Task.setNewTask(name, link);
     $new_task_input.val('');
+    $link_input.val('');
     return $new_task_input.focus();
-  });
-  $('#add-link').click(function(e) {
+  };
+  addLinkTriggered = function(e) {
     e.preventDefault();
     if ($('#add-link').hasClass('link-active')) {
       $('#add-link').removeClass('link-active');
       $('#add-link-input-wrapper').css('opacity', '0');
-      return setTimeout((function() {
+      setTimeout((function() {
         return $('#task-list').css('margin-top', '-40px');
       }), 150);
+      return $new_task_input.focus();
     } else {
       $('#add-link').addClass('link-active');
       $('#task-list').css('margin-top', '0px');
       setTimeout((function() {
         return $('#add-link-input-wrapper').css('opacity', '1');
       }), 150);
-      return $('#add-link-input').focus();
+      return $link_input.focus();
+    }
+  };
+  $('#task-submit').click(addTaskTriggered);
+  $('#add-link').click(addLinkTriggered);
+  $(document).keypress(function(e) {
+    if (e.which === 13) {
+      addTaskTriggered(e);
+    }
+    if (e.keyCode === 12 && e.ctrlKey) {
+      return addLinkTriggered(e);
     }
   });
   $(document).on('click', '.task > label', function(e) {
@@ -1006,27 +1020,38 @@ Arrays = (function() {
       'id': 0,
       'isDone': false,
       'name': 'Add a new task above',
-      'priority': 'blocker'
+      'priority': 'blocker',
+      'link': ''
     }, {
       'id': 1,
       'isDone': false,
       'name': 'Perhaps give it a priority or reorder it',
-      'priority': 'minor'
+      'priority': 'minor',
+      'link': ''
     }, {
       'id': 2,
       'isDone': false,
       'name': 'Refresh to see that your task is still here',
-      'priority': 'minor'
+      'priority': 'minor',
+      'link': ''
     }, {
       'id': 3,
       'isDone': false,
-      'name': 'Follow <a href="http://twitter.com/humphreybc" target="_blank">@humphreybc</a> on Twitter',
-      'priority': 'major'
+      'name': 'Maybe attach a link to your task',
+      'priority': 'minor',
+      'link': 'http://humphreybc.com'
     }, {
       'id': 4,
       'isDone': false,
+      'name': 'Follow <a href="http://twitter.com/humphreybc" target="_blank">@humphreybc</a> on Twitter',
+      'priority': 'major',
+      'link': ''
+    }, {
+      'id': 5,
+      'isDone': false,
       'name': 'Lastly, check this task off!',
-      'priority': 'none'
+      'priority': 'none',
+      'link': ''
     }
   ];
 
@@ -1037,20 +1062,21 @@ Arrays = (function() {
 Task = (function() {
   function Task() {}
 
-  Task.createTask = function(name) {
+  Task.createTask = function(name, link) {
     var task;
     return task = {
       id: null,
       isDone: false,
       name: name,
-      priority: 'none'
+      priority: 'none',
+      link: link
     };
   };
 
-  Task.setNewTask = function(name) {
+  Task.setNewTask = function(name, link) {
     var newTask;
     if (name !== '') {
-      newTask = this.createTask(name);
+      newTask = this.createTask(name, link);
       return window.storageType.get(DB.db_key, function(allTasks) {
         allTasks.push(newTask);
         window.storageType.set(DB.db_key, allTasks);
@@ -1201,7 +1227,7 @@ Views = (function() {
     task_list = [];
     for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
       task = allTasks[i];
-      task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
+      task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span><div class="task-link"><a href="' + task.link + '" target="_blank">' + task.link + '</a></div></li>';
     }
     return task_list;
   };

@@ -6,6 +6,7 @@ $(document).ready ->
               better at https://github.com/humphreybc/super-simple-tasks'
 
   $new_task_input = $('#new-task')
+  $link_input = $('#add-link-input')
 
   # Create a global variable to save whether the onboarding tour is running or not
   window.tourRunning = false
@@ -65,7 +66,7 @@ $(document).ready ->
 
 
   # Triggers the setting of the new task when clicking the button
-  $('#task-submit').click (e) ->
+  addTaskTriggered = (e) ->
     e.preventDefault()
 
     # Move on to the next onboarding tooltip if the tour is running
@@ -74,16 +75,21 @@ $(document).ready ->
     # Get the name from the input value
     name = $new_task_input.val()
 
+    # Get the link if there is one
+    link = $link_input.val()
+
     # Pass the name through to Task.setNewTask()
-    Task.setNewTask(name)
+    Task.setNewTask(name, link)
     
     # Clear the input and re-focus it
     $new_task_input.val('')
+    $link_input.val('')
+
     $new_task_input.focus()
 
 
   # Clicking add link - needs refactoring probably
-  $('#add-link').click (e) ->
+  addLinkTriggered = (e) ->
     e.preventDefault()
 
     if $('#add-link').hasClass('link-active')
@@ -92,6 +98,7 @@ $(document).ready ->
       setTimeout (->
         $('#task-list').css('margin-top', '-40px')
       ), 150
+      $new_task_input.focus()
     else
       $('#add-link').addClass('link-active')
 
@@ -101,7 +108,23 @@ $(document).ready ->
         $('#add-link-input-wrapper').css('opacity', '1')
       ), 150
 
-      $('#add-link-input').focus()
+      $link_input.focus()
+
+
+  # Clicking the task submit button
+  $('#task-submit').click addTaskTriggered
+
+
+  # Clicking the add link button
+  $('#add-link').click addLinkTriggered
+
+
+  # Keyboard shortcuts
+  $(document).keypress (e) ->
+    if e.which == 13
+      addTaskTriggered(e)
+    if e.keyCode == 12 && e.ctrlKey
+      addLinkTriggered(e)
 
 
   # We'll manage checking the checkbox thank you very much
