@@ -32,7 +32,7 @@ class Arrays
                     {
                       'id':3,
                       'isDone':false,
-                      'name':'Maybe attach a link to your task', 
+                      'name':'Reference things by attaching a URL to tasks', 
                       'priority':'minor',
                       'link':'http://humphreybc.com'
                     },

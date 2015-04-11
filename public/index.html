@@ -46,11 +46,11 @@
       <p>You can now attach links to a task. Click the link button and paste a URL, or if you're feeling extra frisky, use the keyboard shortcut CTRL + L. Go on, try it now!</p> 
     </div>
 
-    <div class="create-task" style="min-height:117px;">
+    <div id="create-task">
       <div id="new-task-wrapper">
         <table>
           <tr>
-            <td>
+            <td style="width:80%;">
               <input type="text" autocomplete="on" autocorrect="on" autocapitalize="on" spellcheck="true" placeholder="What do you need to do?" id="new-task">
             </td>
             <td>
@@ -97,7 +97,7 @@
     <ol class="tourbus-legs" id="tour">
 
       <li data-el="#new-task" data-orientation="bottom" data-margin="15" data-width="400">
-        <p>Welcome! Start typing a new task. Hit <strong>Enter</strong> or click the <strong>Add task</strong> button to add it to your list.</p>
+        <p>Welcome! Start typing a new task. Hit <strong>Enter</strong> or click the <strong>+</strong> button to add it to your list.</p>
         <a href="#" class="tourbus-next">Got it! Onto the next step...</a>
       </li>
 

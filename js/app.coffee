@@ -1,7 +1,7 @@
 # Mainly user interaction with the DOM
 
 $(document).ready ->
-  console.log 'Super Simple Tasks v2.0'
+  console.log 'Super Simple Tasks v2.0.1'
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 
@@ -39,6 +39,9 @@ $(document).ready ->
         allTasks = Arrays.default_data
         window.storageType.set(DB.db_key, allTasks)
 
+      # Check if we need to migrate
+      Migrations.run(allTasks)
+
       # Run Views.showTasks to show them on the page
       Views.showTasks(allTasks)
 
@@ -66,8 +69,7 @@ $(document).ready ->
 
 
   # Triggers the setting of the new task when clicking the button
-  addTaskTriggered = (e) ->
-    e.preventDefault()
+  addTaskTriggered = () ->
 
     # Move on to the next onboarding tooltip if the tour is running
     nextTourBus()
@@ -89,8 +91,7 @@ $(document).ready ->
 
 
   # Clicking add link - needs refactoring probably
-  addLinkTriggered = (e) ->
-    e.preventDefault()
+  addLinkTriggered = () ->
 
     if $('#add-link').hasClass('link-active')
       $('#add-link').removeClass('link-active')
@@ -120,11 +121,15 @@ $(document).ready ->
 
 
   # Keyboard shortcuts
-  $(document).keypress (e) ->
-    if e.which == 13
-      addTaskTriggered(e)
-    if e.keyCode == 12 && e.ctrlKey
-      addLinkTriggered(e)
+  KeyPress = (e) ->
+    evtobj = if window.event then event else e
+
+    if evtobj.keyCode == 13
+      addTaskTriggered()
+    if evtobj.ctrlKey && evtobj.keyCode == 76
+      addLinkTriggered()
+
+  document.onkeydown = KeyPress
 
 
   # We'll manage checking the checkbox thank you very much

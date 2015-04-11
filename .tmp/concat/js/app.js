@@ -1,6 +1,6 @@
 $(document).ready(function() {
-  var $link_input, $new_task_input, addLinkTriggered, addTaskTriggered, initialize, nextTourBus, tour;
-  console.log('Super Simple Tasks v2.0');
+  var $link_input, $new_task_input, KeyPress, addLinkTriggered, addTaskTriggered, initialize, nextTourBus, tour;
+  console.log('Super Simple Tasks v2.0.1');
   console.log('Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks');
   $new_task_input = $('#new-task');
   $link_input = $('#add-link-input');
@@ -25,6 +25,7 @@ $(document).ready(function() {
         allTasks = Arrays.default_data;
         window.storageType.set(DB.db_key, allTasks);
       }
+      Migrations.run(allTasks);
       Views.showTasks(allTasks);
       $new_task_input.focus();
       Views.checkOnboarding(allTasks, tour);
@@ -40,9 +41,8 @@ $(document).ready(function() {
     $('.whats-new').hide();
     return Views.closeWhatsNew();
   });
-  addTaskTriggered = function(e) {
+  addTaskTriggered = function() {
     var link, name;
-    e.preventDefault();
     nextTourBus();
     name = $new_task_input.val();
     link = $link_input.val();
@@ -51,8 +51,7 @@ $(document).ready(function() {
     $link_input.val('');
     return $new_task_input.focus();
   };
-  addLinkTriggered = function(e) {
-    e.preventDefault();
+  addLinkTriggered = function() {
     if ($('#add-link').hasClass('link-active')) {
       $('#add-link').removeClass('link-active');
       $('#add-link-input-wrapper').css('opacity', '0');
@@ -71,14 +70,17 @@ $(document).ready(function() {
   };
   $('#task-submit').click(addTaskTriggered);
   $('#add-link').click(addLinkTriggered);
-  $(document).keypress(function(e) {
-    if (e.which === 13) {
-      addTaskTriggered(e);
+  KeyPress = function(e) {
+    var evtobj;
+    evtobj = window.event ? event : e;
+    if (evtobj.keyCode === 13) {
+      addTaskTriggered();
     }
-    if (e.keyCode === 12 && e.ctrlKey) {
-      return addLinkTriggered(e);
+    if (evtobj.ctrlKey && evtobj.keyCode === 76) {
+      return addLinkTriggered();
     }
-  });
+  };
+  document.onkeydown = KeyPress;
   $(document).on('click', '.task > label', function(e) {
     return e.preventDefault();
   });
@@ -250,7 +252,7 @@ Arrays = (function() {
     }, {
       'id': 3,
       'isDone': false,
-      'name': 'Maybe attach a link to your task',
+      'name': 'Reference things by attaching a URL to tasks',
       'priority': 'minor',
       'link': 'http://humphreybc.com'
     }, {
@@ -405,6 +407,34 @@ Task = (function() {
   };
 
   return Task;
+
+})();
+
+var Migrations;
+
+Migrations = (function() {
+  function Migrations() {}
+
+  Migrations.run = function(allTasks) {
+    return this.addLinkProperty(allTasks);
+  };
+
+  Migrations.addLinkProperty = function(allTasks) {
+    return window.storageType.get('whats-new-2-0-1', function(whatsNew) {
+      var i, j, len, task;
+      if (whatsNew === null) {
+        for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
+          task = allTasks[i];
+          if (!task.hasOwnProperty('link')) {
+            task.link = '';
+          }
+        }
+        return window.storageType.set(DB.db_key, allTasks);
+      }
+    });
+  };
+
+  return Migrations;
 
 })();
 
