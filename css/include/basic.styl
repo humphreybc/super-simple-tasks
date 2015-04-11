@@ -42,16 +42,15 @@ p
 // Inputs
 
 input[type='text']
-  float left
+  width 100%
+  margin 0px
   padding 10px
   border-radius radius
   border 1px solid xlight-gray
-  width 78%
   font-size font-small
 
   &:hover, &:focus
-    border 2px solid green
-    padding 9px
+    border 1px solid green
     outline none
 
 // Buttons
@@ -62,20 +61,25 @@ input[type='text']
     padding 10px !important
 
 .button
-  width 20%
-  background green
+  width 100%
   border none
-  border-radius radius
-  padding 10px 10px 11px
-  font-size font-small
-  font-weight 700
-  color white
-  cursor pointer
   outline none
-  transition background transition-speed
+  margin 0px
+  border-radius radius
+  padding 12px 20px
+  cursor pointer
+  
+.button-gray
+  background xlight-gray
+  
+  &:hover
+    background lighten(xlight-gray, 5)
+  
+.button-green
+  background green
 
   &:hover
     background lighten(green, 5)
-
-  &:active
-    box-shadow inset 0px 2px 3px darken(dark-green, 5)
+    
+.button img
+  vertical-align middle

@@ -1,4 +1,4 @@
-# Super Simple Tasks v2.0
+# Super Simple Tasks v2.0.1
 [supersimpletasks.com](http://supersimpletasks.com)
 
 A very simple, 100% client-side tasks app that uses localStorage to save the list and Slip.js for reordering. This exists mainly so I can teach myself Coffeescript and better programming in general.
@@ -45,11 +45,18 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 * **[DONE]** Auto advance to the next step when the user completes an onboarding action
 * **[DONE]** Slide & fade animation for onboarding tour tooltips
 
-### 2.0
+### 2.0 - released
 
 * **[DONE]** Write [Storage API](http://stackoverflow.com/q/26249133/1105159) for handling different storage types
 * **[DONE]** Personal task sync with Google account and chrome.storage.sync
 * **[DONE]** Fix a bug where reordering a task and changing its priority sometimes wouldn't work
+
+### 2.0.1 - released
+
+* **[DONE]** Add support for links
+* **[DONE]** Refactor create task HTML and CSS
+* **[DONE]** Add migration logic
+* **[DONE]** Miscellaneous bug fixes and refactoring
 
 ### 2.1
 

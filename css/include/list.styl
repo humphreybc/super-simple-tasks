@@ -1,10 +1,8 @@
 // Create task input and button
 
-.create-task
-  padding 10px 15px 20px
-
-  input, button
-    margin-top 10px
+#create-task
+  padding 10px 0px 20px
+  min-height 117px
 
 // Styles for dragging & dropping
 
@@ -22,12 +20,13 @@
 // The main task list
 
 #task-list, #completed-task-list
-  margin 0px
+  margin -40px 0px 0px
   padding 0px
   list-style-type none
+  transition margin 250ms
 
   li
-    padding 10px 15px
+    padding 10px
     border 2px solid transparent
     border-radius radius
     overflow hidden

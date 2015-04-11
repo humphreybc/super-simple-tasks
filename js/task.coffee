@@ -12,31 +12,43 @@ class Arrays
                       'id':0,
                       'isDone':false,
                       'name':'Add a new task above', 
-                      'priority':'blocker'
+                      'priority':'blocker',
+                      'link':''
                     },
                     {
                       'id':1,
                       'isDone':false,
                       'name':'Perhaps give it a priority or reorder it', 
-                      'priority':'minor'
+                      'priority':'minor',
+                      'link':''
                     },
                     {
                       'id':2,
                       'isDone':false,
                       'name':'Refresh to see that your task is still here', 
-                      'priority':'minor'
+                      'priority':'minor',
+                      'link':''
                     },
                     {
                       'id':3,
                       'isDone':false,
-                      'name':'Follow <a href="http://twitter.com/humphreybc" target="_blank">@humphreybc</a> on Twitter', 
-                      'priority':'major'
+                      'name':'Reference things by attaching a URL to tasks', 
+                      'priority':'minor',
+                      'link':'http://humphreybc.com'
                     },
                     {
                       'id':4,
                       'isDone':false,
+                      'name':'Follow <a href="http://twitter.com/humphreybc" target="_blank">@humphreybc</a> on Twitter', 
+                      'priority':'major',
+                      'link':''
+                    },
+                    {
+                      'id':5,
+                      'isDone':false,
                       'name':'Lastly, check this task off!', 
-                      'priority':'none'
+                      'priority':'none',
+                      'link':''
                     }]
 
 
@@ -45,23 +57,24 @@ class Task
   # This class contains most of the logic for manipulating tasks and saving them
 
   # Creates a new task object with some defaults if they're not set
-  @createTask: (name) ->
+  @createTask: (name, link) ->
     task =
       id: null
       isDone: false
       name: name
       priority: 'none'
+      link: link
 
 
   # Sets a new task
   # Receives name which is in the input
-  @setNewTask: (name) ->
+  @setNewTask: (name, link) ->
 
     # Only do this stuff if the input isn't blank
     unless name == ''
 
       # Sends the task to @createTask() to make a new task
-      newTask = @createTask(name)
+      newTask = @createTask(name, link)
 
       # Get all the tasks
       window.storageType.get DB.db_key, (allTasks) ->
