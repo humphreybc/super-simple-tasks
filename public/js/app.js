@@ -1227,7 +1227,11 @@ Views = (function() {
     task_list = [];
     for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
       task = allTasks[i];
-      task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span><div class="task-link"><a href="' + task.link + '" target="_blank">' + task.link + '</a></div></li>';
+      if (task.link !== '') {
+        task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span><div class="task-link"><a href="' + task.link + '" target="_blank">' + task.link + '</a></div></li>';
+      } else {
+        task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
+      }
     }
     return task_list;
   };
@@ -1263,7 +1267,7 @@ Views = (function() {
   };
 
   Views.checkWhatsNew = function() {
-    return window.storageType.get('whats-new-2-0', function(whatsNew) {
+    return window.storageType.get('whats-new-2-0-1', function(whatsNew) {
       if ((whatsNew === null) && (window.tourRunning === false)) {
         return $('.whats-new').show();
       }
@@ -1278,7 +1282,7 @@ Views = (function() {
   };
 
   Views.closeWhatsNew = function() {
-    return window.storageType.set('whats-new-2-0', 1);
+    return window.storageType.set('whats-new-2-0-1', 1);
   };
 
   return Views;

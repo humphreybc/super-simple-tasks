@@ -45,9 +45,13 @@ class Views
 
     # For each task in allTasks
     # Create the HTML markup and add it to the array
+    # Yes I am aware how unbelievably hacky and terrible this is but yolo it's the weekend
     for task, i in allTasks
-      task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span><div class="task-link"><a href="' + task.link + '" target="_blank">' + task.link + '</a></div></li>'
-    
+      if task.link != ''
+        task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span><div class="task-link"><a href="' + task.link + '" target="_blank">' + task.link + '</a></div></li>'
+      else
+        task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>'
+
     # Return the now full task list
     task_list
 
@@ -91,7 +95,7 @@ class Views
 
   # Show the what's new dialog if the user has seen the tour, hasn't seen the dialog
   @checkWhatsNew: ->
-    window.storageType.get 'whats-new-2-0', (whatsNew) ->
+    window.storageType.get 'whats-new-2-0-1', (whatsNew) ->
       if (whatsNew == null) and (window.tourRunning == false)
         $('.whats-new').show()
 
@@ -113,5 +117,5 @@ class Views
 
   # Saves a state in storage when the user has closed the What's new dialog
   @closeWhatsNew: ->
-    window.storageType.set('whats-new-2-0', 1)
+    window.storageType.set('whats-new-2-0-1', 1)
 
