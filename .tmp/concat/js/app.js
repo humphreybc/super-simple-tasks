@@ -126,9 +126,6 @@ $(document).ready(function() {
       }
     });
   });
-  $('#undo').click(function(e) {
-    return Task.undoLast();
-  });
   $(document).on('click', '.priority', function(e) {
     var li, type_attr, value;
     e.preventDefault();
@@ -136,17 +133,13 @@ $(document).ready(function() {
     type_attr = $(e.currentTarget).attr('type');
     value = $(this).attr(type_attr);
     li = $(this).closest('li');
-    return Task.changeAttr(li, type_attr, value);
+    return Task.cycleAttr(li, type_attr, value);
   });
-  $('#mark-all-done').click(function(e) {
+  $('#clear-completed').click(function(e) {
     e.preventDefault();
     return window.storageType.get(DB.db_key, function(allTasks) {
-      if (allTasks.length === 0) {
-        return confirm('No tasks to mark done!');
-      } else {
-        if (confirm('Are you sure you want to mark all tasks as done?')) {
-          return Task.markAllDone();
-        }
+      if (allTasks.length !== 0) {
+        return Task.clearCompleted();
       }
     });
   });
@@ -276,13 +269,13 @@ Arrays = (function() {
       'isDone': false,
       'name': 'Reference things by attaching a URL to tasks',
       'priority': 'minor',
-      'link': 'http://humphreybc.com'
+      'link': 'http://wikipedia.org'
     }, {
       'id': 4,
       'isDone': false,
-      'name': 'Follow <a href="http://twitter.com/humphreybc" target="_blank">@humphreybc</a> on Twitter',
+      'name': 'Follow @humphreybc on Twitter',
       'priority': 'major',
-      'link': ''
+      'link': 'http://twitter.com/humphreybc'
     }, {
       'id': 5,
       'isDone': false,
@@ -325,16 +318,6 @@ Task = (function() {
     });
   };
 
-  Task.markDone = function(id) {
-    return window.storageType.get(DB.db_key, function(allTasks) {
-      var toComplete;
-      toComplete = allTasks[id];
-      window.storageType.set('undo', toComplete);
-      Task.updateAttr(id, 'isDone', true);
-      return Views.undoFade();
-    });
-  };
-
   Task.updateOrder = function(oldLocation, newLocation) {
     if (oldLocation === newLocation) {
       return;
@@ -369,7 +352,7 @@ Task = (function() {
     return allTasks;
   };
 
-  Task.changeAttr = function(li, attr, value) {
+  Task.cycleAttr = function(li, attr, value) {
     var array, currentIndex, id;
     if (attr === 'priority') {
       array = Arrays.priorities;
@@ -393,23 +376,20 @@ Task = (function() {
     });
   };
 
-  Task.undoLast = function() {
-    return window.storageType.get('undo', function(redo) {
-      return window.storageType.get(DB.db_key, function(allTasks) {
-        var position;
-        position = allTasks.length;
-        allTasks.splice(position, 0, redo);
-        window.storageType.set(DB.db_key, allTasks);
-        window.storageType.remove('undo');
-        Views.showTasks(allTasks);
-        return Views.undoUX();
-      });
-    });
-  };
-
-  Task.markAllDone = function() {
-    window.storageType.set(DB.db_key, []);
+  Task.clearCompleted = function() {
     return window.storageType.get(DB.db_key, function(allTasks) {
+      var index;
+      if (allTasks === null) {
+        return;
+      }
+      index = allTasks.length - 1;
+      while (index >= 0) {
+        if (allTasks[index].isDone) {
+          allTasks.splice(index, 1);
+        }
+        index--;
+      }
+      window.storageType.set(DB.db_key, allTasks);
       return Views.showTasks(allTasks);
     });
   };
@@ -537,19 +517,6 @@ Views = (function() {
     }
   };
 
-  Views.undoFade = function() {
-    $('#undo').fadeIn();
-    return timeout = setTimeout(function() {
-      $('#undo').fadeOut();
-      return window.storageType.remove('undo');
-    }, 5000);
-  };
-
-  Views.undoUX = function() {
-    clearTimeout(timeout);
-    return $('#undo').fadeOut();
-  };
-
   Views.checkOnboarding = function(allTasks, tour) {
     return window.storageType.get('sst-tour', function(sstTour) {
       if ((sstTour === null) && ($(window).width() > 600) && (allTasks.length > 0)) {
@@ -588,8 +555,7 @@ list = document.querySelector('#task-list');
 new Slip(list);
 
 list.addEventListener('slip:swipe', function(e) {
-  e.target.parentNode.removeChild(e.target);
-  return Task.markDone(Views.getId(e.target));
+  return e.preventDefault();
 });
 
 list.addEventListener('slip:reorder', function(e) {

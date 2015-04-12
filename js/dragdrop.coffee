@@ -10,13 +10,7 @@ new Slip(list)
 
 # Swipe a task
 list.addEventListener 'slip:swipe', (e) ->
-
-  # Remove it from the DOM
-  e.target.parentNode.removeChild e.target
-
-  # Get the ID with Views.getId and then pass that to Task.markDone()
-  # to remove the task
-  Task.markDone(Views.getId(e.target))
+  e.preventDefault()
 
 
 # Reorder a task

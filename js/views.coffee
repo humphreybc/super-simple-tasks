@@ -38,7 +38,6 @@ class Views
 
     # For each task in allTasks
     # Create the HTML markup and add it to the array
-    # Yes I am aware how unbelievably hacky and terrible this is but yolo it's the weekend
     for task, i in allTasks
       li = @createTaskHTML(task)
       task_list.append(li)
@@ -107,24 +106,6 @@ class Views
       $('#new-task').focus()
     else
       $('#all-done').removeClass('show-empty-state')
-
-
-  # Fades in the undo toast notification
-  @undoFade: ->
-    $('#undo').fadeIn()
-
-    # Sets a 5 second timeout, after which time it will fade out and remove the item from storage
-    timeout = setTimeout(->
-      $('#undo').fadeOut()
-      window.storageType.remove('undo')
-    , 5000)
-
-
-  # When the user clicks on the undo tooltip
-  @undoUX: ->
-    # Update the page, stop the fade out timer and hide it straight away
-    clearTimeout(timeout) 
-    $('#undo').fadeOut()
 
 
   # Start the tour if it hasn't run before and the window is wider than 600px

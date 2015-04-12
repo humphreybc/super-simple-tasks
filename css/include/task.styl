@@ -1,0 +1,102 @@
+// What an individual task looks like
+
+#task-list
+
+  li
+    padding 10px
+    border 2px solid transparent
+    border-radius radius
+    overflow hidden
+
+    &:hover
+      background-color background-gray
+
+    input[type='checkbox']
+      cursor pointer
+      width 28px
+      height 15px
+      margin 0
+      position relative
+      overflow hidden
+
+    label
+      max-width 80%
+      font-weight 500
+      padding-left 28px
+      text-indent -28px
+      font-size font-small
+
+    .drag-handle
+      margin 4px -2px 0 10px
+      background-image url('../img/drag.svg')
+      width 16px
+      height 16px
+
+      &:hover
+        cursor pointer
+
+    .priority
+      color white
+      min-width 60px
+      text-align center
+      padding 2px 6px 2px
+      font-size font-xsmall
+      text-transform capitalize
+      font-weight 700
+      border-radius radius
+      cursor pointer
+      user-select none
+
+    [priority='none']
+      background background-gray
+      color xlight-gray
+
+      &:hover
+        background white
+
+    [priority='blocker']
+      background red
+
+      &:hover
+        background lighten(red, 5)
+
+    [priority='major']
+      background yellow
+
+      &:hover
+        background lighten(yellow, 5)  
+
+    [priority='minor']
+      background green
+
+      &:hover
+        background lighten(green, 2)
+        
+// Completed tasks
+
+.task-completed
+  
+  label, .priority, .drag-handle, .task-link
+    opacity 0.5
+  
+  label
+    text-decoration line-through
+
+// Task links
+  
+.task-link
+  clear both
+  padding-left 28px
+  
+  a
+    display inline-block
+    max-width 80%
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
+    color lighter-gray
+    font-size font-xsmall - 0.1em
+    
+    &:hover
+      color blue
+    
