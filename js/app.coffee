@@ -11,6 +11,13 @@ $(document).ready ->
   # Create a global variable to save whether the onboarding tour is running or not
   window.tourRunning = false
 
+  # Check if we're online
+  online = navigator.onLine;
+  if online == true
+    console.log 'Connected to the internet'
+  else
+    console.log 'Disconnected from the internet'
+
   # Create a new tourbus
   # When the tour stops, run Views.finishTour to set a storage item
   # When each leg starts, update window.tourRunning to true or false
@@ -54,9 +61,14 @@ $(document).ready ->
       # Check to see if we need to show the what's new dialog
       Views.checkWhatsNew()
 
+      # Animation for the main content
       setTimeout (->
         $('#main-content').addClass('content-show')
       ), 150
+
+      # Use a random image from Unsplash if we have an internet connection
+      if online == true
+        $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")')
 
 
   # Triggers the next step of the onboarding tour

@@ -1,10 +1,31 @@
 // Blank state message
 
 #all-done
-  display none
-  margin-top 60px
+  opacity 0
+  height 1px
+  overflow hidden
+  margin-top 40px
   text-align center
   color light-gray
+  
+.show-empty-state
+  opacity 1 !important
+  height auto !important
+  transition opacity 250ms
+  
+#empty-state-image
+  background-image url('../img/empty-state-default.jpg')
+  background-size cover
+  background-color background-gray
+  width 340px
+  height 220px
+  border-radius 5px
+  box-shadow inset 0px 0px 5px rgba(0,0,0,0.25)
+  margin 0px auto
+  text-align center
+  
+
+// What's new dialog
 
 .whats-new
   display none

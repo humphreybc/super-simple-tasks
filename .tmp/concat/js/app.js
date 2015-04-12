@@ -1,10 +1,16 @@
 $(document).ready(function() {
-  var $link_input, $new_task_input, KeyPress, addLinkTriggered, addTaskTriggered, initialize, nextTourBus, tour;
+  var $link_input, $new_task_input, KeyPress, addLinkTriggered, addTaskTriggered, initialize, nextTourBus, online, tour;
   console.log('Super Simple Tasks v2.0.2');
   console.log('Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks');
   $new_task_input = $('#new-task');
   $link_input = $('#add-link-input');
   window.tourRunning = false;
+  online = navigator.onLine;
+  if (online === true) {
+    console.log('Connected to the internet');
+  } else {
+    console.log('Disconnected from the internet');
+  }
   tour = $('#tour').tourbus({
     onStop: Views.finishTour,
     onLegStart: function(leg, bus) {
@@ -30,9 +36,12 @@ $(document).ready(function() {
       $new_task_input.focus();
       Views.checkOnboarding(allTasks, tour);
       Views.checkWhatsNew();
-      return setTimeout((function() {
+      setTimeout((function() {
         return $('#main-content').addClass('content-show');
       }), 150);
+      if (online === true) {
+        return $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")');
+      }
     });
   };
   nextTourBus = function() {
@@ -495,10 +504,10 @@ Views = (function() {
 
   Views.showEmptyState = function(allTasks) {
     if (allTasks.length === 0) {
-      $('#all-done').show();
+      $('#all-done').addClass('show-empty-state');
       return $('#new-task').focus();
     } else {
-      return $('#all-done').hide();
+      return $('#all-done').removeClass('show-empty-state');
     }
   };
 

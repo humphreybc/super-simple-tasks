@@ -61,10 +61,10 @@ class Views
   @showEmptyState: (allTasks) ->
 
     if allTasks.length == 0
-      $('#all-done').show()
+      $('#all-done').addClass('show-empty-state')
       $('#new-task').focus()
     else
-      $('#all-done').hide()
+      $('#all-done').removeClass('show-empty-state')
 
 
   # Fades in the undo toast notification
