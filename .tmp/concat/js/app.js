@@ -1,6 +1,6 @@
 $(document).ready(function() {
   var $link_input, $new_task_input, KeyPress, addLinkTriggered, addTaskTriggered, initialize, nextTourBus, online, tour;
-  console.log('Super Simple Tasks v2.0.2');
+  console.log('Super Simple Tasks v2.0.3');
   console.log('Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks');
   $new_task_input = $('#new-task');
   $link_input = $('#add-link-input');
