@@ -1,6 +1,6 @@
 $(document).ready(function() {
   var $link_input, $new_task_input, KeyPress, addLinkTriggered, addTaskTriggered, initialize, nextTourBus, online, tour;
-  console.log('Super Simple Tasks v2.0.3');
+  console.log('Super Simple Tasks v2.0.3  ');
   console.log('Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks');
   $new_task_input = $('#new-task');
   $link_input = $('#add-link-input');
@@ -114,13 +114,15 @@ $(document).ready(function() {
       var checkbox, li;
       checkbox = void 0;
       if (!holding) {
-        checkbox = $('input', this);
-        checkbox.prop('checked', !checkbox.prop('checked'));
-        nextTourBus();
         li = $(this).closest('li');
-        return li.slideToggle(function() {
-          return Task.markDone(Views.getId(li));
-        });
+        checkbox = $('input', this);
+        if (checkbox.prop('checked')) {
+          Task.updateAttr(Views.getId(li), 'isDone', false);
+        } else {
+          Task.updateAttr(Views.getId(li), 'isDone', true);
+        }
+        checkbox.prop('checked', !checkbox.prop('checked'));
+        return nextTourBus();
       }
     });
   });
@@ -328,9 +330,7 @@ Task = (function() {
       var toComplete;
       toComplete = allTasks[id];
       window.storageType.set('undo', toComplete);
-      allTasks.splice(id, 1);
-      window.storageType.set(DB.db_key, allTasks);
-      Views.showTasks(allTasks);
+      Task.updateAttr(id, 'isDone', true);
       return Views.undoFade();
     });
   };
@@ -365,21 +365,6 @@ Task = (function() {
     while (index < allTasks.length) {
       allTasks[index].id = index;
       ++index;
-    }
-    return allTasks;
-  };
-
-  Task.removeDoneTasks = function(allTasks) {
-    var index;
-    if (allTasks === null) {
-      return;
-    }
-    index = allTasks.length - 1;
-    while (index >= 0) {
-      if (allTasks[index].isDone) {
-        allTasks.splice(index, 1);
-      }
-      index--;
     }
     return allTasks;
   };
@@ -477,29 +462,70 @@ Views = (function() {
   };
 
   Views.showTasks = function(allTasks) {
-    var task_list;
     if (allTasks === void 0) {
       allTasks = [];
     }
     Task.updateTaskId(allTasks);
-    Task.removeDoneTasks(allTasks);
     this.showEmptyState(allTasks);
-    task_list = this.generateHTML(allTasks);
-    return $('#task-list').html(task_list);
+    return this.addHTML(allTasks);
   };
 
-  Views.generateHTML = function(allTasks) {
-    var i, j, len, task, task_list;
-    task_list = [];
+  Views.addHTML = function(allTasks) {
+    var i, j, len, li, results, task, task_list;
+    task_list = $('#task-list');
+    task_list.empty();
+    results = [];
     for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
       task = allTasks[i];
-      if (task.link !== '') {
-        task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span><div class="task-link"><a href="' + task.link + '" target="_blank">' + task.link + '</a></div></li>';
-      } else {
-        task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>';
-      }
+      li = this.createTaskHTML(task);
+      results.push(task_list.append(li));
     }
-    return task_list;
+    return results;
+  };
+
+  Views.createTaskHTML = function(task) {
+    var checkbox, drag, label, li, link, linkdiv, priority;
+    li = $('<li/>', {
+      'class': 'task'
+    });
+    if (task.isDone) {
+      li.addClass('task-completed');
+    }
+    label = $('<label/>', {
+      'class': 'left',
+      'text': task.name
+    });
+    checkbox = $('<input/>', {
+      'type': 'checkbox',
+      'data-id': task.id,
+      'checked': task.isDone
+    });
+    drag = $('<span/>', {
+      'class': 'drag-handle right'
+    });
+    priority = $('<span/>', {
+      'class': 'priority right',
+      'type': 'priority',
+      'priority': task.priority,
+      'text': task.priority
+    });
+    checkbox.prependTo(label);
+    label.appendTo(li);
+    drag.appendTo(li);
+    priority.appendTo(li);
+    if (task.link !== '') {
+      linkdiv = $('<div/>', {
+        'class': 'task-link'
+      });
+      link = $('<a/>', {
+        'href': task.link,
+        'target': '_blank',
+        'text': task.link
+      });
+      link.appendTo(linkdiv);
+      linkdiv.appendTo(li);
+    }
+    return li;
   };
 
   Views.showEmptyState = function(allTasks) {

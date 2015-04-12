@@ -33,7 +33,7 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: 'js/*.coffee',
-        tasks: ['coffeelint', 'coffee:scripts', 'concat:app', 'uglify:app']
+        tasks: ['coffeelint', 'coffee:scripts', 'concat:app']
       },
       styles: {
         files: 'css/**/*.styl',

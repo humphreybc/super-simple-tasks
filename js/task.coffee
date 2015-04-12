@@ -108,16 +108,16 @@ class Task
       # TODO: Instead of removing completed tasks entirely, we want to update the attribute
       # 'isDone' to be true, so completed tasks can still be shown in the UI
 
-      # Task.updateAttr(id, 'isDone', true)
+      Task.updateAttr(id, 'isDone', true)
 
       # Removes the task from the allTasks array
-      allTasks.splice(id, 1)
+      # allTasks.splice(id, 1)
 
       # Save all the tasks
-      window.storageType.set(DB.db_key, allTasks)
+      # window.storageType.set(DB.db_key, allTasks)
 
       # Show the tasks
-      Views.showTasks(allTasks)
+      # Views.showTasks(allTasks)
 
       # Fades in the undo toast notification
       Views.undoFade()
@@ -174,26 +174,6 @@ class Task
       ++index
 
     # Return allTasks, now with an ID for each task
-    allTasks
-
-
-  # Remove tasks with isDone: true from the array
-  @removeDoneTasks: (allTasks) ->
-
-    if allTasks == null
-      return
-
-    # Start from the bottom
-    index = allTasks.length - 1
-
-    # For each task, if the task's attribute 'isDone' is equal to true
-    # remove that task from the array allTasks
-    while index >= 0
-      if allTasks[index].isDone
-        allTasks.splice(index, 1)
-      index--
-
-    # Return allTasks, except now without tasks with isDone: true
     allTasks
 
 

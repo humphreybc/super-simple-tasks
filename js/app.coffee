@@ -1,7 +1,7 @@
 # Mainly user interaction with the DOM
 
 $(document).ready ->
-  console.log 'Super Simple Tasks v2.0.3'
+  console.log 'Super Simple Tasks v2.0.3  '
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 
@@ -179,22 +179,22 @@ $(document).ready ->
       checkbox = undefined
       
       unless holding
-        
-        # They're not dragging, check the checkbox
-        checkbox = $('input', this)
-        checkbox.prop 'checked', not checkbox.prop('checked')
-
-        # Move on to the next onboarding tooltip if the tour is running
-        nextTourBus()
 
         # Get the task li
         li = $(this).closest('li')
         
-        # Slide it up and hide it
-        # Use Views.getId(li) to get the task id
-        # Then pass it to Task.markDone() to get checked off
-        li.slideToggle ->
-          Task.markDone(Views.getId(li))
+        # They're not dragging, check the checkbox
+        checkbox = $('input', this)
+
+        if checkbox.prop 'checked' # Is currently checked, so unchecking
+          Task.updateAttr(Views.getId(li), 'isDone', false)
+        else # Isn't currently checked, so marking it complete
+          Task.updateAttr(Views.getId(li), 'isDone', true)
+
+        checkbox.prop 'checked', not checkbox.prop('checked')
+
+        # Move on to the next onboarding tooltip if the tour is running
+        nextTourBus()
 
 
   # If the user clicks on the undo toast notification, run Task.undoLast()
