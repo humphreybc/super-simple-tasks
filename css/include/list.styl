@@ -1,7 +1,7 @@
 // Create task input and button
 
 #create-task
-  padding 10px 0px 20px
+  padding 10px 0 20px
   min-height 117px
 
 // Styles for dragging & dropping
@@ -10,7 +10,7 @@
   z-index 500
   border 2px solid blue !important
   background-color white !important
-  box-shadow 0px 2px 8px rgba(0,0,0,0.10)
+  box-shadow 0 2px 8px rgba(0,0,0,0.10)
   transition box-shadow 250ms
   cursor default
 
@@ -20,8 +20,8 @@
 // The main task list
 
 #task-list, #completed-task-list
-  margin -40px 0px 0px
-  padding 0px
+  margin -40px 0 0
+  padding 0
   list-style-type none
   transition margin 250ms ease-in-out
 
@@ -39,7 +39,7 @@
       cursor pointer
       width 28px
       height 15px
-      margin 0px
+      margin 0
       position relative
       overflow hidden
 
@@ -51,7 +51,7 @@
       font-size font-small
 
     .drag-handle
-      margin 4px -2px 0px 10px
+      margin 4px -2px 0 10px
       background-image url('../img/drag.svg')
       width 16px
       height 16px
