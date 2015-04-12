@@ -62,6 +62,20 @@ module.exports = function(grunt) {
           'public/js/app.min.js': ['public/js/app.js'],
         }
       }
+    },
+    cacheBust: {
+      options: {
+        encoding: 'utf8',
+        algorithm: 'md5',
+        length: 16,
+        deleteOriginals: true
+      },
+      assets: {
+        files: [{
+          baseDir: 'public/',
+          src: ['public/index.html']
+        }]
+      }
     }
   });
 
@@ -72,6 +86,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-cache-bust');
 
   grunt.registerTask('default', []);
 
@@ -84,6 +99,7 @@ module.exports = function(grunt) {
     'coffee',
     'stylus',
     'concat',
-    'uglify'
+    'uglify',
+    'cacheBust'
   ]);
 };

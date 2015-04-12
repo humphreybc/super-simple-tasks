@@ -10,6 +10,7 @@
     "grunt-contrib-stylus": "latest",
     "grunt-contrib-cssmin": "latest",
     "grunt-contrib-concat": "latest",
-    "grunt-contrib-uglify": "latest"
+    "grunt-contrib-uglify": "latest",
+    "grunt-cache-bust": "~0.4.13"
   }
 }
