@@ -62,9 +62,8 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 
 * **[DONE]** Bug fixes
 
-### 2.1
+### 2.0.3
 
-* Investigate [Chrome Platform Analytics](https://github.com/GoogleChrome/chrome-platform-analytics/wiki)
 * Show completed tasks
 * Replace 'mark all done' with 'Clear completed' 
 
@@ -75,6 +74,7 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 * Import tasks from JSON
 * Share lists with others
 * Collaborate on task lists in real time
+* Investigate [Chrome Platform Analytics](https://github.com/GoogleChrome/chrome-platform-analytics/wiki)
 
 
 ## Dependencies
@@ -94,13 +94,17 @@ A Gruntfile with a 'dev' task is available for development.
 
     npm install
 
-#### Run 'grunt dev' to watch for changes in the JS and Stylus files.
+#### Run 'grunt dev' to watch for changes in the JS and Stylus files. Doesn't uglify.
 
     grunt dev
 
 #### Rebuilding JS and CSS from scratch
 
     grunt build
+
+#### Cache busting, ideal before release
+    
+    grunt bust
 
 ## Testing on mobile
 
@@ -123,19 +127,19 @@ All development happens on the 'develop' branch. Master is for main releases onl
 
 So I don't forget :)
 
-1. JavaScript source in index.html is pointing at app.min.js
-2. Manifest.json for Chrome Web Store has an updated version number
-3. app.coffee has an updated version number
-4. README has an updated version number
-6. package.json has updated version number
-7. Google Analytics commented out
-8. Create a .zip of /public for the Chrome Web Store
-9. Test .zip in Chrome Apps & Extensions Developer Tool
-10. Uncomment Google Analytics
-11. Commit and push to develop
-12. Pull request into master
-13. Create a GitHub release and tags with changelog
-14. Upload .zip file to Chrome Web Store developer dashboard
+1. Manifest.json for Chrome Web Store has an updated version number
+2. app.coffee has an updated version number
+3. README has an updated version number
+4. package.json has updated version number
+5. Google Analytics commented out
+6. Run grunt build and grunt bust
+7. Create a .zip of /public for the Chrome Web Store
+8. Test .zip in Chrome Apps & Extensions Developer Tool
+9. Uncomment Google Analytics
+10. Commit and push to develop
+11. Pull request into master
+12. Create a GitHub release and tags with changelog
+13. Upload .zip file to Chrome Web Store developer dashboard
 
 
 
