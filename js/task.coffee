@@ -58,6 +58,12 @@ class Task
 
   # Creates a new task object with some defaults if they're not set
   @createTask: (name, link) ->
+
+    # Regex to add http:// if it's missing from the user input
+    if !link.match(/^[a-zA-Z]+:\/\//)
+      link = 'http://' + link
+
+    # Actually create the task
     task =
       id: null
       isDone: false
@@ -67,7 +73,7 @@ class Task
 
 
   # Sets a new task
-  # Receives name which is in the input
+  # Receives name and link from the inputs
   @setNewTask: (name, link) ->
 
     # Only do this stuff if the input isn't blank

@@ -54,6 +54,10 @@ $(document).ready ->
       # Check to see if we need to show the what's new dialog
       Views.checkWhatsNew()
 
+      setTimeout (->
+        $('#main-content').addClass('content-show')
+      ), 150
+
 
   # Triggers the next step of the onboarding tour
   nextTourBus = ->

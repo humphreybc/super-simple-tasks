@@ -5,9 +5,16 @@
   max-width 750px
 
 .content
-  margin 20px auto 40px
-  padding 0px 5px 0px
+  margin 0px auto 40px
+  padding 80px 5px 0px
   min-height 600px
+  opacity 0
+  transition opacity 250ms, transform 250ms
+  transform scale(0.95, 0.95)
+  
+.content-show
+  opacity 1
+  transform scale(1, 1)
 
 #undo
   display none
@@ -42,3 +49,12 @@
   
   table
     width 100%
+    
+#new-task
+  &:hover, &:focus
+    border 1px solid green
+    outline none
+  
+
+
+

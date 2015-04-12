@@ -816,7 +816,10 @@ $(document).ready(function() {
       Views.showTasks(allTasks);
       $new_task_input.focus();
       Views.checkOnboarding(allTasks, tour);
-      return Views.checkWhatsNew();
+      Views.checkWhatsNew();
+      return setTimeout((function() {
+        return $('#main-content').addClass('content-show');
+      }), 150);
     });
   };
   nextTourBus = function() {
@@ -1066,6 +1069,9 @@ Task = (function() {
 
   Task.createTask = function(name, link) {
     var task;
+    if (!link.match(/^[a-zA-Z]+:\/\//)) {
+      link = 'http://' + link;
+    }
     return task = {
       id: null,
       isDone: false,
