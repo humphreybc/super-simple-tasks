@@ -58,6 +58,10 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 * **[DONE]** Add migration logic
 * **[DONE]** Miscellaneous bug fixes and refactoring
 
+### 2.0.2 - released
+
+* **[DONE]** Bug fixes
+
 ### 2.1
 
 * Investigate [Chrome Platform Analytics](https://github.com/GoogleChrome/chrome-platform-analytics/wiki)
