@@ -81,15 +81,26 @@ $(document).ready ->
     # Get the name from the input value
     name = $new_task_input.val()
 
-    # Get the link if there is one
-    link = $link_input.val()
+    # Only do this stuff if the input isn't blank
+    unless name == ''
 
-    # Pass the name through to Task.setNewTask()
-    Task.setNewTask(name, link)
-    
-    # Clear the input and re-focus it
-    $new_task_input.val('')
-    $link_input.val('')
+      $('#task-submit').removeClass('task-submit-button')
+      $('#task-submit').addClass('task-submitted')
+
+      setTimeout (->
+        $('#task-submit').removeClass('task-submitted')
+        $('#task-submit').addClass('task-submit-button')
+      ), 1000
+
+      # Get the link if there is one
+      link = $link_input.val()
+
+      # Pass the name through to Task.setNewTask()
+      Task.setNewTask(name, link)
+      
+      # Clear the input and re-focus it
+      $new_task_input.val('')
+      $link_input.val('')
 
     $new_task_input.focus()
 

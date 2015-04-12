@@ -3,6 +3,35 @@
 #create-task
   padding 10px 0 20px
   min-height 117px
+  
+// Add a new task
+
+#new-task-wrapper
+  position relative
+  overflow hidden
+  
+  table
+    border-spacing 3px
+  
+  table
+    width 100%
+    
+#new-task
+  &:hover, &:focus
+    border 1px solid green
+    outline none
+    
+#task-submit
+  background-repeat no-repeat
+  padding 22px 30px 23px
+  background-image url('../img/add-background-icons.svg')
+  transition background-position 150ms ease-in-out
+    
+.task-submit-button
+  background-position 50% 14px
+  
+.task-submitted
+  background-position 50% -22px
 
 // Styles for dragging & dropping
 

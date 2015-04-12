@@ -54,11 +54,6 @@ input[type='text']
 
 // Buttons
 
-// Override for Firefox, without this the button is 1px higher than it should be
-@-moz-document url-prefix()
-  .button
-    padding 10px !important
-
 .button
   width 100%
   border none
@@ -69,16 +64,16 @@ input[type='text']
   cursor pointer
   
 .button-gray
-  background xlight-gray
+  background-color xlight-gray
   
   &:hover
-    background lighten(xlight-gray, 5)
+    background-color lighten(xlight-gray, 5)
   
 .button-green
-  background green
+  background-color green
 
   &:hover
-    background lighten(green, 5)
+    background-color lighten(green, 5)
     
 .button img
   vertical-align middle

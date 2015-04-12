@@ -60,8 +60,9 @@ class Task
   @createTask: (name, link) ->
 
     # Regex to add http:// if it's missing from the user input
-    if !link.match(/^[a-zA-Z]+:\/\//)
-      link = 'http://' + link
+    if link != ''
+      if !link.match(/^[a-zA-Z]+:\/\//)
+        link = 'http://' + link
 
     # Actually create the task
     task =
@@ -76,23 +77,20 @@ class Task
   # Receives name and link from the inputs
   @setNewTask: (name, link) ->
 
-    # Only do this stuff if the input isn't blank
-    unless name == ''
+    # Sends the task to @createTask() to make a new task
+    newTask = @createTask(name, link)
 
-      # Sends the task to @createTask() to make a new task
-      newTask = @createTask(name, link)
+    # Get all the tasks
+    window.storageType.get DB.db_key, (allTasks) ->
 
-      # Get all the tasks
-      window.storageType.get DB.db_key, (allTasks) ->
+      # Adds that new task to the end of the array
+      allTasks.push newTask
 
-        # Adds that new task to the end of the array
-        allTasks.push newTask
+      # Save all the tasks
+      window.storageType.set(DB.db_key, allTasks)
 
-        # Save all the tasks
-        window.storageType.set(DB.db_key, allTasks)
-
-        # Show the tasks
-        Views.showTasks(allTasks)
+      # Show the tasks
+      Views.showTasks(allTasks)
 
 
   # Removes the selected task from the list

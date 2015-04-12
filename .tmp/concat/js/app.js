@@ -48,10 +48,18 @@ $(document).ready(function() {
     var link, name;
     nextTourBus();
     name = $new_task_input.val();
-    link = $link_input.val();
-    Task.setNewTask(name, link);
-    $new_task_input.val('');
-    $link_input.val('');
+    if (name !== '') {
+      $('#task-submit').removeClass('task-submit-button');
+      $('#task-submit').addClass('task-submitted');
+      setTimeout((function() {
+        $('#task-submit').removeClass('task-submitted');
+        return $('#task-submit').addClass('task-submit-button');
+      }), 1000);
+      link = $link_input.val();
+      Task.setNewTask(name, link);
+      $new_task_input.val('');
+      $link_input.val('');
+    }
     return $new_task_input.focus();
   };
   addLinkTriggered = function() {
@@ -282,8 +290,10 @@ Task = (function() {
 
   Task.createTask = function(name, link) {
     var task;
-    if (!link.match(/^[a-zA-Z]+:\/\//)) {
-      link = 'http://' + link;
+    if (link !== '') {
+      if (!link.match(/^[a-zA-Z]+:\/\//)) {
+        link = 'http://' + link;
+      }
     }
     return task = {
       id: null,
@@ -296,14 +306,12 @@ Task = (function() {
 
   Task.setNewTask = function(name, link) {
     var newTask;
-    if (name !== '') {
-      newTask = this.createTask(name, link);
-      return window.storageType.get(DB.db_key, function(allTasks) {
-        allTasks.push(newTask);
-        window.storageType.set(DB.db_key, allTasks);
-        return Views.showTasks(allTasks);
-      });
-    }
+    newTask = this.createTask(name, link);
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      allTasks.push(newTask);
+      window.storageType.set(DB.db_key, allTasks);
+      return Views.showTasks(allTasks);
+    });
   };
 
   Task.markDone = function(id) {
