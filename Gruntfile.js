@@ -45,7 +45,7 @@ module.exports = function(grunt) {
         tasks: []
       },
       options: {
-        tasks: ['build'],
+        tasks: ['update'],
         atBegin: true
       },
     },
@@ -59,7 +59,7 @@ module.exports = function(grunt) {
     uglify: {
       app: {
         files: {
-          'public/js/app.min.js': ['public/js/app.js'],
+          'public/js/app.js': ['public/js/app.js'],
         }
       }
     },
@@ -68,6 +68,7 @@ module.exports = function(grunt) {
         encoding: 'utf8',
         algorithm: 'md5',
         length: 16,
+        ignorePatterns: ['\.jpg', '\.png', '\.svg', 'html5shiv'],
         deleteOriginals: true
       },
       assets: {
@@ -94,12 +95,22 @@ module.exports = function(grunt) {
     'watch'
   ]);
 
+  grunt.registerTask('update', [
+    'coffeelint',
+    'coffee',
+    'stylus',
+    'concat'
+  ]);
+
   grunt.registerTask('build', [
     'coffeelint',
     'coffee',
     'stylus',
     'concat',
-    'uglify',
+    'uglify'
+  ]);
+
+  grunt.registerTask('bust', [
     'cacheBust'
   ]);
 };
