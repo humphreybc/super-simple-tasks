@@ -269,7 +269,7 @@ Arrays = (function() {
       'isDone': false,
       'name': 'Reference things by attaching a URL to tasks',
       'priority': 'minor',
-      'link': 'http://wikipedia.org'
+      'link': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     }, {
       'id': 4,
       'isDone': false,
