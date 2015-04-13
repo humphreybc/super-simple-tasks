@@ -34,14 +34,14 @@ class Arrays
                       'isDone':false,
                       'name':'Reference things by attaching a URL to tasks', 
                       'priority':'minor',
-                      'link':'http://humphreybc.com'
+                      'link':'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
                     },
                     {
                       'id':4,
                       'isDone':false,
-                      'name':'Follow <a href="http://twitter.com/humphreybc" target="_blank">@humphreybc</a> on Twitter', 
+                      'name':'Follow @humphreybc on Twitter', 
                       'priority':'major',
-                      'link':''
+                      'link':'http://twitter.com/humphreybc'
                     },
                     {
                       'id':5,
@@ -91,36 +91,6 @@ class Task
 
       # Show the tasks
       Views.showTasks(allTasks)
-
-
-  # Removes the selected task from the list
-  @markDone: (id) ->
-
-    # Get all the tasks
-    window.storageType.get DB.db_key, (allTasks) ->
-
-      # Identify the one we want to remove / complete
-      toComplete = allTasks[id]
-
-      # Sets the item we're removing in storage as 'undo' just in case
-      window.storageType.set('undo', toComplete)
-
-      # TODO: Instead of removing completed tasks entirely, we want to update the attribute
-      # 'isDone' to be true, so completed tasks can still be shown in the UI
-
-      # Task.updateAttr(id, 'isDone', true)
-
-      # Removes the task from the allTasks array
-      allTasks.splice(id, 1)
-
-      # Save all the tasks
-      window.storageType.set(DB.db_key, allTasks)
-
-      # Show the tasks
-      Views.showTasks(allTasks)
-
-      # Fades in the undo toast notification
-      Views.undoFade()
 
 
   # Updates the order upon drag and drop
@@ -177,29 +147,10 @@ class Task
     allTasks
 
 
-  # Remove tasks with isDone: true from the array
-  @removeDoneTasks: (allTasks) ->
-
-    if allTasks == null
-      return
-
-    # Start from the bottom
-    index = allTasks.length - 1
-
-    # For each task, if the task's attribute 'isDone' is equal to true
-    # remove that task from the array allTasks
-    while index >= 0
-      if allTasks[index].isDone
-        allTasks.splice(index, 1)
-      index--
-
-    # Return allTasks, except now without tasks with isDone: true
-    allTasks
-
-
   # Change the attribute (in the DOM) and run updateAttr to change it in storage
+  # Used for arrays of things like priorities
   # Takes three parameters: the task (li), the attribute to change, and the current value
-  @changeAttr: (li, attr, value) ->
+  @cycleAttr: (li, attr, value) ->
 
     # Attribute is currently always priority
     if attr == 'priority'
@@ -221,7 +172,7 @@ class Task
     @updateAttr(id, attr, value)
 
 
-  # Updates the attribute in storage
+  # Updates a particular attribute in storage
   @updateAttr: (id, attr, value) ->
 
     # Get all the tasks
@@ -240,43 +191,33 @@ class Task
       Views.showTasks(allTasks)
 
 
-  # Grab the last task from storage 'undo' and add it back to storage using @setAllTasks()
-  # Then remove that entry from storage 'undo' 
-  @undoLast: ->
-    window.storageType.get 'undo', (redo) ->
-
-      # Get all the tasks
-      window.storageType.get DB.db_key, (allTasks) ->
-
-        # For now, set the new position to the end of the array (bottom of the list)
-        position = allTasks.length
-
-        # Add the task back in at the bottom
-        allTasks.splice(position, 0, redo)
-
-        # Save all the tasks
-        window.storageType.set(DB.db_key, allTasks)
-
-        # Remove the 'undo' item from storage
-        window.storageType.remove('undo')
-
-        # Show the tasks
-        Views.showTasks(allTasks)
-
-        # Remove the undo toast notification
-        Views.undoUX()
-
 
   # Clears storage and then runs Views.showTasks() to show the blank state message
-  @markAllDone: ->
+  @clearCompleted: ->
 
-    # Save all the tasks with an empty array
-    window.storageType.set(DB.db_key, [])
-
-    # Gets the (now empty) list of tasks
+    # Gets the list of tasks
     window.storageType.get DB.db_key, (allTasks) ->
 
-      # Shows the (now empty) list of tasks
+      if allTasks == null
+        return
+
+      # Start from the bottom
+      index = allTasks.length - 1
+
+      # For each task, if the task's attribute 'isDone' is equal to true
+      # remove that task from the array allTasks
+      while index >= 0
+        if allTasks[index].isDone
+          allTasks.splice(index, 1)
+        index--
+
+      # Save all the tasks
+      window.storageType.set(DB.db_key, allTasks)
+
+      # Return allTasks, except now without tasks with isDone: true
       Views.showTasks(allTasks)
+
+
+
 
     

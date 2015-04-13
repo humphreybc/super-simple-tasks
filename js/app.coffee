@@ -1,7 +1,7 @@
 # Mainly user interaction with the DOM
 
 $(document).ready ->
-  console.log 'Super Simple Tasks v2.0.3'
+  console.log 'Super Simple Tasks v2.0.3  '
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 
@@ -12,7 +12,7 @@ $(document).ready ->
   window.tourRunning = false
 
   # Check if we're online
-  online = navigator.onLine;
+  online = navigator.onLine
   if online == true
     console.log 'Connected to the internet'
   else
@@ -179,31 +179,26 @@ $(document).ready ->
       checkbox = undefined
       
       unless holding
+
+        # Get the task li
+        li = $(this).closest('li')
         
         # They're not dragging, check the checkbox
         checkbox = $('input', this)
+
+        if checkbox.prop 'checked' # Is currently checked, so unchecking
+          Task.updateAttr(Views.getId(li), 'isDone', false)
+        else # Isn't currently checked, so marking it complete
+          Task.updateAttr(Views.getId(li), 'isDone', true)
+
         checkbox.prop 'checked', not checkbox.prop('checked')
 
         # Move on to the next onboarding tooltip if the tour is running
         nextTourBus()
 
-        # Get the task li
-        li = $(this).closest('li')
-        
-        # Slide it up and hide it
-        # Use Views.getId(li) to get the task id
-        # Then pass it to Task.markDone() to get checked off
-        li.slideToggle ->
-          Task.markDone(Views.getId(li))
-
-
-  # If the user clicks on the undo toast notification, run Task.undoLast()
-  $('#undo').click (e) ->
-    Task.undoLast()
-
 
   # Click on an attribute (in this case .priority)
-  # Run the changeAttr() function and pass parameter
+  # Run the cycleAttr() function and pass parameter
   $(document).on 'click', '.priority', (e) ->
     e.preventDefault()
 
@@ -219,25 +214,19 @@ $(document).ready ->
     # Find the actual task it is attached to
     li = $(this).closest('li')
     
-    # Run Task.changeAttr() and pass through
+    # Run Task.cycleAttr() and pass through
     # The task (li), the attribute type, and the current value
-    Task.changeAttr(li, type_attr, value)
+    Task.cycleAttr(li, type_attr, value)
 
 
-  # Click 'Mark all done'
-  $('#mark-all-done').click (e) ->
+  # Click 'Clear completed'
+  $('#clear-completed').click (e) ->
     e.preventDefault()
 
     # Get the tasks
     window.storageType.get DB.db_key, (allTasks) ->
-
-      # If there are no tasks, show a message, otherwise show a confirm
-      # dialog and then run Task.markAllDone() which clears all tasks in storage
-      if allTasks.length == 0
-        confirm 'No tasks to mark done!'
-      else
-        if confirm 'Are you sure you want to mark all tasks as done?'
-          Task.markAllDone()
+      unless allTasks.length == 0
+        Task.clearCompleted()
 
 
   # Click 'Export tasks'

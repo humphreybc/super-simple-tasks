@@ -15,24 +15,20 @@
 
   <meta name="description" content="The world’s simplest to-do list." />
 
-  <link rel="stylesheet" href="css/app.49b96d70e433329e.css">
+  <link rel="stylesheet" href="css/app.f07e53977c5b1caf.css">
   <link rel="shortcut icon" href="favicon.png" />
 
   <link href="http://fonts.googleapis.com/css?family=Roboto:500,700" rel="stylesheet" type="text/css">
 
-
 </head>
 <body>
-
-  <div id="undo" class="wrapper"><img src="img/undo-white.svg" width="16" height="16" />Undo last <span>action</span></div>
-
   <header>
     <div class="header-left left">
       <img src="img/logo-white.svg" width="32" height="32" class="left" style="margin-right:10px;"/>
     </div>
 
     <div class="header-right right">
-      <a href="#" id="mark-all-done" class="right">Mark all done</a>
+      <a href="#" id="clear-completed" class="right">Clear completed</a>
     </div>
   </header>
 
@@ -88,11 +84,6 @@
       <p>Congratulations, you’re all done!<br>Enjoy this lovely photograph.</p>
     </div>
 
-    <div id="completed-tasks">
-      <h2>Completed tasks</h2>
-      <ul id="completed-task-list"></ul>
-    </div>
-
     <ol class="tourbus-legs" id="tour">
 
       <li data-el="#new-task" data-orientation="bottom" data-margin="15" data-width="400">
@@ -114,29 +105,27 @@
 
   </div>
 
-<div class="footer" id="footer">
-    <ul>
-      <li><a href="#" id="export-tasks">Export tasks </a>(JSON)</li>
-      <li>On <a href="https://github.com/humphreybc/super-simple-tasks">Github</a> &amp; the <a href="https://chrome.google.com/webstore/detail/super-simple-tasks/bngpflcpbefndiblbdjokgpmbldcoplk">Chrome Web Store</a></li>
-      <li>Made by <a href="http://twitter.com/humphreybc">@humphreybc</a></li>
-    </ul>
-</div>
+  <div class="footer" id="footer">
+      <ul>
+        <li><a href="#" id="export-tasks">Export tasks </a>(JSON)</li>
+        <li>On <a href="https://github.com/humphreybc/super-simple-tasks">Github</a> &amp; the <a href="https://chrome.google.com/webstore/detail/super-simple-tasks/bngpflcpbefndiblbdjokgpmbldcoplk">Chrome Web Store</a></li>
+        <li>Made by <a href="http://twitter.com/humphreybc">@humphreybc</a></li>
+      </ul>
+  </div>
+  <script src="js/app.6dfd6ace50035816.js"></script>
+  <!-- Analytics is commented out when packaging in Chrome -->
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-37638548-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
 </body>
-<script src="js/app.d9d0589fc85a7ca6.js"></script>
-<!-- Analytics is commented out when packaging in Chrome -->
-
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-37638548-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
 
 </html>

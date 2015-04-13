@@ -17,73 +17,95 @@ class Views
   # If there are no tasks, shows the #all-done blank state div
   # Runs two methods to show the two lists of tasks in the DOM
   @showTasks: (allTasks) ->
-
     if allTasks == undefined
       allTasks = []
 
     # Update task IDs
     Task.updateTaskId(allTasks)
 
-    # Remove tasks that have the attribute isDone: true
-    Task.removeDoneTasks(allTasks)
-
     # Show the trophy if there's nothing in allTasks
     @showEmptyState(allTasks)
 
     # Generate HTML
-    task_list = @generateHTML(allTasks)
-
-    # Puts the generated HTML into #task-list
-    $('#task-list').html(task_list)
+    @addHTML(allTasks)
 
 
   # Creates the task list in HTML
-  @generateHTML: (allTasks) ->
+  @addHTML: (allTasks) ->
+    task_list = $('#task-list')
 
-    # Creates an empty array
-    task_list = []
+    task_list.empty()
 
     # For each task in allTasks
     # Create the HTML markup and add it to the array
-    # Yes I am aware how unbelievably hacky and terrible this is but yolo it's the weekend
     for task, i in allTasks
-      if task.link != ''
-        task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span><div class="task-link"><a href="' + task.link + '" target="_blank">' + task.link + '</a></div></li>'
-      else
-        task_list[i] = '<li class="task"><label class="left"><input type="checkbox" data-id="' + task.id + '" />' + task.name + '</label>' + '<span class="right drag-handle"></span><span class="priority right" type="priority" priority="' + task.priority + '">' + task.priority + '</span></li>'
+      li = @createTaskHTML(task)
+      task_list.append(li)
 
-    # Return the now full task list
-    task_list
+
+  # Create the HTML markup for a single task li and returns it
+  # Takes into account whether a link is present or task is done
+  @createTaskHTML: (task) ->
+    li = $('<li/>', {
+      'class':'task'
+    })
+
+    if task.isDone
+      li.addClass('task-completed')
+
+    label = $('<label/>', {
+      'class':'left',
+      'text':task.name
+    })
+
+    checkbox = $('<input/>', {
+      'type':'checkbox',
+      'data-id':task.id,
+      'checked':task.isDone
+    })
+
+    drag = $('<span/>', {
+        'class':'drag-handle right'
+    })
+
+    priority = $('<span/>', {
+        'class':'priority right',
+        'type':'priority',
+        'priority':task.priority,
+        'text':task.priority
+    })
+
+    checkbox.prependTo(label)
+    label.appendTo(li)
+
+    drag.appendTo(li)
+    priority.appendTo(li)
+
+    unless task.link == ''
+      linkdiv = $('<div/>', {
+        'class':'task-link'
+      })
+
+      link = $('<a/>', {
+          'href':task.link,
+          'target':'_blank',
+          'text':task.link
+      })
+
+      link.appendTo(linkdiv)
+      linkdiv.appendTo(li)
+
+    return li
 
 
   # Show the 'cup of tea' empty state if there aren't any tasks
   # Also focus the new task field
   @showEmptyState: (allTasks) ->
-
     if allTasks.length == 0
       $('#all-done').addClass('show-empty-state')
       $('#new-task').focus()
     else
       $('#all-done').removeClass('show-empty-state')
-
-
-  # Fades in the undo toast notification
-  @undoFade: ->
-    $('#undo').fadeIn()
-
-    # Sets a 5 second timeout, after which time it will fade out and remove the item from storage
-    timeout = setTimeout(->
-      $('#undo').fadeOut()
-      window.storageType.remove('undo')
-    , 5000)
-
-
-  # When the user clicks on the undo tooltip
-  @undoUX: ->
-
-    # Update the page, stop the fade out timer and hide it straight away
-    clearTimeout(timeout) 
-    $('#undo').fadeOut()
 
 
   # Start the tour if it hasn't run before and the window is wider than 600px
@@ -102,7 +124,6 @@ class Views
 
   # Saves a state in storage when the tour is over
   @finishTour: ->
-
     # Set this guy to false
     window.tourRunning = false
 

@@ -1,4 +1,9 @@
-// UI style that's not the core task list
+// Shared UI components + basic styling
+
+*
+  box-sizing: border-box
+  
+// Layout
 
 .wrapper
   margin 0 auto
@@ -16,28 +21,107 @@
   opacity 1
   transform scale(1, 1)
 
-#undo
-  display none
-  position fixed
-  top 15px
-  left 50%
-  margin-left -90px
-  min-width 180px
-  z-index 200
-  text-align center
-  background-color gray
-  color white
-  border-radius 3px
-  padding 3px 5px 4px
-  cursor pointer
+// Background stuff
+
+body
+  background-color white
+  font-family 'Roboto', sans-serif
+  color gray
+  font-size 14px
+  -webkit-font-smoothing antialiased
+  padding 0px 0px 20px
+  margin 0px
+
+input, button, textarea
+  -webkit-font-smoothing antialiased
+  font-family 'Roboto', sans-serif
+
+// Fonts
+
+h1
+  margin 0px
+  font-size font-large
+  font-weight 500
+
+h2
+  margin 40px 0px 10px
+  text-transform uppercase
+  font-size font-xsmall
+  color light-gray
+
+a
+  color green
+  text-decoration none
 
   &:hover
-    background-color black
+    color dark-green
 
-  img
-    margin 0 10px 2px 0
-    vertical-align middle
+p
+  font-size font-small
+
+// Inputs
+
+input[type='text']
+  width 100%
+  margin 0
+  padding 10px
+  border-radius radius
+  border 1px solid xlight-gray
+  font-size font-small
   
+  &:hover, &:focus
+    outline none
 
+// Buttons
+
+.button
+  width 100%
+  border none
+  outline none
+  margin 0
+  border-radius radius
+  padding 12px 20px
+  cursor pointer
+  
+.button-gray
+  background-color xlight-gray
+  
+  &:hover
+    background-color lighten(xlight-gray, 5)
+  
+.button-green
+  background-color green
+
+  &:hover
+    background-color lighten(green, 5)
+    
+.button img
+  vertical-align middle
+  
+// What's new dialog
+
+.whats-new
+  display none
+  border 2px solid blue
+  border-radius radius
+  padding 20px
+
+  h2
+    margin-top 0
+
+  #whats-new-close
+    padding 5px
+    display block
+    text-align center
+    line-height 8px
+    cursor pointer
+    float right
+    font-size 1.75em
+
+    &:hover
+      color blue
+
+  #whats-new-close:before
+    content "×"
 
 
