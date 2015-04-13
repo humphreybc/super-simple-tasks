@@ -1,0 +1,52 @@
+// Blank state message
+
+#all-done
+  opacity 0
+  height 1px
+  overflow hidden
+  margin-top 40px
+  text-align center
+  color light-gray
+  
+.show-empty-state
+  opacity 1 !important
+  height auto !important
+  transition opacity 250ms
+  
+#empty-state-image
+  background-image url('../img/empty-state-default.jpg')
+  background-size cover
+  background-color background-gray
+  width 340px
+  height 220px
+  border-radius 5px
+  box-shadow inset 0px 0px 5px rgba(0,0,0,0.25)
+  margin 0px auto
+  text-align center
+  
+
+// What's new dialog
+
+.whats-new
+  display none
+  border 2px solid blue
+  border-radius radius
+  padding 20px
+
+  h2
+    margin-top 0
+
+  #whats-new-close
+    padding 5px
+    display block
+    text-align center
+    line-height 8px
+    cursor pointer
+    float right
+    font-size 1.75em
+
+    &:hover
+      color blue
+
+  #whats-new-close:before
+    content "×"

@@ -1,0 +1,79 @@
+*
+  box-sizing: border-box
+
+// Background stuff
+
+body
+  background-color white
+  font-family 'Roboto', sans-serif
+  color gray
+  font-size 14px
+  -webkit-font-smoothing antialiased
+  padding 0px 0px 20px
+  margin 0px
+
+input, button, textarea
+  -webkit-font-smoothing antialiased
+  font-family 'Roboto', sans-serif
+
+// Fonts
+
+h1
+  margin 0px
+  font-size font-large
+  font-weight 500
+
+h2
+  margin 40px 0px 10px
+  text-transform uppercase
+  font-size font-xsmall
+  color light-gray
+
+a
+  color green
+  text-decoration none
+
+  &:hover
+    color dark-green
+
+p
+  font-size font-small
+
+// Inputs
+
+input[type='text']
+  width 100%
+  margin 0
+  padding 10px
+  border-radius radius
+  border 1px solid xlight-gray
+  font-size font-small
+  
+  &:hover, &:focus
+    outline none
+
+// Buttons
+
+.button
+  width 100%
+  border none
+  outline none
+  margin 0
+  border-radius radius
+  padding 12px 20px
+  cursor pointer
+  
+.button-gray
+  background-color xlight-gray
+  
+  &:hover
+    background-color lighten(xlight-gray, 5)
+  
+.button-green
+  background-color green
+
+  &:hover
+    background-color lighten(green, 5)
+    
+.button img
+  vertical-align middle

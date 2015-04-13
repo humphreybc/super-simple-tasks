@@ -1,0 +1,132 @@
+// Create task input and button
+
+#create-task
+  padding 10px 0 20px
+  min-height 117px
+  
+// Add a new task
+
+#new-task-wrapper
+  position relative
+  overflow hidden
+  
+  table
+    border-spacing 3px
+  
+  table
+    width 100%
+    
+#new-task
+  &:hover, &:focus
+    border 1px solid green
+    outline none
+    
+#task-submit
+  background-repeat no-repeat
+  padding 22px 30px 23px
+  background-image url('../img/add-background-icons.svg')
+  transition background-position 150ms ease-in-out
+    
+.task-submit-button
+  background-position 50% 14px
+  
+.task-submitted
+  background-position 50% -22px
+
+// Styles for dragging & dropping
+
+.slip-reordering
+  z-index 500
+  border 2px solid blue !important
+  background-color white !important
+  box-shadow 0 2px 8px rgba(0,0,0,0.10)
+  transition box-shadow 250ms
+  cursor default
+
+.slip-swiping-container
+  overflow-x hidden
+
+// The main task list
+
+#task-list, #completed-task-list
+  margin -40px 0 0
+  padding 0
+  list-style-type none
+  transition margin 250ms ease-in-out
+
+  li
+    padding 10px
+    border 2px solid transparent
+    border-radius radius
+    overflow hidden
+    user-select none
+
+    &:hover
+      background-color background-gray
+
+    input[type='checkbox']
+      cursor pointer
+      width 28px
+      height 15px
+      margin 0
+      position relative
+      overflow hidden
+
+    label
+      max-width 80%
+      font-weight 500
+      padding-left 28px
+      text-indent -28px
+      font-size font-small
+
+    .drag-handle
+      margin 4px -2px 0 10px
+      background-image url('../img/drag.svg')
+      width 16px
+      height 16px
+
+      &:hover
+        cursor pointer
+
+    .priority
+      color white
+      min-width 60px
+      text-align center
+      padding 2px 6px 2px
+      font-size font-xsmall
+      text-transform capitalize
+      font-weight 700
+      border-radius radius
+      cursor pointer
+
+    [priority='none']
+      background background-gray
+      color xlight-gray
+
+      &:hover
+        background white
+
+    [priority='blocker']
+      background red
+
+      &:hover
+        background lighten(red, 5)
+
+    [priority='major']
+      background yellow
+
+      &:hover
+        background lighten(yellow, 5)  
+
+    [priority='minor']
+      background green
+
+      &:hover
+        background lighten(green, 2)
+
+
+// The completed task bucket
+
+#completed-tasks
+  display none
+
