@@ -153,7 +153,7 @@ $(document).ready(function() {
     mouseenter: function() {
       return $new_task_input.blur();
     }
-  }, '.task');
+  }, '.drag-handle');
   return initialize();
 });
 

@@ -240,12 +240,13 @@ $(document).ready ->
       Exporter(allTasks, 'super simple tasks backup')
 
 
-  # When hovering over a task, unfocus the new task input field
+  # When hovering over the drag handle, unfocus the new task input field
+  # This prevents people having to "click twice", once to unfocus, the other to drag
   $(document).on
     mouseenter: ->
       $new_task_input.blur()
 
-  , '.task'
+  , '.drag-handle'
 
 
   # Runs the initialize function when the page loads

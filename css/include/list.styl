@@ -23,26 +23,31 @@
     
 #task-submit
   background-repeat no-repeat
-  padding 21px 30px 20px
-  background-image url('../img/add-background-icons.svg')
+  background-image url('../img/add.svg')
   transition background-position 150ms ease-in-out
     
 .task-submit-button
-  background-position 50% 14px
+  background-position 50% 7px
   
 .task-submitted
-  background-position 50% -22px
+  background-position 50% -26px
   
 // Add link button and styling
 
+#add-link
+  background-repeat no-repeat
+  background-image url('../img/link-black.svg')
+  background-position 50% 50%
+
 .link-active
-  background blue
+  background-color blue
+  background-image url('../img/link-white.svg') !important
   
   #link-icon
     fill white
     
   &:hover
-    background blue !important
+    background-color blue
 
 #add-link-input-wrapper
   opacity 0
@@ -50,10 +55,10 @@
     
 #add-link-input
   color blue
-  background-image url('../img/link.svg')
+  background-image url('../img/link-black.svg')
   background-repeat no-repeat
-  background-size 16px
-  background-position 0 50%
+  background-size 22px
+  background-position -2px 50%
   border none
   font-size font-xsmall
   padding 5px 5px 5px 20px
