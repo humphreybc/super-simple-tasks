@@ -1,0 +1,35 @@
+{
+  "manifest_version": 2,
+
+  "content_security_policy": "script-src 'self'; object-src 'self'",
+
+  "name": "Super Simple Tasks",
+  "short_name": "Tasks",
+  "description": "The world’s simplest tasks app with offline support, an elegant design, and no account required!",
+  "version": "2.0.3",
+
+  "icons": {
+    "16": "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
+  },
+
+  "permissions": [
+    "storage"
+  ],
+
+  "offline_enabled": true,
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "browser_action": {
+    "default_icon": {   
+      "19": "img/icon19.png",
+      "38": "img/icon38.png"
+    },
+
+    "default_title": "Super Simple Tasks"
+  }
+}
