@@ -94,17 +94,14 @@ A Gruntfile with a 'dev' task is available for development.
 
     npm install
 
-#### Run 'grunt dev' to watch for changes in the JS and Stylus files. Doesn't uglify.
+#### Run 'grunt dev' to watch for changes. Doesn't uglify.
 
     grunt dev
 
-#### Rebuilding JS and CSS from scratch
+#### Build everything from scratch. Uglifies and cache busts.
 
+    rm -r public/
     grunt build
-
-#### Cache busting, ideal before release
-    
-    grunt bust
 
 ## Testing on mobile
 

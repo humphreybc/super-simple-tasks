@@ -4,12 +4,18 @@ module.exports = function(grunt) {
     coffee: {
       scripts: {
         files: {
-          '.tmp/concat/js/app.js': ['js/app.coffee', 'js/storage.coffee', 'js/task.coffee', 'js/migrations.coffee', 'js/views.coffee', 'js/dragdrop.coffee', 'js/export.coffee', 'js/tour.coffee']
+          '.tmp/concat/js/app.js': ['src/js/app.coffee', 
+                                    'src/js/storage.coffee', 
+                                    'src/js/task.coffee', 
+                                    'src/js/migrations.coffee', 
+                                    'src/js/views.coffee', 
+                                    'src/js/dragdrop.coffee', 
+                                    'src/js/export.coffee', 
+                                    'src/js/tour.coffee']
         },
         options: {
           bare: true
         }
-
       }
     },
     coffeelint: {
@@ -27,39 +33,30 @@ module.exports = function(grunt) {
     },
     stylus: {
       compile: {
-        files: {'public/css/app.css': 'css/app.styl'}
+        files: {'public/css/app.css': 'src/css/app.styl'}
       }
-    },
-    watch: {
-      scripts: {
-        files: 'js/*.coffee',
-        tasks: ['coffeelint', 'coffee:scripts', 'concat:app']
-      },
-      styles: {
-        files: 'css/**/*.styl',
-        tasks: ['stylus']
-      },
-      livereload: {
-        options: { livereload: true },
-        files: ['public/**/*'],
-        tasks: []
-      },
-      options: {
-        tasks: ['update'],
-        atBegin: true
-      },
     },
     concat: {
       app: {
         files: {
-          'public/js/app.js': ['public/js/jquery-2.1.1.min.js', 'public/js/slip.js', 'public/js/bootstrap-tooltip.js', '.tmp/concat/js/app.js'],
+          'public/js/app.js': ['src/vendor/jquery-2.1.1.min.js', 
+                               'src/vendor/slip.js', 
+                               '.tmp/concat/js/app.js']
         }
+      }
+    },
+    copy: {
+      main: {
+        files: [
+          {expand: true, cwd: 'src/', src: 'img/**', dest: 'public/'},
+          {expand: true, cwd: 'src/', src: '*', dest: 'public/', filter: 'isFile'}
+        ]
       }
     },
     uglify: {
       app: {
         files: {
-          'public/js/app.js': ['public/js/app.js'],
+          'public/js/app.js': ['public/js/app.js']
         }
       }
     },
@@ -68,7 +65,7 @@ module.exports = function(grunt) {
         encoding: 'utf8',
         algorithm: 'md5',
         length: 16,
-        ignorePatterns: ['\.jpg', '\.png', '\.svg', 'html5shiv'],
+        ignorePatterns: ['\.jpg', '\.png', '\.svg'],
         deleteOriginals: true
       },
       assets: {
@@ -76,6 +73,32 @@ module.exports = function(grunt) {
           baseDir: 'public/',
           src: ['public/index.html']
         }]
+      }
+    },
+    watch: {
+      scripts: {
+        files: 'src/js/*.coffee',
+        tasks: ['coffeelint', 'coffee:scripts', 'concat:app']
+      },
+      styles: {
+        files: 'src/css/**/*.styl',
+        tasks: ['stylus']
+      },
+      livereload: {
+        options: { livereload: true },
+        files: ['public/**/*'],
+        tasks: []
+      },
+      copyImg: {
+        files: ['src/img/*'],
+        tasks: ['copy']
+      },
+      copyRoot: {
+        files: ['src/*'],
+        tasks: ['copy']
+      },
+      options: {
+        atBegin: true
       }
     }
   });
@@ -86,20 +109,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-stylus');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-cache-bust');
 
-  grunt.registerTask('default', []);
-
   grunt.registerTask('dev', [
     'watch'
-  ]);
-
-  grunt.registerTask('update', [
-    'coffeelint',
-    'coffee',
-    'stylus',
-    'concat'
   ]);
 
   grunt.registerTask('build', [
@@ -107,6 +122,7 @@ module.exports = function(grunt) {
     'coffee',
     'stylus',
     'concat',
+    'copy',
     'uglify',
     'cacheBust'
   ]);
