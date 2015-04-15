@@ -1,7 +1,7 @@
 # Mainly user interaction with the DOM
 
 $(document).ready ->
-  console.log 'Super Simple Tasks v2.0.3  '
+  console.log 'Super Simple Tasks v2.0.4'
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 
@@ -240,12 +240,13 @@ $(document).ready ->
       Exporter(allTasks, 'super simple tasks backup')
 
 
-  # When hovering over a task, unfocus the new task input field
+  # When hovering over the drag handle, unfocus the new task input field
+  # This prevents people having to "click twice", once to unfocus, the other to drag
   $(document).on
     mouseenter: ->
       $new_task_input.blur()
 
-  , '.task'
+  , '.drag-handle'
 
 
   # Runs the initialize function when the page loads

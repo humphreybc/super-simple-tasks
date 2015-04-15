@@ -1,4 +1,4 @@
-# Super Simple Tasks v2.0.3
+# Super Simple Tasks v2.0.4
 [supersimpletasks.com](http://supersimpletasks.com)
 
 A very simple, 100% client-side tasks app that uses localStorage to save the list and Slip.js for reordering. This exists mainly so I can teach myself Coffeescript and better programming in general.
@@ -94,17 +94,14 @@ A Gruntfile with a 'dev' task is available for development.
 
     npm install
 
-#### Run 'grunt dev' to watch for changes in the JS and Stylus files. Doesn't uglify.
+#### Run 'grunt dev' to watch for changes. Doesn't uglify.
 
     grunt dev
 
-#### Rebuilding JS and CSS from scratch
+#### Build everything from scratch. Uglifies and cache busts.
 
+    rm -r public/
     grunt build
-
-#### Cache busting, ideal before release
-    
-    grunt bust
 
 ## Testing on mobile
 
@@ -131,15 +128,13 @@ So I don't forget :)
 2. app.coffee has an updated version number
 3. README has an updated version number
 4. package.json has updated version number
-5. Google Analytics commented out
-6. Run grunt build and grunt bust
-7. Create a .zip of /public for the Chrome Web Store
-8. Test .zip in Chrome Apps & Extensions Developer Tool
-9. Uncomment Google Analytics
-10. Commit and push to develop
-11. Pull request into master
-12. Create a GitHub release and tags with changelog
-13. Upload .zip file to Chrome Web Store developer dashboard
+5. Delete public/ and run 'grunt build'
+6. Create a .zip of /public for the Chrome Web Store
+7. Test .zip in Chrome Apps & Extensions Developer Tool
+8. Commit and push to develop
+10. Pull request into master
+11. For a major release, create a GitHub release and tags with changelog
+12. Upload .zip file to Chrome Web Store developer dashboard
 
 
 
