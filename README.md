@@ -132,7 +132,7 @@ So I don't forget :)
 3. README has an updated version number
 4. package.json has updated version number
 5. Google Analytics commented out
-6. Run grunt build and grunt bust
+6. Run grunt build
 7. Create a .zip of /public for the Chrome Web Store
 8. Test .zip in Chrome Apps & Extensions Developer Tool
 9. Uncomment Google Analytics

@@ -107,10 +107,7 @@ module.exports = function(grunt) {
     'coffee',
     'stylus',
     'concat',
-    'uglify'
-  ]);
-
-  grunt.registerTask('bust', [
+    'uglify',
     'cacheBust'
   ]);
 };
