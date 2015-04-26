@@ -187,6 +187,7 @@ $(document).ready ->
         checkbox = $('input', this)
 
         if checkbox.prop 'checked' # Is currently checked, so unchecking
+          debugger
           Task.updateAttr(Views.getId(li), 'isDone', false)
         else # Isn't currently checked, so marking it complete
           Task.updateAttr(Views.getId(li), 'isDone', true)

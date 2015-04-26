@@ -84,7 +84,7 @@ class Task
     window.storageType.get DB.db_key, (allTasks) ->
 
       # Adds that new task to the end of the array
-      allTasks.push newTask
+      allTasks.unshift newTask
 
       # Save all the tasks
       window.storageType.set(DB.db_key, allTasks)
