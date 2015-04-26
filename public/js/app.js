@@ -902,7 +902,6 @@ $(document).ready(function() {
         li = $(this).closest('li');
         checkbox = $('input', this);
         if (checkbox.prop('checked')) {
-          debugger;
           Task.updateAttr(Views.getId(li), 'isDone', false);
         } else {
           Task.updateAttr(Views.getId(li), 'isDone', true);
@@ -1033,37 +1032,31 @@ Arrays = (function() {
 
   Arrays.default_data = [
     {
-      'id': 0,
       'isDone': false,
       'name': 'Add a new task above',
       'priority': 'blocker',
       'link': ''
     }, {
-      'id': 1,
       'isDone': false,
       'name': 'Perhaps give it a priority or reorder it',
       'priority': 'minor',
       'link': ''
     }, {
-      'id': 2,
       'isDone': false,
       'name': 'Refresh to see that your task is still here',
       'priority': 'minor',
       'link': ''
     }, {
-      'id': 3,
       'isDone': false,
       'name': 'Reference things by attaching a URL to tasks',
       'priority': 'minor',
       'link': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     }, {
-      'id': 4,
       'isDone': false,
       'name': 'Follow @humphreybc on Twitter',
       'priority': 'major',
       'link': 'http://twitter.com/humphreybc'
     }, {
-      'id': 5,
       'isDone': false,
       'name': 'Lastly, check this task off!',
       'priority': 'none',
@@ -1086,7 +1079,6 @@ Task = (function() {
       }
     }
     return task = {
-      id: null,
       isDone: false,
       name: name,
       priority: 'none',
@@ -1119,23 +1111,9 @@ Task = (function() {
         oldLocation += 1;
       }
       allTasks.splice(oldLocation, 1);
-      Task.updateTaskId(allTasks);
       window.storageType.set(DB.db_key, allTasks);
       return Views.showTasks(allTasks);
     });
-  };
-
-  Task.updateTaskId = function(allTasks) {
-    var index;
-    if (allTasks === null) {
-      return;
-    }
-    index = 0;
-    while (index < allTasks.length) {
-      allTasks[index].id = index;
-      ++index;
-    }
-    return allTasks;
   };
 
   Task.cycleAttr = function(li, attr, value) {
@@ -1223,15 +1201,14 @@ Views = (function() {
 
   Views.getId = function(li) {
     var id;
-    id = $(li).find('input').data('id');
-    return parseInt(id);
+    id = $(li).parent().children().index(li);
+    return id;
   };
 
   Views.showTasks = function(allTasks) {
     if (allTasks === void 0) {
       allTasks = [];
     }
-    Task.updateTaskId(allTasks);
     this.showEmptyState(allTasks);
     return this.addHTML(allTasks);
   };
@@ -1263,7 +1240,6 @@ Views = (function() {
     });
     checkbox = $('<input/>', {
       'type': 'checkbox',
-      'data-id': task.id,
       'checked': task.isDone
     });
     drag = $('<span/>', {

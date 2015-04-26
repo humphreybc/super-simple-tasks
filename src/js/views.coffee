@@ -6,12 +6,10 @@ class Views
   timeout = 0
 
 
-  # Useful function that takes a given task li and returns its id
-  # Finds the input id, strips 'task' from it, and converts the string to an int
-  # Destined to be replaced by the attribute / property 'id' on each object in allTasks
+  # Takes a task li and returns its id with jQuery
   @getId: (li) ->
-    id = $(li).find('input').data('id')
-    parseInt(id)
+    id = $(li).parent().children().index(li)
+    id
 
 
   # If there are no tasks, shows the #all-done blank state div
@@ -19,9 +17,6 @@ class Views
   @showTasks: (allTasks) ->
     if allTasks == undefined
       allTasks = []
-
-    # Update task IDs
-    Task.updateTaskId(allTasks)
 
     # Show the trophy if there's nothing in allTasks
     @showEmptyState(allTasks)
@@ -60,7 +55,6 @@ class Views
 
     checkbox = $('<input/>', {
       'type':'checkbox',
-      'data-id':task.id,
       'checked':task.isDone
     })
 
