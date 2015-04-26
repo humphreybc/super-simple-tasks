@@ -39,8 +39,7 @@ module.exports = function(grunt) {
     concat: {
       app: {
         files: {
-          'public/js/app.js': ['src/vendor/jquery-2.1.1.min.js', 
-                               'src/vendor/slip.js', 
+          'public/js/app.js': ['src/vendor/*', 
                                '.tmp/concat/js/app.js']
         }
       }
