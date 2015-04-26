@@ -9,7 +9,6 @@ class Views
   # Takes a task li and returns its id with jQuery
   @getId: (li) ->
     id = $(li).parent().children().index(li)
-    id
 
 
   # If there are no tasks, shows the #all-done blank state div
@@ -77,7 +76,7 @@ class Views
     $('.tourbus-leg').hide()
 
     # Get rid of the # at the end of the URL
-    history.pushState('', document.title, window.location.pathname);
+    history.pushState('', document.title, window.location.pathname)
     
     window.storageType.set('sst-tour', 1)
 

@@ -10,8 +10,7 @@ module.exports = function(grunt) {
                                     'src/js/migrations.coffee', 
                                     'src/js/views.coffee', 
                                     'src/js/dragdrop.coffee', 
-                                    'src/js/export.coffee', 
-                                    'src/js/tour.coffee']
+                                    'src/js/export.coffee']
         },
         options: {
           bare: true
@@ -19,7 +18,7 @@ module.exports = function(grunt) {
       }
     },
     coffeelint: {
-      app: ['*.coffee'],
+      app: ['src/js/*.coffee'],
       options: {
         indentation: {
           value: 2,
@@ -28,6 +27,15 @@ module.exports = function(grunt) {
         max_line_length: {
           value: 120,
           level: 'error'
+        },
+        cyclomatic_complexity: {
+          level: 'warn'
+        },
+        no_unnecessary_double_quotes: {
+          level: 'warn'
+        },
+        no_unnecessary_fat_arrows: {
+          level: 'warn'
         }
       }
     },

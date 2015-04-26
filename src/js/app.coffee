@@ -237,7 +237,7 @@ $(document).ready ->
     # Get the tasks
     window.storageType.get DB.db_key, (allTasks) ->
 
-      # Run the code in export.coffee, passing through the tasks to export and the file name 
+      # Run the code in export.coffee, passing through the tasks to export and the file name
       Exporter(allTasks, 'super simple tasks backup')
 
 

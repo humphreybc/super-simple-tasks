@@ -10,37 +10,37 @@ class Arrays
   # Default task data for new users
   @default_data = [{
                       'isDone':false,
-                      'name':'Add a new task above', 
+                      'name':'Add a new task above',
                       'priority':'blocker',
                       'link':''
                     },
                     {
                       'isDone':false,
-                      'name':'Perhaps give it a priority or reorder it', 
+                      'name':'Perhaps give it a priority or reorder it',
                       'priority':'minor',
                       'link':''
                     },
                     {
                       'isDone':false,
-                      'name':'Refresh to see that your task is still here', 
+                      'name':'Refresh to see that your task is still here',
                       'priority':'minor',
                       'link':''
                     },
                     {
                       'isDone':false,
-                      'name':'Reference things by attaching a URL to tasks', 
+                      'name':'Reference things by attaching a URL to tasks',
                       'priority':'minor',
                       'link':'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
                     },
                     {
                       'isDone':false,
-                      'name':'Follow @humphreybc on Twitter', 
+                      'name':'Follow @humphreybc on Twitter',
                       'priority':'major',
                       'link':'http://twitter.com/humphreybc'
                     },
                     {
                       'isDone':false,
-                      'name':'Lastly, check this task off!', 
+                      'name':'Lastly, check this task off!',
                       'priority':'none',
                       'link':''
                     }]
