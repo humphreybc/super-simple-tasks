@@ -12,7 +12,20 @@ ga('require', 'displayfeatures');
 ga('send', 'pageview', '/index.html');
 
 $(document).ready(function(){
+
+  // Click on add link
   $('#add-link').on('click', function(e){
     ga('send', 'event', 'add', 'click', 'add-link');
   });
-});
+
+  // Click on add task
+  $('#task-submit').on('click', function(e){
+    ga('send', 'event', 'add', 'click', 'add-task');
+  });
+
+  // Click on clear completed
+  $('#clear-completed').on('click', function(e){
+    ga('send', 'event', 'clear', 'click', 'clear-completed');
+  });
+
+}); 
