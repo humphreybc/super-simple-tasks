@@ -42,7 +42,6 @@ module.exports = function(grunt) {
       app: {
         files: {
           'public/js/app.js': ['src/vendor/*',
-                               'src/js/*.js',
                                '.tmp/concat/js/app.js']
         }
       }
