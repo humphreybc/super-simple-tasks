@@ -42,16 +42,17 @@ $(document).ready ->
     # Get all the tasks
     window.storageType.get DB.db_key, (allTasks) ->
 
-      ga 'send',
-      'hitType': 'event'
-      'eventCategory': 'Data'
-      'eventAction': 'All tasks'
-      'eventValue': allTasks.length
-
       # If there's nothing there, seed with sample tasks and save
       if allTasks == null
         allTasks = Arrays.default_data
         window.storageType.set(DB.db_key, allTasks)
+
+      # Sends number of tasks to analytics
+      ga 'send',
+      'hitType': 'event'
+      'eventCategory': 'Data'
+      'eventAction': 'Task count'
+      'eventValue': allTasks.length
 
       # Check if we need to migrate
       Migrations.run(allTasks)
@@ -160,8 +161,10 @@ $(document).ready ->
 
     if evtobj.keyCode == 13
       addTaskTriggered()
+      ga 'send', 'event', 'Add task shortcut', 'shortcut'
     if evtobj.ctrlKey && evtobj.keyCode == 76
       addLinkTriggered()
+      ga 'send', 'event', 'Add link shortcut', 'shortcut'
 
   document.onkeydown = KeyPress
 

@@ -38,14 +38,30 @@ $(document).on 'click', '.drag-handle', ->
 $(document).on 'click', '.priority', ->
   ga 'send', 'event', 'Priority', 'click'
 
+# Click a task to complete / uncomplete it
+$(document).on 'mousedown', '.task > label', ->
+  ga 'send', 'event', 'Complete task', 'click'
 
-# Keyboard shortcuts
-KeyPress = (e) ->
-  evtobj = if window.event then event else e
+# Click a task link
+$(document).on 'click', '.task-link', ->
+  ga 'send', 'event', 'Task link', 'click'
 
-  if evtobj.keyCode == 13
-    ga 'send', 'event', 'Add task shortcut', 'click'
-  if evtobj.ctrlKey && evtobj.keyCode == 76
-    ga 'send', 'event', 'Add link shortcut', 'click'
+# Close What's New dialog
+$(document).on 'click', '#whats-new-close', ->
+  ga 'send', 'event', 'Close Whats New', 'click'
 
-document.onkeydown = KeyPress
+
+# Tourbus stuff
+$(document).on 'click', '#tour-bus-1', ->
+  ga 'send', 'event', 'Onboarding', 'click', 'Step 1', 33
+
+$(document).on 'click', '#tour-bus-2', ->
+  ga 'send', 'event', 'Onboarding', 'click', 'Step 2', 33
+
+$(document).on 'click', '#tour-bus-3', ->
+  ga 'send', 'event', 'Onboarding', 'click', 'Step 3', 33
+
+
+
+
+

@@ -6,6 +6,6 @@
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','https://ssl.google-analytics.com/analytics.js','ga'); // Note: https protocol here
  
-ga('create', 'UA-37638548-1', 'none');
+ga('create', 'UA-37638548-1', 'auto');
 ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
 ga('require', 'displayfeatures');
