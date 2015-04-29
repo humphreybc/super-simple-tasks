@@ -2,7 +2,7 @@
 
 Exporter = (allTasks, FileTitle) ->
 
-  exportData = JSON.stringify(allTasks);
+  exportData = JSON.stringify(allTasks)
 
   # Add a newline after comma
   reg = /(\,)/g

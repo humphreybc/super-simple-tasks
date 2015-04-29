@@ -72,17 +72,17 @@
 
       <li data-el="#new-task" data-orientation="bottom" data-margin="15" data-width="400">
         <p>Welcome! Start typing a new task. Hit <strong>Enter</strong> or click the <strong>+</strong> button to add it to your list.</p>
-        <a href="#" class="tourbus-next">Got it! Onto the next step...</a>
+        <a href="#" id="tour-bus-1" class="tourbus-next">Got it! Onto the next step...</a>
       </li>
 
       <li data-el=".priority" data-orientation="left" data-margin="20" data-width="400">
         <p>Change the priority by <strong>clicking a priority lozenge.</strong></p>
-        <a href="#" class="tourbus-next">Got it! Onto the next step...</a>
+        <a href="#" id="tour-bus-2" class="tourbus-next">Got it! Onto the next step...</a>
       </li>
 
       <li data-el="#task-list" data-orientation="bottom" data-width="420">
         <p>Lastly, complete a task by clicking the checkbox or its name.</p>
-        <a href="#" class="tourbus-stop" id="tour-stop">Finish tutorial</a>
+        <a href="#" id="tour-bus-3" class="tourbus-stop" id="tour-stop">Finish tutorial</a>
       </li>
 
     </ol>
@@ -90,26 +90,31 @@
   </div>
 
   <div class="footer" id="footer">
-      <ul>
-        <li><a href="#" id="export-tasks">Export tasks </a>(JSON)</li>
-        <li>On <a href="https://github.com/humphreybc/super-simple-tasks">Github</a> &amp; the <a href="https://chrome.google.com/webstore/detail/super-simple-tasks/bngpflcpbefndiblbdjokgpmbldcoplk">Chrome Web Store</a></li>
-        <li>Made by <a href="http://twitter.com/humphreybc">@humphreybc</a></li>
-      </ul>
+    <ul>
+      <li><a href="#" id="export-tasks">Export tasks </a>(JSON)</li>
+      <li>On <a href="https://github.com/humphreybc/super-simple-tasks">Github</a> &amp; the <a href="https://chrome.google.com/webstore/detail/super-simple-tasks/bngpflcpbefndiblbdjokgpmbldcoplk">Chrome Web Store</a></li>
+      <li>Made by <a href="http://twitter.com/humphreybc">@humphreybc</a></li>
+    </ul>
   </div>
-  <script src="js/app.js"></script>
-  <!-- Analytics is commented out when packaging in Chrome -->
 
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-37638548-1']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
+  <script id="task-template" type="text/x-handlebars-template">
+  {{#each tasks}}
+    <li class="task {{#if this.isDone}}task-completed{{/if}}">
+      <label class="left task-label">
+        <input type="checkbox" {{#if this.isDone}}checked="checked"{{/if}} class="task-checkbox">{{this.name}}
+      </label>
+      <span class="drag-handle right"></span>
+      <span class="priority right" type="priority" priority="{{this.priority}}">{{this.priority}}</span>
+      {{#if this.link}}
+        <div class="task-link">
+          <a href="{{this.link}}" target="_blank">{{this.link}}</a>
+        </div>
+      {{/if}}
+    </li>
+  {{/each}}
   </script>
+
+  <script src="js/app.js"></script>
 </body>
 
 </html>

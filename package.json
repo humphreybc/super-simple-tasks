@@ -1,6 +1,6 @@
 {
   "name": "super-simple-tasks",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "devDependencies": {
     "coffee-script": "latest",
     "grunt": "latest",
@@ -12,6 +12,7 @@
     "grunt-contrib-concat": "latest",
     "grunt-contrib-uglify": "latest",
     "grunt-cache-bust": "latest",
-    "grunt-contrib-copy": "latest"
+    "grunt-contrib-copy": "latest",
+    "grunt-contrib-connect": "latest"
   }
 }

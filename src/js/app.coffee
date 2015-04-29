@@ -1,7 +1,8 @@
 # Mainly user interaction with the DOM
 
 $(document).ready ->
-  console.log 'Super Simple Tasks v2.0.4'
+
+  console.log 'Super Simple Tasks v2.0.5'
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 
@@ -45,6 +46,13 @@ $(document).ready ->
       if allTasks == null
         allTasks = Arrays.default_data
         window.storageType.set(DB.db_key, allTasks)
+
+      # Sends number of tasks to analytics
+      ga 'send',
+      'hitType': 'event'
+      'eventCategory': 'Data'
+      'eventAction': 'Task count'
+      'eventValue': allTasks.length
 
       # Check if we need to migrate
       Migrations.run(allTasks)
@@ -153,8 +161,10 @@ $(document).ready ->
 
     if evtobj.keyCode == 13
       addTaskTriggered()
+      ga 'send', 'event', 'Add task shortcut', 'shortcut'
     if evtobj.ctrlKey && evtobj.keyCode == 76
       addLinkTriggered()
+      ga 'send', 'event', 'Add link shortcut', 'shortcut'
 
   document.onkeydown = KeyPress
 
@@ -236,7 +246,7 @@ $(document).ready ->
     # Get the tasks
     window.storageType.get DB.db_key, (allTasks) ->
 
-      # Run the code in export.coffee, passing through the tasks to export and the file name 
+      # Run the code in export.coffee, passing through the tasks to export and the file name
       Exporter(allTasks, 'super simple tasks backup')
 
 

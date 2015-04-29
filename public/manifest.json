@@ -1,12 +1,12 @@
 {
   "manifest_version": 2,
 
-  "content_security_policy": "script-src 'self'; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com 'unsafe-eval'; object-src 'self'",
 
   "name": "Super Simple Tasks",
   "short_name": "Tasks",
   "description": "The world’s simplest tasks app with offline support, an elegant design, and no account required!",
-  "version": "2.0.4",
+  "version": "2.0.5",
 
   "icons": {
     "16": "img/icon16.png",

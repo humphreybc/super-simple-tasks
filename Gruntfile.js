@@ -4,14 +4,7 @@ module.exports = function(grunt) {
     coffee: {
       scripts: {
         files: {
-          '.tmp/concat/js/app.js': ['src/js/app.coffee', 
-                                    'src/js/storage.coffee', 
-                                    'src/js/task.coffee', 
-                                    'src/js/migrations.coffee', 
-                                    'src/js/views.coffee', 
-                                    'src/js/dragdrop.coffee', 
-                                    'src/js/export.coffee', 
-                                    'src/js/tour.coffee']
+          '.tmp/concat/js/app.js': ['src/js/*.coffee']
         },
         options: {
           bare: true
@@ -19,7 +12,7 @@ module.exports = function(grunt) {
       }
     },
     coffeelint: {
-      app: ['*.coffee'],
+      app: ['src/js/*.coffee'],
       options: {
         indentation: {
           value: 2,
@@ -28,6 +21,15 @@ module.exports = function(grunt) {
         max_line_length: {
           value: 120,
           level: 'error'
+        },
+        cyclomatic_complexity: {
+          level: 'warn'
+        },
+        no_unnecessary_double_quotes: {
+          level: 'warn'
+        },
+        no_unnecessary_fat_arrows: {
+          level: 'warn'
         }
       }
     },
@@ -39,8 +41,7 @@ module.exports = function(grunt) {
     concat: {
       app: {
         files: {
-          'public/js/app.js': ['src/vendor/jquery-2.1.1.min.js', 
-                               'src/vendor/slip.js', 
+          'public/js/app.js': ['src/vendor/*',
                                '.tmp/concat/js/app.js']
         }
       }
@@ -100,9 +101,19 @@ module.exports = function(grunt) {
       options: {
         atBegin: true
       }
+    },
+    connect: {
+      server: {
+        options: {
+          port: 9001,
+          base: 'public',
+          keepalive: true
+        }
+      }
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-coffeelint');
   grunt.loadNpmTasks('grunt-contrib-watch');

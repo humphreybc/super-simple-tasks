@@ -54,10 +54,10 @@ class ChromeStorage
     chrome.storage.sync.get key, (value) ->
       value = value[key] || null || LocalStorage.getSync(key)
 
-      callback(value) 
+      callback(value)
  
 
-  # Set all the tasks given the key 'todo' and the thing we're setting 
+  # Set all the tasks given the key 'todo' and the thing we're setting
   # Usually a JSON array of all the tasks
   @set: (key, value, callback) ->
 

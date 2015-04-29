@@ -1,4 +1,4 @@
-# Super Simple Tasks v2.0.4
+# Super Simple Tasks v2.0.5
 [supersimpletasks.com](http://supersimpletasks.com)
 
 A very simple, 100% client-side tasks app that uses localStorage to save the list and Slip.js for reordering. This exists mainly so I can teach myself Coffeescript and better programming in general.
@@ -105,9 +105,9 @@ A Gruntfile with a 'dev' task is available for development.
 
 ## Testing on mobile
 
-The easiest way to test on mobile locally is to start a HTTP server with Python:
+The easiest way to test on mobile locally is to start a server with grunt connect:
 
-    python -m SimpleHTTPServer
+    grunt connect
 
 Now visit <youripaddress>:8000/public to see Super Simple Tasks on your phone.
 

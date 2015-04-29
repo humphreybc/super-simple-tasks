@@ -6,12 +6,9 @@ class Views
   timeout = 0
 
 
-  # Useful function that takes a given task li and returns its id
-  # Finds the input id, strips 'task' from it, and converts the string to an int
-  # Destined to be replaced by the attribute / property 'id' on each object in allTasks
+  # Takes a task li and returns its id with jQuery
   @getId: (li) ->
-    id = $(li).find('input').data('id')
-    parseInt(id)
+    id = $(li).parent().children().index(li)
 
 
   # If there are no tasks, shows the #all-done blank state div
@@ -19,9 +16,6 @@ class Views
   @showTasks: (allTasks) ->
     if allTasks == undefined
       allTasks = []
-
-    # Update task IDs
-    Task.updateTaskId(allTasks)
 
     # Show the trophy if there's nothing in allTasks
     @showEmptyState(allTasks)
@@ -34,71 +28,22 @@ class Views
   @addHTML: (allTasks) ->
     task_list = $('#task-list')
 
-    task_list.empty()
+    tasks = @createTaskHTML(allTasks)
 
-    # For each task in allTasks
-    # Create the HTML markup and add it to the array
-    for task, i in allTasks
-      li = @createTaskHTML(task)
-      task_list.append(li)
+    task_list.html(tasks)
 
 
   # Create the HTML markup for a single task li and returns it
   # Takes into account whether a link is present or task is done
-  @createTaskHTML: (task) ->
-    li = $('<li/>', {
-      'class':'task'
-    })
+  @createTaskHTML: (allTasks) ->
 
-    if task.isDone
-      li.addClass('task-completed')
+    source = $('#task-template').html()
+    template = Handlebars.compile(source)
 
-    label = $('<label/>', {
-      'class':'left',
-      'text':task.name
-    })
-
-    checkbox = $('<input/>', {
-      'type':'checkbox',
-      'data-id':task.id,
-      'checked':task.isDone
-    })
-
-    drag = $('<span/>', {
-        'class':'drag-handle right'
-    })
-
-    priority = $('<span/>', {
-        'class':'priority right',
-        'type':'priority',
-        'priority':task.priority,
-        'text':task.priority
-    })
-
-    checkbox.prependTo(label)
-    label.appendTo(li)
-
-    drag.appendTo(li)
-    priority.appendTo(li)
-
-    unless task.link == ''
-      linkdiv = $('<div/>', {
-        'class':'task-link'
-      })
-
-      link = $('<a/>', {
-          'href':task.link,
-          'target':'_blank',
-          'text':task.link
-      })
-
-      link.appendTo(linkdiv)
-      linkdiv.appendTo(li)
-
-    return li
+    template({tasks: allTasks})
 
 
-  # Show the 'cup of tea' empty state if there aren't any tasks
+  # Show the empty state if there aren't any tasks
   # Also focus the new task field
   @showEmptyState: (allTasks) ->
     if allTasks.length == 0
@@ -131,7 +76,7 @@ class Views
     $('.tourbus-leg').hide()
 
     # Get rid of the # at the end of the URL
-    history.pushState('', document.title, window.location.pathname);
+    history.pushState('', document.title, window.location.pathname)
     
     window.storageType.set('sst-tour', 1)
 

@@ -9,44 +9,38 @@ class Arrays
 
   # Default task data for new users
   @default_data = [{
-                      'id':0,
                       'isDone':false,
-                      'name':'Add a new task above', 
+                      'name':'Add a new task above',
                       'priority':'blocker',
                       'link':''
                     },
                     {
-                      'id':1,
                       'isDone':false,
-                      'name':'Perhaps give it a priority or reorder it', 
+                      'name':'Perhaps give it a priority or reorder it',
                       'priority':'minor',
                       'link':''
                     },
                     {
-                      'id':2,
                       'isDone':false,
-                      'name':'Refresh to see that your task is still here', 
+                      'name':'Refresh to see that your task is still here',
                       'priority':'minor',
                       'link':''
                     },
                     {
-                      'id':3,
                       'isDone':false,
-                      'name':'Reference things by attaching a URL to tasks', 
+                      'name':'Reference things by attaching a URL to tasks',
                       'priority':'minor',
                       'link':'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
                     },
                     {
-                      'id':4,
                       'isDone':false,
-                      'name':'Follow @humphreybc on Twitter', 
+                      'name':'Follow @humphreybc on Twitter',
                       'priority':'major',
                       'link':'http://twitter.com/humphreybc'
                     },
                     {
-                      'id':5,
                       'isDone':false,
-                      'name':'Lastly, check this task off!', 
+                      'name':'Lastly, check this task off!',
                       'priority':'none',
                       'link':''
                     }]
@@ -66,7 +60,6 @@ class Task
 
     # Actually create the task
     task =
-      id: null
       isDone: false
       name: name
       priority: 'none'
@@ -84,7 +77,7 @@ class Task
     window.storageType.get DB.db_key, (allTasks) ->
 
       # Adds that new task to the end of the array
-      allTasks.push newTask
+      allTasks.unshift newTask
 
       # Save all the tasks
       window.storageType.set(DB.db_key, allTasks)
@@ -118,33 +111,12 @@ class Task
       if newLocation < oldLocation
         oldLocation += 1
       allTasks.splice(oldLocation, 1)
-
-      # Update the task id to reflect the new world order
-      Task.updateTaskId(allTasks)
       
       # Save the tasks
       window.storageType.set(DB.db_key, allTasks)
 
       # Show the tasks again
       Views.showTasks(allTasks)
-
-
-  # Add attribute 'id' to all objects in allTasks
-  @updateTaskId: (allTasks) ->
-
-    if allTasks == null
-      return
-
-    # Set id to object's current index (position in the array)
-    index = 0
-
-    # Update the ID
-    while index < allTasks.length
-      allTasks[index].id = index
-      ++index
-
-    # Return allTasks, now with an ID for each task
-    allTasks
 
 
   # Change the attribute (in the DOM) and run updateAttr to change it in storage
