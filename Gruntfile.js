@@ -101,9 +101,19 @@ module.exports = function(grunt) {
       options: {
         atBegin: true
       }
+    },
+    connect: {
+      server: {
+        options: {
+          port: 9001,
+          base: 'public',
+          keepalive: true
+        }
+      }
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-coffeelint');
   grunt.loadNpmTasks('grunt-contrib-watch');

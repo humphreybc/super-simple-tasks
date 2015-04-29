@@ -12,6 +12,7 @@
     "grunt-contrib-concat": "latest",
     "grunt-contrib-uglify": "latest",
     "grunt-cache-bust": "latest",
-    "grunt-contrib-copy": "latest"
+    "grunt-contrib-copy": "latest",
+    "grunt-contrib-connect": "latest"
   }
 }

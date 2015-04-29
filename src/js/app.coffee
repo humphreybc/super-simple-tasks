@@ -42,6 +42,12 @@ $(document).ready ->
     # Get all the tasks
     window.storageType.get DB.db_key, (allTasks) ->
 
+      ga 'send',
+      'hitType': 'event'
+      'eventCategory': 'Data'
+      'eventAction': 'All tasks'
+      'eventValue': allTasks.length
+
       # If there's nothing there, seed with sample tasks and save
       if allTasks == null
         allTasks = Arrays.default_data
