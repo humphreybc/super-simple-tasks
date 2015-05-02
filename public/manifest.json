@@ -18,10 +18,14 @@
     "storage"
   ],
 
+  "web_accessible_resources": [
+    "fonts/*.woff2"
+  ],
+
   "offline_enabled": true,
 
   "background": {
-    "scripts": ["background.js"]
+    "page": "index.html"
   },
 
   "browser_action": {

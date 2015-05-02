@@ -19,7 +19,9 @@ checkOnline = () ->
   online = navigator.onLine
   if online == true
     console.log 'Connected to the internet'
-    # $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")')
+    setTimeout (->
+      $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")')
+    ), 0
   else
     console.log 'Disconnected from the internet'
 
