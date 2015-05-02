@@ -30,6 +30,8 @@
       "38": "img/icon38.png"
     },
 
-    "default_title": "Super Simple Tasks"
+    "default_title": "Super Simple Tasks",
+
+    "default_popup": "index.html?popup=true"
   }
 }

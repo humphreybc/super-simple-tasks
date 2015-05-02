@@ -1,23 +1,49 @@
 # Mainly user interaction with the DOM
 
-$(document).ready ->
+# If we're a Chrome extension popup, add a class to the body
+setPopupClass = () ->
+  isPopup = Utils.getUrlParameter('popup') == 'true'
+  $('body').toggleClass('popup', isPopup)
 
+# Determine whether we're using localStorage or chrome.storage
+checkStorageMethod = () ->
+  if !!window.chrome and chrome.storage
+    console.log 'Using chrome.storage.sync to save'
+    window.storageType = ChromeStorage
+  else
+    console.log 'Using localStorage to save'
+    window.storageType = LocalStorage
+
+# Check if we're online
+checkOnline = () ->
+  online = navigator.onLine
+  if online == true
+    console.log 'Connected to the internet'
+    # $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")')
+  else
+    console.log 'Disconnected from the internet'
+
+standardLog = () ->
   console.log 'Super Simple Tasks v2.0.5'
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
+
+
+$(document).ready ->
+
+  setPopupClass()
+
+  standardLog()
+
+  checkStorageMethod()
+
+  checkOnline()
 
   $new_task_input = $('#new-task')
   $link_input = $('#add-link-input')
 
   # Create a global variable to save whether the onboarding tour is running or not
   window.tourRunning = false
-
-  # Check if we're online
-  online = navigator.onLine
-  if online == true
-    console.log 'Connected to the internet'
-  else
-    console.log 'Disconnected from the internet'
 
   # Create a new tourbus
   # When the tour stops, run Views.finishTour to set a storage item
@@ -27,14 +53,6 @@ $(document).ready ->
     onLegStart: (leg, bus) ->
       window.tourRunning = bus.running
       leg.$el.addClass('animated fadeInDown')
-
-  # Decide which storage method we're using
-  if !!window.chrome and chrome.storage
-    console.log 'Using chrome.storage.sync to save'
-    window.storageType = ChromeStorage
-  else
-    console.log 'Using localStorage to save'
-    window.storageType = LocalStorage
 
   # Runs functions on page load
   initialize = ->
@@ -73,10 +91,6 @@ $(document).ready ->
       setTimeout (->
         $('#main-content').addClass('content-show')
       ), 150
-
-      # Use a random image from Unsplash if we have an internet connection
-      if online == true
-        $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")')
 
 
   # Triggers the next step of the onboarding tour

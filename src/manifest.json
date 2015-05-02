@@ -2,7 +2,6 @@
   "manifest_version": 2,
 
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com 'unsafe-eval'; object-src 'self'",
-  // "content_security_policy": "script-src 'self'; object-src 'self'",
 
   "name": "Super Simple Tasks",
   "short_name": "Tasks",
@@ -31,6 +30,8 @@
       "38": "img/icon38.png"
     },
 
-    "default_title": "Super Simple Tasks"
+    "default_title": "Super Simple Tasks",
+
+    "default_popup": "index.html?popup=true"
   }
 }
