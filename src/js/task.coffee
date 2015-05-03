@@ -37,12 +37,6 @@ class Arrays
                       'name':'Follow @humphreybc on Twitter',
                       'priority':'major',
                       'link':'http://twitter.com/humphreybc'
-                    },
-                    {
-                      'isDone':false,
-                      'name':'Lastly, check this task off!',
-                      'priority':'none',
-                      'link':''
                     }]
 
 

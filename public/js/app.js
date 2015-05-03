@@ -4843,24 +4843,38 @@ window['Slip'] = (function(){
     }
     return Slip;
 })();
-ga('send', 'pageview', '/index.html');
+var sendPageView;
 
-$(document).ready(function() {
-  $('#new-task').on('click', function(e) {
-    return ga('send', 'event', 'New task focused', 'click');
-  });
-  $('#add-link').on('click', function(e) {
-    return ga('send', 'event', 'Add link button', 'click');
-  });
-  $('#task-submit').on('click', function(e) {
-    return ga('send', 'event', 'Add task button', 'click');
-  });
-  $('#clear-completed').on('click', function(e) {
-    return ga('send', 'event', 'Clear completed', 'click');
-  });
-  return $('#export-tasks').on('click', function(e) {
-    return ga('send', 'event', 'Export tasks', 'click');
-  });
+sendPageView = function() {
+  var url;
+  url = window.location.href.split('://');
+  if (url[0] === 'chrome-extension') {
+    return ga('send', 'pageview', 'chrome-extension');
+  } else {
+    return ga('send', 'pageview', url[1]);
+  }
+};
+
+sendPageView();
+
+$(document).on('click', '#new-task', function() {
+  return ga('send', 'event', 'New task focused', 'click');
+});
+
+$(document).on('click', '#add-link', function() {
+  return ga('send', 'event', 'Add link button', 'click');
+});
+
+$(document).on('click', '#task-submit', function() {
+  return ga('send', 'event', 'Add task button', 'click');
+});
+
+$(document).on('click', '#clear-completed', function() {
+  return ga('send', 'event', 'Clear completed', 'click');
+});
+
+$(document).on('click', '#export-tasks', function() {
+  return ga('send', 'event', 'Export tasks', 'click');
 });
 
 document.querySelector('#task-list').addEventListener('slip:reorder', function(e) {
@@ -4883,20 +4897,20 @@ $(document).on('click', '.task-link', function() {
   return ga('send', 'event', 'Task link', 'click');
 });
 
-$(document).on('click', '#whats-new-close', function() {
+$(document).on('mousedown', '#whats-new-close', function() {
   return ga('send', 'event', 'Close Whats New', 'click');
 });
 
-$(document).on('click', '#tour-bus-1', function() {
+$(document).on('mousedown', '#tour-bus-1', function() {
   return ga('send', 'event', 'Onboarding', 'click', 'Step 1', 33);
 });
 
-$(document).on('click', '#tour-bus-2', function() {
-  return ga('send', 'event', 'Onboarding', 'click', 'Step 2', 33);
+$(document).on('mousedown', '#tour-bus-2', function() {
+  return ga('send', 'event', 'Onboarding', 'click', 'Step 2', 66);
 });
 
-$(document).on('click', '#tour-bus-3', function() {
-  return ga('send', 'event', 'Onboarding', 'click', 'Step 3', 33);
+$(document).on('mousedown', '#tour-bus-3', function() {
+  return ga('send', 'event', 'Onboarding', 'click', 'Step 3', 100);
 });
 
 var $body, $link_input, $new_task_input, addLinkTriggered, addTaskTriggered, animateContent, changeEmptyStateImage, checkOnline, checkStorageMethod, clearCompleted, completeTask, createTour, displaySaveSuccess, exportTasks, handleNoTasks, initialize, keyboardShortcuts, nextTourBus, online, sendTaskCount, setPopupClass, standardLog, tour;
@@ -5318,11 +5332,6 @@ Arrays = (function() {
       'name': 'Follow @humphreybc on Twitter',
       'priority': 'major',
       'link': 'http://twitter.com/humphreybc'
-    }, {
-      'isDone': false,
-      'name': 'Lastly, check this task off!',
-      'priority': 'none',
-      'link': ''
     }
   ];
 
@@ -5497,7 +5506,7 @@ Views = (function() {
   Views.checkOnboarding = function(allTasks, tour) {
     return window.storageType.get('sst-tour', (function(_this) {
       return function(sstTour) {
-        if ((sstTour === null) && ($(window).width() > 600) && (allTasks.length > 0)) {
+        if ((sstTour === null) && ($(window).width() > 499) && (allTasks.length > 0)) {
           return tour.trigger('depart.tourbus');
         }
       };
