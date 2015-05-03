@@ -12,18 +12,23 @@
 
   <meta name="description" content="The world’s simplest to-do list." />
 
-  <link rel="stylesheet" href="css/app.d7350d16274202bc.css">
+  <link rel="stylesheet" href="css/app.css">
   <link rel="shortcut icon" href="favicon.png" />
 
 </head>
 <body>
   <header>
     <div class="header-left left">
-      <img src="img/logo-white.svg" width="32" height="32" class="left" style="margin-right:10px;"/>
+      <img src="img/logo-white.svg" width="32" height="32" class="left" />
     </div>
 
     <div class="header-right right">
-      <a href="#" id="clear-completed" class="right">Clear completed</a>
+      <a href="index.html" target="_blank" id="expand" class="right" title="Open as a tab">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 20 20" version="1.1"><title>Artboard 6</title><desc>Created with Sketch.</desc><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Artboard-6" fill="#FFFFFF"><path d="M9 14L11 14 11 5 13 5 10 1 7 5 9 5 9 14 9 14ZM17 6L14 6 14 8 16 8 16 17 4 17 4 8 6 8 6 6 3 6C2.447 6 2 6.447 2 7L2 18C2 18.552 2.447 19 3 19L17 19C17.553 19 18 18.552 18 18L18 7C18 6.448 17.553 6 17 6L17 6Z" id="Shape"/></g></g></svg>
+      </a>
+      <a href="#" id="clear-completed" class="right" title="Clear completed tasks">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 20 20" version="1.1"><title>Artboard 5</title><desc>Created with Sketch.</desc><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Artboard-5" fill="#FFFFFF"><path d="M6.6 18L14.4 18C14.952 18 15 17.553 15 17 15 16.447 14.952 16 14.4 16L6.6 16C6.048 16 6 16.447 6 17 6 17.553 6.048 18 6.6 18L6.6 18Z" id="Path"/><path d="M3.4 16L1.6 16C1.048 16 1 16.447 1 17 1 17.553 1.048 18 1.6 18L3.4 18C3.952 18 4 17.553 4 17 4 16.447 3.952 16 3.4 16L3.4 16Z" id="Path"/><path d="M8.6 13L16.4 13C16.952 13 17 12.553 17 12 17 11.447 16.952 11 16.4 11L8.6 11C8.048 11 8 11.447 8 12 8 12.553 8.048 13 8.6 13L8.6 13Z" id="Path"/><path d="M5.4 11L3.6 11C3.048 11 3 11.447 3 12 3 12.553 3.048 13 3.6 13L5.4 13C5.952 13 6 12.553 6 12 6 11.447 5.952 11 5.4 11L5.4 11Z" id="Path"/><path d="M10.6 8L18.4 8C18.952 8 19 7.553 19 7 19 6.447 18.952 6 18.4 6L10.6 6C10.048 6 10 6.447 10 7 10 7.553 10.048 8 10.6 8L10.6 8Z" id="Path"/><path d="M7.4 6L5.6 6C5.048 6 5 6.447 5 7 5 7.553 5.048 8 5.6 8L7.4 8C7.952 8 8 7.553 8 7 8 6.447 7.952 6 7.4 6L7.4 6Z" id="Path"/></g></g></svg>
+      </a>
     </div>
   </header>
 
@@ -47,7 +52,7 @@
               <button class="button button-gray" tabindex="2" id="add-link" title="Attach a link (Ctrl + L)"></button>
             </td>
             <td>
-              <button class="button button-green task-submit-button" tabindex="3" id="task-submit" title="Add task (Enter)"></button>
+              <button class="button button-green" tabindex="3" id="task-submit" title="Add task (Enter)"></button>
             </td>
           </tr>
           <tr id="add-link-input-wrapper">
@@ -112,7 +117,7 @@
   {{/each}}
   </script>
 
-  <script src="js/app.e2fda5bd1528ebaf.js"></script>
+  <script src="js/app.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,38 @@
+// Add link button and styling
+
+#add-link
+  background-repeat no-repeat
+  background-image url('../img/link-black.svg')
+  background-position 50% 50%
+
+#add-link-input-wrapper
+  opacity 0
+  transition opacity 250ms
+    
+#add-link-input
+  color blue
+  background-image url('../img/link-black.svg')
+  background-repeat no-repeat
+  background-size 22px
+  background-position -2px 50%
+  border none
+  font-size font-xsmall
+  padding 5px 5px 5px 20px
+  
+.link-active
+
+  #add-link
+    background-color blue
+    background-image url('../img/link-white.svg') !important
+    
+    #link-icon
+      fill white
+      
+    &:hover
+      background-color blue
+      
+  #add-link-input-wrapper
+    opacity 1
+    
+  #task-list
+    margin-top 0px

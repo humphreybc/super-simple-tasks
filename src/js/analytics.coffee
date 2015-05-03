@@ -61,7 +61,3 @@ $(document).on 'click', '#tour-bus-2', ->
 $(document).on 'click', '#tour-bus-3', ->
   ga 'send', 'event', 'Onboarding', 'click', 'Step 3', 33
 
-
-
-
-

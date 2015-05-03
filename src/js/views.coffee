@@ -55,7 +55,7 @@ class Views
 
   # Start the tour if it hasn't run before and the window is wider than 600px
   @checkOnboarding: (allTasks, tour) ->
-    window.storageType.get 'sst-tour', (sstTour) ->
+    window.storageType.get 'sst-tour', (sstTour) =>
       if (sstTour == null) and ($(window).width() > 600) and (allTasks.length > 0)
         tour.trigger 'depart.tourbus'
 
