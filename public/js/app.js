@@ -5190,9 +5190,29 @@ Exporter = function(allTasks, FileTitle) {
   return document.body.removeChild(link);
 };
 
-chrome.extension.onMessage.addListener(function(task, sender, sendResponse) {
-  Task.setNewTask(task, '');
-});
+var onClickHandler;
+
+if (!!window.chrome && chrome.storage) {
+  onClickHandler = function(task) {
+    var options;
+    task = task.selectionText;
+    Task.setNewTask(task, '');
+    options = {
+      type: 'basic',
+      title: 'Task added!',
+      message: task,
+      iconUrl: '../img/notification_icon.png'
+    };
+    chrome.notifications.create(options);
+  };
+  chrome.contextMenus.onClicked.addListener(onClickHandler);
+  chrome.runtime.onStartup.addListener(function() {
+    chrome.contextMenus.create({
+      'title': 'Add: %s',
+      'contexts': ['selection']
+    });
+  });
+}
 
 var Migrations;
 
