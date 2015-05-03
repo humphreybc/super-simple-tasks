@@ -1,32 +1,37 @@
 # Specific to the Chrome extension
 
-getText = (selected) ->
-  Task.setNewTask(selected.selectionText, '')
+chrome.extension.onMessage.addListener (task, sender, sendResponse) ->
+  Task.setNewTask(task, '')
+  return
 
-cmid = cmid || null
+# chrome.runtime.onMessage.addListener (selection_text, _, sendResponse) ->
+#   Task.setNewTask(selection_text, '')
+#   showChromeNotification()
 
-console.log 'thing'
+# cmid = cmid || null
 
-document.addEventListener 'selectionchange', () ->
-  debugger
-  type = window.getSelection().toString().trim()
-  if type == ''
-    # Remove the context menu entry
-    if cmid != null
-      chrome.contextMenus.remove(cmid)
-      cmid = null # Invalidate entry now to avoid race conditions
-    # else: No contextmenu ID, so nothing to remove
-  else # Add/update context menu entry
-    options = {
-      title: type
-      contexts: ['selection']
-      onclick: getText
-    }
-    if !!cmid
-      chrome.contextMenus.update(cmid, options)
-    else
-      # Create new menu, and remember the ID
-      cmid = chrome.contextMenus.create(options)
+# console.log 'thing'
+
+# document.addEventListener 'selectionchange', () ->
+#   debugger
+#   type = window.getSelection().toString().trim()
+#   if type == ''
+#     # Remove the context menu entry
+#     if cmid != null
+#       chrome.contextMenus.remove(cmid)
+#       cmid = null # Invalidate entry now to avoid race conditions
+#     # else: No contextmenu ID, so nothing to remove
+#   else # Add/update context menu entry
+#     options = {
+#       title: type
+#       contexts: ['selection']
+#       onclick: getText
+#     }
+#     if !!cmid
+#       chrome.contextMenus.update(cmid, options)
+#     else
+#       # Create new menu, and remember the ID
+#       cmid = chrome.contextMenus.create(options)
 
 # var cmid;
 # var cm_clickHandler = function(clickData, tab) {

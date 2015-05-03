@@ -16,22 +16,25 @@
 
   "permissions": [
     "storage",
-    "contextMenus"
+    "contextMenus",
+    "tabs",
+    "notifications"
   ],
 
   "web_accessible_resources": [
-    "fonts/*.woff2"
+    "fonts/*.woff2",
+    "images/icon48.png"
   ],
 
   "offline_enabled": true,
 
-  "background": {
-    "page": "index.html"
-  },
-
   // "background": {
   //   "scripts": ["background.js"]
   // },
+
+  "background": {
+    "page": "index.html"
+  },
 
   "browser_action": {
     "default_icon": {   

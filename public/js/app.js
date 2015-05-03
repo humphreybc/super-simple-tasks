@@ -5190,37 +5190,8 @@ Exporter = function(allTasks, FileTitle) {
   return document.body.removeChild(link);
 };
 
-var cmid, getText;
-
-getText = function(selected) {
-  return Task.setNewTask(selected.selectionText, '');
-};
-
-cmid = cmid || null;
-
-console.log('thing');
-
-document.addEventListener('selectionchange', function() {
-  debugger;
-  var options, type;
-  type = window.getSelection().toString().trim();
-  if (type === '') {
-    if (cmid !== null) {
-      chrome.contextMenus.remove(cmid);
-      return cmid = null;
-    }
-  } else {
-    options = {
-      title: type,
-      contexts: ['selection'],
-      onclick: getText
-    };
-    if (!!cmid) {
-      return chrome.contextMenus.update(cmid, options);
-    } else {
-      return cmid = chrome.contextMenus.create(options);
-    }
-  }
+chrome.extension.onMessage.addListener(function(task, sender, sendResponse) {
+  Task.setNewTask(task, '');
 });
 
 var Migrations;
