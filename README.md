@@ -1,4 +1,4 @@
-# Super Simple Tasks v2.0.5
+# Super Simple Tasks
 [supersimpletasks.com](http://supersimpletasks.com)
 
 A very simple, 100% client-side tasks app that uses localStorage to save the list and Slip.js for reordering. This exists mainly so I can teach myself Coffeescript and better programming in general.
@@ -126,15 +126,14 @@ So I don't forget :)
 
 1. Manifest.json for Chrome Web Store has an updated version number
 2. app.coffee has an updated version number
-3. README has an updated version number
-4. package.json has updated version number
-5. Delete public/ and run 'grunt build'
-6. Create a .zip of /public for the Chrome Web Store
-7. Test .zip in Chrome Apps & Extensions Developer Tool
-8. Commit and push to develop
-10. Pull request into master
-11. For a major release, create a GitHub release and tags with changelog
-12. Upload .zip file to Chrome Web Store developer dashboard
+3. package.json has updated version number
+4. Delete public/ and run 'grunt build'
+5. Create a .zip of /public for the Chrome Web Store
+6. Test .zip in Chrome Apps & Extensions Developer Tool
+7. Commit and push to develop
+8. Pull request into master
+9. For a major release, create a GitHub release and tags with changelog
+10. Upload .zip file to Chrome Web Store developer dashboard
 
 
 
