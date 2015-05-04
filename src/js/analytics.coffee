@@ -8,11 +8,12 @@ sendPageView = ->
   else
     ga('send', 'pageview', url[1])
 
-sendPageView()
-
-# Focus new task input
-$(document).on 'click', '#new-task', ->
-  ga 'send', 'event', 'New task focused', 'click'
+# Because this code is set as background code for the extension, we
+# don't want the pageviews firing all the time. So instead we
+# only send the pageview when the new task input has focus.
+# The new task input is focused by default when the page loads.
+$(document).on 'focus', '#new-task', ->
+  sendPageView()
 
 # Click on Add link button
 $(document).on 'click', '#add-link', ->
