@@ -20,8 +20,6 @@ initialize = ->
 
     Views.checkOnboarding(allTasks, tour)
 
-    sendTaskCount(allTasks)
-
     Views.checkWhatsNew()
 
   animateContent()
@@ -31,16 +29,17 @@ initialize = ->
 
 # Send an event with the task count
 sendTaskCount = (allTasks) ->
-  ga 'send',
-    'hitType': 'event'
-    'eventCategory': 'Data'
-    'eventAction': 'Task count'
-    'eventValue': allTasks.length
+  window.storageType.get DB.db_key, (allTasks) ->
+    ga 'send',
+      'hitType': 'event'
+      'eventCategory': 'Data'
+      'eventAction': 'Task count'
+      'eventValue': allTasks.length
 
 
 # Write some standard stuff to the console
 standardLog = ->
-  console.log 'Super Simple Tasks v2.1'
+  console.log 'Super Simple Tasks v2.1.1'
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 
@@ -124,6 +123,8 @@ addTaskTriggered = () ->
     $link_input.val('')
 
     displaySaveSuccess()
+
+    sendTaskCount()
 
   $new_task_input.focus()
 
