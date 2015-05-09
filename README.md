@@ -125,15 +125,16 @@ All development happens on the 'develop' branch. Master is for main releases onl
 So I don't forget :)
 
 1. Manifest.json for Chrome Web Store has an updated version number
-2. app.coffee has an updated version number
-3. package.json has updated version number
-4. Delete public/ and run 'grunt build'
-5. Create a .zip of /public for the Chrome Web Store
-6. Test .zip in Chrome Apps & Extensions Developer Tool
-7. Commit and push to develop
-8. Pull request into master
-9. For a major release, create a GitHub release and tags with changelog
-10. Upload .zip file to Chrome Web Store developer dashboard
+1. app.coffee has an updated version number
+1. package.json has updated version number
+1. Make sure analytics.js is using tracking_code instead of dev_tracking_code
+1. Delete public/ and run 'grunt build'
+1. Create a .zip of /public for the Chrome Web Store
+1. Test .zip in Chrome Apps & Extensions Developer Tool
+1. Commit and push to develop
+1. Pull request into master
+1. For a major release, create a GitHub release and tags with changelog
+1. Upload .zip file to Chrome Web Store developer dashboard
 
 
 
