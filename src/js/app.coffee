@@ -45,12 +45,22 @@ standardLog = ->
 
 
 checkStorageMethod = ->
-  if !!window.chrome and chrome.storage
-    console.log 'Using chrome.storage.sync to save'
-    window.storageType = ChromeStorage
-  else
-    console.log 'Using localStorage to save'
-    window.storageType = LocalStorage
+  window.storageType = FirebaseSync
+
+  # key = Utils.generateUUID()
+
+  # value = Arrays.default_data
+
+  # window.storageType.set(DB.db_key, value)
+
+  # window.storageType.get()
+
+  # if !!window.chrome and chrome.storage
+  #   console.log 'Using chrome.storage.sync to save'
+  #   window.storageType = ChromeStorage
+  # else
+  #   console.log 'Using localStorage to save'
+  #   window.storageType = LocalStorage
 
 
 checkOnline = ->

@@ -82,6 +82,39 @@ class ChromeStorage
           Views.showTasks(storageChange.newValue)
 
 
+class FirebaseSync
+
+  ref = new Firebase('https://supersimpletasks.firebaseio.com')
+
+  @get: (key, callback) ->
+
+    ref.once 'value', (value) ->
+      allTasks = value.val()
+      callback(allTasks.todo)
+
+    # ref.on 'value', ((value) ->
+      
+    #   allTasks = value.val()
+
+    #   callback(allTasks.todo)
+
+    # ), (errorObject) ->
+    #   console.log 'The read failed: ' + errorObject.code
+    #   return
+
+
+  @set: (key, value, callback) ->
+
+    params = {}
+    params[key] = value
+
+    ref.set params, () ->
+
+
+  @remove: ->
+    console.log 'remove'
+
+
 
 
 
