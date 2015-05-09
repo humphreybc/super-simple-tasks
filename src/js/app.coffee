@@ -39,7 +39,7 @@ sendTaskCount = (allTasks) ->
 
 # Write some standard stuff to the console
 standardLog = ->
-  console.log 'Super Simple Tasks v2.1.1'
+  console.log 'Super Simple Tasks v2.1.2'
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 
