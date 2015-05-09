@@ -23,6 +23,9 @@ class Views
     # Generate HTML
     @addHTML(allTasks)
 
+    # Set the badge action for the extension
+    Extension.setBrowserActionBadge(allTasks)
+
 
   # Creates the task list in HTML
   @addHTML: (allTasks) ->

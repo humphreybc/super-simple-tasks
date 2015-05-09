@@ -12,7 +12,7 @@ sendPageView = ->
 # don't want the pageviews firing all the time. So instead we
 # only send the pageview when the new task input has focus.
 # The new task input is focused by default when the page loads.
-$(document).on 'focus', '#new-task', ->
+$(window).focus ->
   sendPageView()
 
 # Click on Add link button
