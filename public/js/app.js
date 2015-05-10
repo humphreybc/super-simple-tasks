@@ -5114,9 +5114,16 @@ var Utils;
 Utils = (function() {
   function Utils() {}
 
+  Utils.getUrlAttribute = function(attribute) {
+    var parser;
+    parser = document.createElement('a');
+    parser.href = window.location.href;
+    return parser[attribute];
+  };
+
   Utils.getUrlParameter = function(param) {
     var i, pageURL, parameterName, urlVariables;
-    pageURL = window.location.search.substring(1);
+    pageURL = this.getUrlAttribute('search').substring(1);
     urlVariables = pageURL.split('&');
     i = 0;
     while (i < urlVariables.length) {
@@ -5136,6 +5143,12 @@ Utils = (function() {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   };
 
+  Utils.checkOnline = function() {
+    var online;
+    online = navigator.onLine;
+    return online;
+  };
+
   return Utils;
 
 })();
@@ -5147,9 +5160,6 @@ LocalStorage = (function() {
 
   LocalStorage.get = function(key, callback) {
     var value;
-    if (key === DB.db_key) {
-      value = FirebaseSync.get(key);
-    }
     value = localStorage.getItem(key);
     value = JSON.parse(value);
     return callback(value);
@@ -5162,9 +5172,6 @@ LocalStorage = (function() {
   };
 
   LocalStorage.set = function(key, value) {
-    if (key === DB.db_key) {
-      FirebaseSync.set(key, value);
-    }
     value = JSON.stringify(value);
     return localStorage.setItem(key, value);
   };
@@ -5189,9 +5196,6 @@ ChromeStorage = (function() {
 
   ChromeStorage.set = function(key, value, callback) {
     var params;
-    if (key === DB.db_key) {
-      FirebaseSync.set(key, value);
-    }
     params = {};
     params[key] = value;
     return chrome.storage.sync.set(params, function() {});
@@ -5271,14 +5275,37 @@ FirebaseSync = (function() {
 DB = (function() {
   function DB() {}
 
-  DB.saveSyncKey = function() {
-    this.db_key = localStorage.getItem('sync_key');
-    if (this.db_key === null) {
-      this.db_key = Utils.generateID();
-      localStorage.setItem('sync_key', this.db_key);
-      console.log('Your sync key has been set to: ' + this.db_key);
+  DB.checkStorageMethod = function() {
+    window.sync_enabled = localStorage.getItem('sync_enabled');
+    if (window.sync_enabled === null) {
+      window.sync_enabled = false;
+    } else {
+      window.sync_enabled = true;
     }
-    return console.log('Your sync key is: ' + this.db_key);
+    if (window.sync_enabled) {
+      console.log('Using Firebase to save');
+      return window.storageType = FirebaseSync;
+    } else {
+      if (!!window.chrome && chrome.storage) {
+        console.log('Using chrome.storage.sync to save');
+        return window.storageType = ChromeStorage;
+      } else {
+        console.log('Using localStorage to save');
+        return window.storageType = LocalStorage;
+      }
+    }
+  };
+
+  DB.saveSyncKey = function() {
+    if (window.sync_enabled === true) {
+      this.db_key = localStorage.getItem('sync_key');
+      if (this.db_key === null) {
+        this.db_key = Utils.generateID();
+        localStorage.setItem('sync_key', this.db_key);
+        console.log('Your sync key has been set to: ' + this.db_key);
+      }
+      return console.log('Your sync key is: ' + this.db_key);
+    }
   };
 
   return DB;
@@ -5483,6 +5510,20 @@ Task = (function() {
     });
   };
 
+  Task.handleNoTasks = function(allTasks) {
+    if (allTasks === null) {
+      allTasks = Arrays.default_data;
+      window.storageType.set(DB.db_key, allTasks);
+    }
+    return allTasks;
+  };
+
+  Task.exportTasks = function() {
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      return Exporter(allTasks, 'super simple tasks backup');
+    });
+  };
+
   return Task;
 
 })();
@@ -5495,6 +5536,19 @@ Views = (function() {
   function Views() {}
 
   timeout = 0;
+
+  Views.animateContent = function() {
+    return setTimeout((function() {
+      return $('#main-content').addClass('content-show');
+    }), 150);
+  };
+
+  Views.displaySaveSuccess = function() {
+    $('#task-submit').addClass('task-submitted');
+    return setTimeout((function() {
+      return $('#task-submit').removeClass('task-submitted');
+    }), 1000);
+  };
 
   Views.getId = function(li) {
     var id;
@@ -5678,7 +5732,7 @@ Migrations = (function() {
 
 })();
 
-var $body, $link_input, $new_task_input, addLinkTriggered, addTaskTriggered, animateContent, catchSharingCode, changeEmptyStateImage, checkOnline, checkStorageMethod, clearCompleted, completeTask, createTour, disconnectDevices, displaySaveSuccess, exportTasks, handleNoTasks, initialize, keyboardShortcuts, linkDevicesModal, nextTourBus, online, sendTaskCount, setPopupClass, standardLog, tour;
+var $body, $link_input, $new_task_input, addLinkTriggered, addTaskTriggered, catchSharingCode, changeEmptyStateImage, completeTask, createTour, disconnectDevices, enableSync, initialize, keyboardShortcuts, linkDevices, nextTourBus, online, sendTaskCount, setPopupClass, standardLog, toggleModalDialog, tour;
 
 $new_task_input = $('#new-task');
 
@@ -5692,11 +5746,11 @@ tour = null;
 
 initialize = function() {
   window.storageType.get(DB.db_key, function(allTasks) {
-    allTasks = handleNoTasks(allTasks);
+    allTasks = Task.handleNoTasks(allTasks);
     Migrations.run(allTasks);
     return Views.showTasks(allTasks);
   });
-  animateContent();
+  Views.animateContent();
   return $new_task_input.focus();
 };
 
@@ -5714,15 +5768,6 @@ sendTaskCount = function(allTasks) {
 standardLog = function() {
   console.log('Super Simple Tasks v2.1.2');
   return console.log('Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks');
-};
-
-checkStorageMethod = function() {
-  return window.storageType = FirebaseSync;
-};
-
-checkOnline = function() {
-  online = navigator.onLine;
-  return online;
 };
 
 setPopupClass = function() {
@@ -5756,20 +5801,6 @@ createTour = function() {
   });
 };
 
-handleNoTasks = function(allTasks) {
-  if (allTasks === null) {
-    allTasks = Arrays.default_data;
-    window.storageType.set(DB.db_key, allTasks);
-  }
-  return allTasks;
-};
-
-animateContent = function() {
-  return setTimeout((function() {
-    return $('#main-content').addClass('content-show');
-  }), 150);
-};
-
 nextTourBus = function(tour) {
   if (window.tourRunning) {
     return tour.trigger('next.tourbus');
@@ -5798,17 +5829,10 @@ addTaskTriggered = function() {
     Task.setNewTask(name, link);
     $new_task_input.val('');
     $link_input.val('');
-    displaySaveSuccess();
+    Views.displaySaveSuccess();
     sendTaskCount();
   }
   return $new_task_input.focus();
-};
-
-displaySaveSuccess = function() {
-  $('#task-submit').addClass('task-submitted');
-  return setTimeout((function() {
-    return $('#task-submit').removeClass('task-submitted');
-  }), 1000);
 };
 
 keyboardShortcuts = function(e) {
@@ -5834,15 +5858,11 @@ completeTask = function(li) {
   return checkbox.prop('checked', isDone);
 };
 
-clearCompleted = function() {
-  return window.storageType.get(DB.db_key, function(allTasks) {
-    if (allTasks.length !== 0) {
-      return Task.clearCompleted();
-    }
-  });
+enableSync = function() {
+  return localStorage.setItem('sync_enabled', true);
 };
 
-linkDevicesModal = function() {
+toggleModalDialog = function() {
   var $blanket, $device_link_code, $modal;
   $blanket = $('.modal-blanket');
   $modal = $('#link-devices-modal');
@@ -5863,14 +5883,17 @@ linkDevicesModal = function() {
 };
 
 disconnectDevices = function() {
-  localStorage.removeItem('sync_key', DB.db_key);
+  localStorage.removeItem('sync_enabled');
+  localStorage.removeItem('sync_key');
   return location.reload();
 };
 
-exportTasks = function() {
-  return window.storageType.get(DB.db_key, function(allTasks) {
-    return Exporter(allTasks, 'super simple tasks backup');
-  });
+linkDevices = function() {
+  enableSync();
+  DB.checkStorageMethod();
+  DB.saveSyncKey();
+  toggleModalDialog();
+  return initialize();
 };
 
 $(document).on('click', '.task > label', function(e) {
@@ -5918,12 +5941,12 @@ $(document).on('click', '#add-link', addLinkTriggered);
 
 $(document).on('click', '#clear-completed', function(e) {
   e.preventDefault();
-  return clearCompleted();
+  return Task.clearCompleted();
 });
 
 $(document).on('click', '#link-devices', function(e) {
   e.preventDefault();
-  return linkDevicesModal();
+  return linkDevices();
 });
 
 $(document).on('click', '#disconnect-devices', function(e) {
@@ -5933,26 +5956,26 @@ $(document).on('click', '#disconnect-devices', function(e) {
 
 $(document).on('click', '#modal-close', function(e) {
   e.preventDefault();
-  return linkDevicesModal();
+  return toggleModalDialog();
 });
 
 $(document).on('click', '#export-tasks', function(e) {
   e.preventDefault();
-  return exportTasks();
+  return Task.exportTasks();
 });
 
 $(document).ready(function() {
   setPopupClass();
   catchSharingCode();
   standardLog();
-  checkStorageMethod();
+  DB.checkStorageMethod();
   DB.saveSyncKey();
   window.tourRunning = false;
   document.onkeydown = keyboardShortcuts;
   tour = createTour();
   initialize();
   return setTimeout((function() {
-    checkOnline();
+    Utils.checkOnline();
     return changeEmptyStateImage(online);
   }), 100);
 });

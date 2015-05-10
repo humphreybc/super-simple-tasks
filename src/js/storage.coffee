@@ -6,9 +6,6 @@ class LocalStorage
   # Parses the JSON so it's an object instead of a string
   @get: (key, callback) ->
 
-    if key == DB.db_key
-      value = FirebaseSync.get(key)
-
     value = localStorage.getItem(key)
 
     value = JSON.parse(value)
@@ -26,9 +23,6 @@ class LocalStorage
 
   # Sets something to localStorage given a key and value
   @set: (key, value) ->
-
-    if key == DB.db_key
-      FirebaseSync.set(key, value)
 
     value = JSON.stringify(value)
 
@@ -56,9 +50,6 @@ class ChromeStorage
   # Usually a JSON array of all the tasks
   @set: (key, value, callback) ->
 
-    if key == DB.db_key
-      FirebaseSync.set(key, value)
-
     params = {}
     params[key] = value
 
@@ -82,6 +73,7 @@ class ChromeStorage
 
 class FirebaseSync
 
+  # if sync_enabled = localStorage.getItem('sync_enabled')
   ref = new Firebase('https://supersimpletasks.firebaseio.com/data')
 
   @get: (key, callback) ->
@@ -132,18 +124,38 @@ class DB
   # This is the key used to save tasks in localStorage
   # If this is changed, tasks will be lost on upgrade
 
+  @checkStorageMethod: ->
+    window.sync_enabled = localStorage.getItem('sync_enabled')
+    if window.sync_enabled == null
+      window.sync_enabled = false
+    else
+      window.sync_enabled = true
+
+    if window.sync_enabled
+      console.log 'Using Firebase to save'
+      window.storageType = FirebaseSync
+    else
+      if !!window.chrome and chrome.storage
+        console.log 'Using chrome.storage.sync to save'
+        window.storageType = ChromeStorage
+      else
+        console.log 'Using localStorage to save'
+        window.storageType = LocalStorage
+
   @saveSyncKey: ->
 
-    @db_key = localStorage.getItem('sync_key')
+    if window.sync_enabled == true
 
-    if @db_key == null
-      @db_key = Utils.generateID()
+      @db_key = localStorage.getItem('sync_key')
 
-      localStorage.setItem('sync_key', @db_key)
+      if @db_key == null
+        @db_key = Utils.generateID()
 
-      console.log 'Your sync key has been set to: ' + @db_key
+        localStorage.setItem('sync_key', @db_key)
 
-    console.log 'Your sync key is: ' + @db_key
+        console.log 'Your sync key has been set to: ' + @db_key
+
+      console.log 'Your sync key is: ' + @db_key
 
 
 

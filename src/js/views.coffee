@@ -5,6 +5,20 @@ class Views
   # Variable that we can clear if the timeout has to be stopped early
   timeout = 0
 
+  @animateContent: ->
+    setTimeout (->
+      $('#main-content').addClass('content-show')
+    ), 150
+
+
+  # Does the little animation on the task submit button
+  @displaySaveSuccess: ->
+    $('#task-submit').addClass('task-submitted')
+
+    setTimeout (->
+      $('#task-submit').removeClass('task-submitted')
+    ), 1000
+
 
   # Takes a task li and returns its id with jQuery
   @getId: (li) ->

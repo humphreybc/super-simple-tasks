@@ -12,7 +12,7 @@ initialize = ->
 
   window.storageType.get DB.db_key, (allTasks) ->
 
-    allTasks = handleNoTasks(allTasks)
+    allTasks = Task.handleNoTasks(allTasks)
 
     Migrations.run(allTasks)
 
@@ -22,7 +22,7 @@ initialize = ->
 
     # Views.checkWhatsNew()
 
-  animateContent()
+  Views.animateContent()
 
   $new_task_input.focus()
 
@@ -42,23 +42,6 @@ standardLog = ->
   console.log 'Super Simple Tasks v2.1.2'
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
-
-
-checkStorageMethod = ->
-
-  window.storageType = FirebaseSync
-
-  # if !!window.chrome and chrome.storage
-  #   console.log 'Using chrome.storage.sync to save'
-  #   window.storageType = ChromeStorage
-  # else
-  #   console.log 'Using localStorage to save'
-  #   window.storageType = LocalStorage
-
-
-checkOnline = ->
-  online = navigator.onLine
-  return online
 
 
 setPopupClass = ->
@@ -84,20 +67,6 @@ createTour = ->
     onLegStart: (leg, bus) ->
       window.tourRunning = bus.running
       leg.$el.addClass('animated fadeInDown')
-
-
-handleNoTasks = (allTasks) ->
-  if allTasks == null
-    allTasks = Arrays.default_data
-    window.storageType.set(DB.db_key, allTasks)
-
-  return allTasks
-
-
-animateContent = ->
-  setTimeout (->
-    $('#main-content').addClass('content-show')
-  ), 150
 
 
 nextTourBus = (tour) ->
@@ -132,20 +101,11 @@ addTaskTriggered = () ->
     $new_task_input.val('')
     $link_input.val('')
 
-    displaySaveSuccess()
+    Views.displaySaveSuccess()
 
     sendTaskCount()
 
   $new_task_input.focus()
-
-
-# Does the little animation on the task submit button
-displaySaveSuccess = ->
-  $('#task-submit').addClass('task-submitted')
-
-  setTimeout (->
-    $('#task-submit').removeClass('task-submitted')
-  ), 1000
 
 
 keyboardShortcuts = (e) ->
@@ -173,13 +133,11 @@ completeTask = (li) ->
   checkbox.prop 'checked', isDone
 
 
-clearCompleted = ->
-  window.storageType.get DB.db_key, (allTasks) ->
-    unless allTasks.length == 0
-      Task.clearCompleted()
+enableSync = ->
+  localStorage.setItem('sync_enabled', true)
 
-linkDevicesModal = ->
 
+toggleModalDialog = ->
   $blanket = $('.modal-blanket')
   $modal = $('#link-devices-modal')
   $device_link_code = $('#device-link-code')
@@ -200,14 +158,24 @@ linkDevicesModal = ->
 
   $device_link_code.val('http://dev.supersimpletasks.com?share=' + DB.db_key)
 
+
 disconnectDevices = ->
-  localStorage.removeItem('sync_key', DB.db_key)
+  localStorage.removeItem('sync_enabled')
+  localStorage.removeItem('sync_key')
   location.reload()
 
 
-exportTasks = ->
-  window.storageType.get DB.db_key, (allTasks) ->
-    Exporter(allTasks, 'super simple tasks backup')
+linkDevices = ->
+
+  enableSync()
+
+  DB.checkStorageMethod()
+
+  DB.saveSyncKey()
+
+  toggleModalDialog()
+
+  initialize()
 
 
 # We'll manage checking the checkbox thank you very much
@@ -269,11 +237,11 @@ $(document).on 'click', '#add-link', addLinkTriggered
 
 $(document).on 'click', '#clear-completed', (e) ->
   e.preventDefault()
-  clearCompleted()
+  Task.clearCompleted()
 
 $(document).on 'click', '#link-devices', (e) ->
   e.preventDefault()
-  linkDevicesModal()
+  linkDevices()
 
 $(document).on 'click', '#disconnect-devices', (e) ->
   e.preventDefault()
@@ -281,11 +249,11 @@ $(document).on 'click', '#disconnect-devices', (e) ->
 
 $(document).on 'click', '#modal-close', (e) ->
   e.preventDefault()
-  linkDevicesModal()
+  toggleModalDialog()
 
 $(document).on 'click', '#export-tasks', (e) ->
   e.preventDefault()
-  exportTasks()
+  Task.exportTasks()
 
 
 $(document).ready ->
@@ -296,7 +264,7 @@ $(document).ready ->
 
   standardLog()
 
-  checkStorageMethod()
+  DB.checkStorageMethod()
 
   DB.saveSyncKey()
 
@@ -310,7 +278,7 @@ $(document).ready ->
 
   setTimeout (->
 
-    checkOnline()
+    Utils.checkOnline()
 
     changeEmptyStateImage(online)
 
