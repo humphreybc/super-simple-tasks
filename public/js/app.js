@@ -5177,7 +5177,7 @@ $(document).on('mousedown', '#tour-bus-3', function() {
   return ga('send', 'event', 'Onboarding', 'click', 'Step 3', 100);
 });
 
-var $body, $link_input, $new_task_input, addLinkTriggered, addTaskTriggered, animateContent, changeEmptyStateImage, checkOnline, checkStorageMethod, clearCompleted, completeTask, createTour, displaySaveSuccess, exportTasks, handleNoTasks, initialize, keyboardShortcuts, nextTourBus, online, sendTaskCount, setPopupClass, standardLog, tour;
+var $body, $link_input, $new_task_input, addLinkTriggered, addTaskTriggered, animateContent, changeEmptyStateImage, checkOnline, checkStorageMethod, clearCompleted, completeTask, createTour, displaySaveSuccess, exportTasks, handleNoTasks, initialize, keyboardShortcuts, linkDevicesModal, nextTourBus, online, sendTaskCount, setPopupClass, standardLog, tour;
 
 $new_task_input = $('#new-task');
 
@@ -5334,6 +5334,25 @@ clearCompleted = function() {
   });
 };
 
+linkDevicesModal = function() {
+  var $blanket, $device_link_code, $modal;
+  $blanket = $('.modal-blanket');
+  $modal = $('#link-devices-modal');
+  $device_link_code = $('#device-link-code');
+  $blanket.show();
+  setTimeout((function() {
+    $blanket.toggleClass('fade');
+    return $modal.toggleClass('modal-show');
+  }), 250);
+  return setTimeout((function() {
+    if ($modal.hasClass('modal-show')) {
+      return $device_link_code.select();
+    } else {
+      return $blanket.hide();
+    }
+  }), 500);
+};
+
 exportTasks = function() {
   return window.storageType.get(DB.db_key, function(allTasks) {
     return Exporter(allTasks, 'super simple tasks backup');
@@ -5386,6 +5405,16 @@ $(document).on('click', '#add-link', addLinkTriggered);
 $(document).on('click', '#clear-completed', function(e) {
   e.preventDefault();
   return clearCompleted();
+});
+
+$(document).on('click', '#link-devices', function(e) {
+  e.preventDefault();
+  return linkDevicesModal();
+});
+
+$(document).on('click', '#modal-close', function(e) {
+  e.preventDefault();
+  return linkDevicesModal();
 });
 
 $(document).on('click', '#export-tasks', function(e) {

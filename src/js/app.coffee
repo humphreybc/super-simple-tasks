@@ -178,6 +178,26 @@ clearCompleted = ->
     unless allTasks.length == 0
       Task.clearCompleted()
 
+linkDevicesModal = ->
+
+  $blanket = $('.modal-blanket')
+  $modal = $('#link-devices-modal')
+  $device_link_code = $('#device-link-code')
+
+  $blanket.show()
+
+  setTimeout (->
+    $blanket.toggleClass('fade')
+    $modal.toggleClass('modal-show')
+  ), 250
+
+  setTimeout (->
+    if $modal.hasClass('modal-show')
+      $device_link_code.select()
+    else
+      $blanket.hide()
+  ), 500
+
 
 exportTasks = ->
   window.storageType.get DB.db_key, (allTasks) ->
@@ -244,6 +264,14 @@ $(document).on 'click', '#add-link', addLinkTriggered
 $(document).on 'click', '#clear-completed', (e) ->
   e.preventDefault()
   clearCompleted()
+
+$(document).on 'click', '#link-devices', (e) ->
+  e.preventDefault()
+  linkDevicesModal()
+
+$(document).on 'click', '#modal-close', (e) ->
+  e.preventDefault()
+  linkDevicesModal()
 
 $(document).on 'click', '#export-tasks', (e) ->
   e.preventDefault()
