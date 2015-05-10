@@ -18,9 +18,9 @@ initialize = ->
 
     Views.showTasks(allTasks)
 
-    Views.checkOnboarding(allTasks, tour)
+    # Views.checkOnboarding(allTasks, tour)
 
-    Views.checkWhatsNew()
+    # Views.checkWhatsNew()
 
   animateContent()
 
@@ -45,15 +45,8 @@ standardLog = ->
 
 
 checkStorageMethod = ->
+
   window.storageType = FirebaseSync
-
-  # key = Utils.generateUUID()
-
-  # value = Arrays.default_data
-
-  # window.storageType.set(DB.db_key, value)
-
-  # window.storageType.get()
 
   # if !!window.chrome and chrome.storage
   #   console.log 'Using chrome.storage.sync to save'
@@ -71,6 +64,13 @@ checkOnline = ->
 setPopupClass = ->
   if Utils.getUrlParameter('popup') == 'true'
     $body.addClass('popup')
+
+
+catchSharingCode = ->
+  share_code = Utils.getUrlParameter('share')
+  unless share_code == undefined
+    DB.db_key = share_code
+    localStorage.setItem('sync_key', DB.db_key)
 
 
 changeEmptyStateImage = (online) ->
@@ -198,6 +198,12 @@ linkDevicesModal = ->
       $blanket.hide()
   ), 500
 
+  $device_link_code.val('http://dev.supersimpletasks.com?share=' + DB.db_key)
+
+disconnectDevices = ->
+  localStorage.removeItem('sync_key', DB.db_key)
+  location.reload()
+
 
 exportTasks = ->
   window.storageType.get DB.db_key, (allTasks) ->
@@ -269,6 +275,10 @@ $(document).on 'click', '#link-devices', (e) ->
   e.preventDefault()
   linkDevicesModal()
 
+$(document).on 'click', '#disconnect-devices', (e) ->
+  e.preventDefault()
+  disconnectDevices()
+
 $(document).on 'click', '#modal-close', (e) ->
   e.preventDefault()
   linkDevicesModal()
@@ -282,9 +292,13 @@ $(document).ready ->
 
   setPopupClass()
 
+  catchSharingCode()
+
   standardLog()
 
   checkStorageMethod()
+
+  DB.saveSyncKey()
 
   window.tourRunning = false
 

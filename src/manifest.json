@@ -1,7 +1,8 @@
 {
   "manifest_version": 2,
 
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": "object-src 'unsafe-eval'; script-src 'unsafe-eval' https://ssl.google-analytics.com https://*.firebaseio.com;",
+
 
   "name": "Super Simple Tasks",
   "short_name": "Tasks",

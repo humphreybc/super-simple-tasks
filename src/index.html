@@ -48,7 +48,7 @@
         <table>
           <tr>
             <td style="width:80%;">
-              <input type="text" tabindex="1" autocomplete="on" autocorrect="on" autocapitalize="on" spellcheck="true" placeholder="What do you need to do?" id="new-task" style="height:45px;">
+              <input type="text" tabindex="1" autocomplete="off" autocorrect="on" autocapitalize="on" spellcheck="true" placeholder="What do you need to do?" id="new-task" style="height:45px;">
             </td>
             <td>
               <button class="button button-gray" tabindex="2" id="add-link" title="Attach a link (Ctrl + L)"></button>
@@ -103,11 +103,11 @@
       </div>
       <div class="modal-section">
         <p>Send this link to yourself and open it on another device.</p>
-        <input id="device-link-code" type="text" placeholder="URL" value="http://supersimpletasks.com/44d8bf37-4692-7357-6ccc-a7631c78399d">
+        <input id="device-link-code" type="text" placeholder="URL">
       </div>
       <div class="modal-section modal-footer">
         <p>When you enable multiple devices, tasks are stored both locally and with <a href="https://www.firebase.com/" target="_blank">Firebase</a>. Pro tip: you can also use this feature to invite friends to collaborate on a shared task list!</p>
-        <p><a href="#" style="color:#FF4444;">Disconnect from shared list</a></p>
+        <p><a href="#" id="disconnect-devices" style="color:#FF4444;">Disconnect from shared list</a></p>
       </div>
     </div>
   </div>

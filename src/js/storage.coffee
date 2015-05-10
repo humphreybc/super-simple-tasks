@@ -1,21 +1,13 @@
 # Saving tasks using either localStorage or chrome.storage.sync
 
-class DB
-
-  # DO NOT CHANGE
-
-  # This is the key used to save tasks in localStorage
-  # If this is changed, tasks will be lost on upgrade
-
-  @db_key = 'todo'
-
-
-
 class LocalStorage
 
   # Gets a generic value from localStorage given a particular key
   # Parses the JSON so it's an object instead of a string
   @get: (key, callback) ->
+
+    if key == DB.db_key
+      value = FirebaseSync.get(key)
 
     value = localStorage.getItem(key)
 
@@ -34,6 +26,9 @@ class LocalStorage
 
   # Sets something to localStorage given a key and value
   @set: (key, value) ->
+
+    if key == DB.db_key
+      FirebaseSync.set(key, value)
 
     value = JSON.stringify(value)
 
@@ -61,6 +56,9 @@ class ChromeStorage
   # Usually a JSON array of all the tasks
   @set: (key, value, callback) ->
 
+    if key == DB.db_key
+      FirebaseSync.set(key, value)
+
     params = {}
     params[key] = value
 
@@ -84,37 +82,68 @@ class ChromeStorage
 
 class FirebaseSync
 
-  ref = new Firebase('https://supersimpletasks.firebaseio.com')
+  ref = new Firebase('https://supersimpletasks.firebaseio.com/data')
 
   @get: (key, callback) ->
 
-    ref.once 'value', (value) ->
+    child = ref.child(key)
+
+    child.once 'value', (value) ->
+
       allTasks = value.val()
+
+      callback(allTasks)
+
+
+  @on: (key, callback) ->
+    ref.on 'value', ((value) ->
+      
+      allTasks = value.val()
+
       callback(allTasks.todo)
 
-    # ref.on 'value', ((value) ->
-      
-    #   allTasks = value.val()
+    ), (errorObject) ->
+      console.log 'The read failed: ' + errorObject.code
+      return
 
-    #   callback(allTasks.todo)
 
-    # ), (errorObject) ->
-    #   console.log 'The read failed: ' + errorObject.code
-    #   return
+  @update: (key, value, callback) ->
+
+    child = ref.child(key)
+
+    child.update value, () ->
 
 
   @set: (key, value, callback) ->
 
-    params = {}
-    params[key] = value
+    child = ref.child(key)
 
-    ref.set params, () ->
+    child.set value, () ->
 
 
   @remove: ->
     console.log 'remove'
 
 
+class DB
+
+  # DO NOT CHANGE
+
+  # This is the key used to save tasks in localStorage
+  # If this is changed, tasks will be lost on upgrade
+
+  @saveSyncKey: ->
+
+    @db_key = localStorage.getItem('sync_key')
+
+    if @db_key == null
+      @db_key = Utils.generateID()
+
+      localStorage.setItem('sync_key', @db_key)
+
+      console.log 'Your sync key has been set to: ' + @db_key
+
+    console.log 'Your sync key is: ' + @db_key
 
 
 
