@@ -27,6 +27,9 @@ $(document).on 'click', '#task-submit', ->
 $(document).on 'click', '#clear-completed', ->
   ga 'send', 'event', 'Clear completed', 'click'
 
+$(document).on 'click', '#link-devices', (e) ->
+  ga 'send', 'event', 'Link devices', 'click'
+
 # Click on Export tasks in footer
 $(document).on 'click', '#export-tasks', ->
   ga 'send', 'event', 'Export tasks', 'click'
