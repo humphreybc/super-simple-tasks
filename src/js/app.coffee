@@ -1,4 +1,4 @@
-# User interaction with the DOM
+# Catch user interaction
 
 $new_task_input = $('#new-task')
 $link_input = $('#add-link-input')
@@ -18,9 +18,9 @@ initialize = ->
 
     Views.showTasks(allTasks)
 
-    # Views.checkOnboarding(allTasks, tour)
+    Views.checkOnboarding(allTasks, tour)
 
-    # Views.checkWhatsNew()
+    Views.checkWhatsNew()
 
   Views.animateContent()
 
@@ -39,7 +39,7 @@ sendTaskCount = (allTasks) ->
 
 # Write some standard stuff to the console
 standardLog = ->
-  console.log 'Super Simple Tasks v2.1.2'
+  console.log 'Super Simple Tasks v3.0'
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 
@@ -51,9 +51,13 @@ setPopupClass = ->
 
 catchSharingCode = ->
   share_code = Utils.getUrlParameter('share')
+  
   unless share_code == undefined
     DB.db_key = share_code
     localStorage.setItem('sync_key', DB.db_key)
+    DB.enableSync()
+    DB.setSyncStatus()
+    DB.createFirebase()
 
 
 changeEmptyStateImage = (online) ->
@@ -86,8 +90,7 @@ addLinkTriggered = ->
     $link_input.focus()
 
 
-# Creates a new task
-addTaskTriggered = () ->
+addTaskTriggered = ->
   nextTourBus(tour)
 
   name = $new_task_input.val()
@@ -108,74 +111,34 @@ addTaskTriggered = () ->
   $new_task_input.focus()
 
 
-keyboardShortcuts = (e) ->
-  evtobj = if window.event then event else e
-
-  enterKey = 13
-  lKey = 76
-
-  if evtobj.keyCode == enterKey
-    addTaskTriggered()
-    ga 'send', 'event', 'Add task shortcut', 'shortcut'
-
-  if evtobj.ctrlKey && evtobj.keyCode == lKey
-    addLinkTriggered()
-    ga 'send', 'event', 'Add link shortcut', 'shortcut'
-
-
 completeTask = (li) ->
   checkbox = li.find('input')
 
-  isDone = not checkbox.prop 'checked'
-  Task.updateAttr(Views.getId(li), 'isDone', isDone)
+  is_done = not checkbox.prop 'checked'
+  Task.updateAttr(Views.getId(li), 'isDone', is_done)
 
   # Manually toggle the value of the checkbox
-  checkbox.prop 'checked', isDone
+  checkbox.prop 'checked', is_done
 
 
-enableSync = ->
-  localStorage.setItem('sync_enabled', true)
+keyboardShortcuts = (e) ->
+  evtobj = if window.event then event else e
 
+  enter_key = 13
+  l_key = 76
+  esc_key = 27
 
-toggleModalDialog = ->
-  $blanket = $('.modal-blanket')
-  $modal = $('#link-devices-modal')
-  $device_link_code = $('#device-link-code')
+  if evtobj.keyCode == enter_key
+    addTaskTriggered()
+    ga 'send', 'event', 'Add task shortcut', 'shortcut'
 
-  $blanket.show()
+  if (evtobj.keyCode == esc_key) and ($('#link-devices-modal').hasClass('modal-show'))
+    Views.toggleModalDialog()
+    ga 'send', 'event', 'Modal dialog close shortcut', 'shortcut'
 
-  setTimeout (->
-    $blanket.toggleClass('fade')
-    $modal.toggleClass('modal-show')
-  ), 250
-
-  setTimeout (->
-    if $modal.hasClass('modal-show')
-      $device_link_code.select()
-    else
-      $blanket.hide()
-  ), 500
-
-  $device_link_code.val('http://dev.supersimpletasks.com?share=' + DB.db_key)
-
-
-disconnectDevices = ->
-  localStorage.removeItem('sync_enabled')
-  localStorage.removeItem('sync_key')
-  location.reload()
-
-
-linkDevices = ->
-
-  enableSync()
-
-  DB.checkStorageMethod()
-
-  DB.saveSyncKey()
-
-  toggleModalDialog()
-
-  initialize()
+  if evtobj.ctrl_key && evtobj.keyCode == lKey
+    addLinkTriggered()
+    ga 'send', 'event', 'Add link shortcut', 'shortcut'
 
 
 # We'll manage checking the checkbox thank you very much
@@ -203,7 +166,6 @@ $(document).on 'mousedown', '.task > label', ->
       nextTourBus(tour)
 
 
-# Click on priority
 $(document).on 'click', '.priority', (e) ->
   e.preventDefault()
 
@@ -239,17 +201,22 @@ $(document).on 'click', '#clear-completed', (e) ->
   e.preventDefault()
   Task.clearCompleted()
 
+
 $(document).on 'click', '#link-devices', (e) ->
   e.preventDefault()
-  linkDevices()
+  DB.linkDevices()
+
 
 $(document).on 'click', '#disconnect-devices', (e) ->
   e.preventDefault()
-  disconnectDevices()
+  DB.disconnectDevices()
+  location.reload()
+
 
 $(document).on 'click', '#modal-close', (e) ->
   e.preventDefault()
-  toggleModalDialog()
+  Views.toggleModalDialog()
+
 
 $(document).on 'click', '#export-tasks', (e) ->
   e.preventDefault()
@@ -264,13 +231,17 @@ $(document).ready ->
 
   standardLog()
 
+  DB.setSyncStatus()
+
+  DB.createFirebase()
+
   DB.checkStorageMethod()
 
-  DB.saveSyncKey()
+  DB.setSyncKey()
 
   window.tourRunning = false
 
-  document.onkeydown = keyboardShortcuts
+  document.onkeyup = keyboardShortcuts
 
   tour = createTour() # This is badwrong
 

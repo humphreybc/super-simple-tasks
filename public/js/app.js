@@ -5160,18 +5160,18 @@ LocalStorage = (function() {
 
   LocalStorage.get = function(key, callback) {
     var value;
+    if (window.sync_enabled) {
+      FirebaseSync.get(key, function(value) {
+        return callback(value);
+      });
+    }
     value = localStorage.getItem(key);
     value = JSON.parse(value);
     return callback(value);
   };
 
-  LocalStorage.getSync = function(key) {
-    var value;
-    value = localStorage.getItem(key);
-    return JSON.parse(value);
-  };
-
   LocalStorage.set = function(key, value) {
+    FirebaseSync.set(key, value, function() {});
     value = JSON.stringify(value);
     return localStorage.setItem(key, value);
   };
@@ -5196,6 +5196,7 @@ ChromeStorage = (function() {
 
   ChromeStorage.set = function(key, value, callback) {
     var params;
+    FirebaseSync.set(key, value, function() {});
     params = {};
     params[key] = value;
     return chrome.storage.sync.set(params, function() {});
@@ -5226,23 +5227,33 @@ ChromeStorage = (function() {
 })();
 
 FirebaseSync = (function() {
-  var ref;
-
   function FirebaseSync() {}
 
-  ref = new Firebase('https://supersimpletasks.firebaseio.com/data');
-
   FirebaseSync.get = function(key, callback) {
-    var child;
-    child = ref.child(key);
-    return child.once('value', function(value) {
-      var allTasks;
-      allTasks = value.val();
-      return callback(allTasks);
-    });
+    var child, ref;
+    if (key === DB.db_key && window.sync_enabled) {
+      ref = DB.remote_ref;
+      child = ref.child(key);
+      return child.once('value', function(value) {
+        var allTasks;
+        allTasks = value.val();
+        return callback(allTasks);
+      });
+    }
+  };
+
+  FirebaseSync.set = function(key, value, callback) {
+    var child, ref;
+    if (key === DB.db_key && window.sync_enabled) {
+      ref = DB.remote_ref;
+      child = ref.child(key);
+      return child.set(value, function() {});
+    }
   };
 
   FirebaseSync.on = function(key, callback) {
+    var ref;
+    ref = DB.remote_ref;
     return ref.on('value', (function(value) {
       var allTasks;
       allTasks = value.val();
@@ -5253,15 +5264,10 @@ FirebaseSync = (function() {
   };
 
   FirebaseSync.update = function(key, value, callback) {
-    var child;
+    var child, ref;
+    ref = DB.remote_ref;
     child = ref.child(key);
     return child.update(value, function() {});
-  };
-
-  FirebaseSync.set = function(key, value, callback) {
-    var child;
-    child = ref.child(key);
-    return child.set(value, function() {});
   };
 
   FirebaseSync.remove = function() {
@@ -5275,37 +5281,77 @@ FirebaseSync = (function() {
 DB = (function() {
   function DB() {}
 
-  DB.checkStorageMethod = function() {
+  DB.linkDevices = function() {
+    if (!window.sync_enabled) {
+      this.enableSync();
+      this.setSyncStatus();
+      this.createFirebase();
+      this.setSyncKey();
+      this.reSaveTasks();
+    }
+    return Views.toggleModalDialog();
+  };
+
+  DB.enableSync = function() {
+    return localStorage.setItem('sync_enabled', true);
+  };
+
+  DB.setSyncStatus = function() {
     window.sync_enabled = localStorage.getItem('sync_enabled');
     if (window.sync_enabled === null) {
-      window.sync_enabled = false;
+      return window.sync_enabled = false;
     } else {
-      window.sync_enabled = true;
-    }
-    if (window.sync_enabled) {
-      console.log('Using Firebase to save');
-      return window.storageType = FirebaseSync;
-    } else {
-      if (!!window.chrome && chrome.storage) {
-        console.log('Using chrome.storage.sync to save');
-        return window.storageType = ChromeStorage;
-      } else {
-        console.log('Using localStorage to save');
-        return window.storageType = LocalStorage;
-      }
+      return window.sync_enabled = true;
     }
   };
 
-  DB.saveSyncKey = function() {
-    if (window.sync_enabled === true) {
+  DB.createFirebase = function() {
+    return this.remote_ref = new Firebase('https://supersimpletasks.firebaseio.com/data');
+  };
+
+  DB.migrateKey = function(new_key) {
+    return window.storageType.get(this.db_key, function(allTasks) {
+      this.db_key = new_key;
+      window.storageType.set(this.db_key, allTasks);
+      return this.db_key;
+    });
+  };
+
+  DB.reSaveTasks = function() {
+    return window.storageType.get(this.db_key, function(allTasks) {
+      return window.storageType.set(this.db_key, allTasks);
+    });
+  };
+
+  DB.checkStorageMethod = function() {
+    if (!!window.chrome && chrome.storage) {
+      return window.storageType = ChromeStorage;
+    } else {
+      return window.storageType = LocalStorage;
+    }
+  };
+
+  DB.setSyncKey = function() {
+    var new_key;
+    if (window.sync_enabled) {
       this.db_key = localStorage.getItem('sync_key');
       if (this.db_key === null) {
-        this.db_key = Utils.generateID();
+        this.db_key = 'todo';
+        new_key = Utils.generateID();
+        this.db_key = this.migrateKey(new_key);
         localStorage.setItem('sync_key', this.db_key);
         console.log('Your sync key has been set to: ' + this.db_key);
       }
-      return console.log('Your sync key is: ' + this.db_key);
+    } else {
+      this.db_key = 'todo';
     }
+    return console.log('Your sync key is: ' + this.db_key);
+  };
+
+  DB.disconnectDevices = function() {
+    localStorage.removeItem('sync_enabled');
+    localStorage.removeItem('sync_key');
+    return this.migrateKey('todo');
   };
 
   return DB;
@@ -5338,6 +5384,10 @@ $(document).on('click', '#task-submit', function() {
 
 $(document).on('click', '#clear-completed', function() {
   return ga('send', 'event', 'Clear completed', 'click');
+});
+
+$(document).on('click', '#link-devices', function(e) {
+  return ga('send', 'event', 'Link devices', 'click');
 });
 
 $(document).on('click', '#export-tasks', function() {
@@ -5543,6 +5593,27 @@ Views = (function() {
     }), 150);
   };
 
+  Views.toggleModalDialog = function() {
+    var $blanket, $device_link_code, $modal, host;
+    $blanket = $('.modal-blanket');
+    $modal = $('#link-devices-modal');
+    $device_link_code = $('#device-link-code');
+    $blanket.show();
+    setTimeout((function() {
+      $blanket.toggleClass('fade');
+      return $modal.toggleClass('modal-show');
+    }), 250);
+    setTimeout((function() {
+      if ($modal.hasClass('modal-show')) {
+        return $device_link_code.select();
+      } else {
+        return $blanket.hide();
+      }
+    }), 500);
+    host = Utils.getUrlAttribute('host');
+    return $device_link_code.val('http://' + host + '?share=' + DB.db_key);
+  };
+
   Views.displaySaveSuccess = function() {
     $('#task-submit').addClass('task-submitted');
     return setTimeout((function() {
@@ -5732,7 +5803,7 @@ Migrations = (function() {
 
 })();
 
-var $body, $link_input, $new_task_input, addLinkTriggered, addTaskTriggered, catchSharingCode, changeEmptyStateImage, completeTask, createTour, disconnectDevices, enableSync, initialize, keyboardShortcuts, linkDevices, nextTourBus, online, sendTaskCount, setPopupClass, standardLog, toggleModalDialog, tour;
+var $body, $link_input, $new_task_input, addLinkTriggered, addTaskTriggered, catchSharingCode, changeEmptyStateImage, completeTask, createTour, initialize, keyboardShortcuts, nextTourBus, online, sendTaskCount, setPopupClass, standardLog, tour;
 
 $new_task_input = $('#new-task');
 
@@ -5748,7 +5819,9 @@ initialize = function() {
   window.storageType.get(DB.db_key, function(allTasks) {
     allTasks = Task.handleNoTasks(allTasks);
     Migrations.run(allTasks);
-    return Views.showTasks(allTasks);
+    Views.showTasks(allTasks);
+    Views.checkOnboarding(allTasks, tour);
+    return Views.checkWhatsNew();
   });
   Views.animateContent();
   return $new_task_input.focus();
@@ -5766,7 +5839,7 @@ sendTaskCount = function(allTasks) {
 };
 
 standardLog = function() {
-  console.log('Super Simple Tasks v2.1.2');
+  console.log('Super Simple Tasks v3.0');
   return console.log('Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks');
 };
 
@@ -5781,7 +5854,10 @@ catchSharingCode = function() {
   share_code = Utils.getUrlParameter('share');
   if (share_code !== void 0) {
     DB.db_key = share_code;
-    return localStorage.setItem('sync_key', DB.db_key);
+    localStorage.setItem('sync_key', DB.db_key);
+    DB.enableSync();
+    DB.setSyncStatus();
+    return DB.createFirebase();
   }
 };
 
@@ -5835,65 +5911,32 @@ addTaskTriggered = function() {
   return $new_task_input.focus();
 };
 
+completeTask = function(li) {
+  var checkbox, is_done;
+  checkbox = li.find('input');
+  is_done = !checkbox.prop('checked');
+  Task.updateAttr(Views.getId(li), 'isDone', is_done);
+  return checkbox.prop('checked', is_done);
+};
+
 keyboardShortcuts = function(e) {
-  var enterKey, evtobj, lKey;
+  var enter_key, esc_key, evtobj, l_key;
   evtobj = window.event ? event : e;
-  enterKey = 13;
-  lKey = 76;
-  if (evtobj.keyCode === enterKey) {
+  enter_key = 13;
+  l_key = 76;
+  esc_key = 27;
+  if (evtobj.keyCode === enter_key) {
     addTaskTriggered();
     ga('send', 'event', 'Add task shortcut', 'shortcut');
   }
-  if (evtobj.ctrlKey && evtobj.keyCode === lKey) {
+  if ((evtobj.keyCode === esc_key) && ($('#link-devices-modal').hasClass('modal-show'))) {
+    Views.toggleModalDialog();
+    ga('send', 'event', 'Modal dialog close shortcut', 'shortcut');
+  }
+  if (evtobj.ctrl_key && evtobj.keyCode === lKey) {
     addLinkTriggered();
     return ga('send', 'event', 'Add link shortcut', 'shortcut');
   }
-};
-
-completeTask = function(li) {
-  var checkbox, isDone;
-  checkbox = li.find('input');
-  isDone = !checkbox.prop('checked');
-  Task.updateAttr(Views.getId(li), 'isDone', isDone);
-  return checkbox.prop('checked', isDone);
-};
-
-enableSync = function() {
-  return localStorage.setItem('sync_enabled', true);
-};
-
-toggleModalDialog = function() {
-  var $blanket, $device_link_code, $modal;
-  $blanket = $('.modal-blanket');
-  $modal = $('#link-devices-modal');
-  $device_link_code = $('#device-link-code');
-  $blanket.show();
-  setTimeout((function() {
-    $blanket.toggleClass('fade');
-    return $modal.toggleClass('modal-show');
-  }), 250);
-  setTimeout((function() {
-    if ($modal.hasClass('modal-show')) {
-      return $device_link_code.select();
-    } else {
-      return $blanket.hide();
-    }
-  }), 500);
-  return $device_link_code.val('http://dev.supersimpletasks.com?share=' + DB.db_key);
-};
-
-disconnectDevices = function() {
-  localStorage.removeItem('sync_enabled');
-  localStorage.removeItem('sync_key');
-  return location.reload();
-};
-
-linkDevices = function() {
-  enableSync();
-  DB.checkStorageMethod();
-  DB.saveSyncKey();
-  toggleModalDialog();
-  return initialize();
 };
 
 $(document).on('click', '.task > label', function(e) {
@@ -5946,17 +5989,18 @@ $(document).on('click', '#clear-completed', function(e) {
 
 $(document).on('click', '#link-devices', function(e) {
   e.preventDefault();
-  return linkDevices();
+  return DB.linkDevices();
 });
 
 $(document).on('click', '#disconnect-devices', function(e) {
   e.preventDefault();
-  return disconnectDevices();
+  DB.disconnectDevices();
+  return location.reload();
 });
 
 $(document).on('click', '#modal-close', function(e) {
   e.preventDefault();
-  return toggleModalDialog();
+  return Views.toggleModalDialog();
 });
 
 $(document).on('click', '#export-tasks', function(e) {
@@ -5968,10 +6012,12 @@ $(document).ready(function() {
   setPopupClass();
   catchSharingCode();
   standardLog();
+  DB.setSyncStatus();
+  DB.createFirebase();
   DB.checkStorageMethod();
-  DB.saveSyncKey();
+  DB.setSyncKey();
   window.tourRunning = false;
-  document.onkeydown = keyboardShortcuts;
+  document.onkeyup = keyboardShortcuts;
   tour = createTour();
   initialize();
   return setTimeout((function() {

@@ -16,6 +16,7 @@ class Utils
 
     parser[attribute]
 
+
   @getUrlParameter: (param) ->
     pageURL = @getUrlAttribute('search').substring(1)
     urlVariables = pageURL.split('&')
@@ -26,11 +27,13 @@ class Utils
         return parameterName[1]
       i++
 
+
   @generateID: ->
     s4 = ->
       Math.floor((1 + Math.random()) * 0x10000).toString(16).substring 1
 
     s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4()
+
 
   @checkOnline: ->
     online = navigator.onLine

@@ -5,10 +5,36 @@ class Views
   # Variable that we can clear if the timeout has to be stopped early
   timeout = 0
 
+  # Makes the content fade and slide in
   @animateContent: ->
     setTimeout (->
       $('#main-content').addClass('content-show')
     ), 150
+
+  # Show / hide the link devices modal dialog
+  # Could do with some abstraction
+  @toggleModalDialog: ->
+    $blanket = $('.modal-blanket')
+    $modal = $('#link-devices-modal')
+    $device_link_code = $('#device-link-code')
+
+    $blanket.show()
+
+    setTimeout (->
+      $blanket.toggleClass('fade')
+      $modal.toggleClass('modal-show')
+    ), 250
+
+    setTimeout (->
+      if $modal.hasClass('modal-show')
+        $device_link_code.select()
+      else
+        $blanket.hide()
+    ), 500
+
+    host = Utils.getUrlAttribute('host')
+
+    $device_link_code.val('http://' + host + '?share=' + DB.db_key)
 
 
   # Does the little animation on the task submit button
