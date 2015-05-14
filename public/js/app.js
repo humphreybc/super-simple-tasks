@@ -4846,7 +4846,7 @@ window['Slip'] = (function(){
     }
     return Slip;
 })();
-var sendPageView;
+var sendPageView, sendTagClickEvent;
 
 sendPageView = function() {
   var url;
@@ -4856,6 +4856,13 @@ sendPageView = function() {
   } else {
     return ga('send', 'pageview', url[1]);
   }
+};
+
+sendTagClickEvent = function() {
+  window.clearTimeout(window.timeout);
+  return window.timeout = setTimeout((function() {
+    return ga('send', 'event', 'Tag color', 'click');
+  }), 1000);
 };
 
 $(window).focus(function() {
@@ -4874,6 +4881,10 @@ $(document).on('click', '#clear-completed', function() {
   return ga('send', 'event', 'Clear completed', 'click');
 });
 
+$(document).on('click', '#expand', function() {
+  return ga('send', 'event', 'Open as tab', 'click');
+});
+
 $(document).on('click', '#export-tasks', function() {
   return ga('send', 'event', 'Export tasks', 'click');
 });
@@ -4887,7 +4898,7 @@ $(document).on('click', '.drag-handle', function() {
 });
 
 $(document).on('click', '.tag', function() {
-  return ga('send', 'event', 'tag color', 'click');
+  return sendTagClickEvent();
 });
 
 $(document).on('mousedown', '.task > tag', function() {
