@@ -24,25 +24,19 @@ class Migrations
   # Go from priority to color tag when migrating to 2.2
   @changePrioritiesToColor: (allTasks) ->
 
-    if allTasks[1].priority == undefined
-      return
+    if allTasks[0].tag == null
 
-    for task, i in allTasks
+      for task, i in allTasks
+        task['tag'] = switch task.priority
+          when 'none' then 'gray'
+          when 'minor' then 'green'
+          when 'major' then 'yellow'
+          when 'blocker' then 'red'
 
-      task =
-        isDone: task.isDone
-        name: task.name
-        tag: ''
-        link: task.link
+        delete task.priority
 
-      if task.priority == 'none'
-        task.tag = 'gray'
-      if task.priority == 'minor'
-        task.tag = 'green'
-      if task.priority == 'major'
-        task.tag = 'yellow'
-      if task.priority == 'blocker'
-        task.tag = 'red'
+      window.storageType.set(DB.db_key, allTasks)
 
-    window.storageType.set(DB.db_key, allTasks)
+
+
 
