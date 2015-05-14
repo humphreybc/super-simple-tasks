@@ -36,47 +36,60 @@
       &:hover
         cursor pointer
 
-    .priority
-      color white
-      min-width 60px
-      text-align center
-      padding 2px 6px 2px
-      font-size font-xsmall
-      text-transform capitalize
-      font-weight 700
-      border-radius radius
+    .tag
+      margin-top 1px
+      border-radius 20px
       cursor pointer
+      height 20px
+      width 20px
 
-    [priority='none']
-      background background-gray
-      color xlight-gray
+    [tag='gray']
+      background xlight-gray
 
       &:hover
-        background white
+        background lighten(xlight-gray, 2)
 
-    [priority='blocker']
+    [tag='red']
       background red
 
       &:hover
         background lighten(red, 5)
 
-    [priority='major']
+    [tag='yellow']
       background yellow
 
       &:hover
         background lighten(yellow, 5)  
 
-    [priority='minor']
+    [tag='green']
       background green
 
       &:hover
         background lighten(green, 2)
         
+    [tag='blue']
+      background blue
+
+      &:hover
+        background lighten(blue, 2)
+        
+    [tag='pink']
+      background pink
+
+      &:hover
+        background lighten(pink, 2)
+        
+    [tag='purple']
+      background purple
+
+      &:hover
+        background lighten(purple, 2)
+        
 // Completed tasks
 
 .task-completed
   
-  label, .priority, .drag-handle, .task-link
+  label, .tag, .drag-handle, .task-link
     opacity 0.5
   
   label

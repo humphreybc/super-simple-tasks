@@ -39,12 +39,12 @@ document.querySelector('#task-list').addEventListener 'slip:reorder', (e) ->
 $(document).on 'click', '.drag-handle', ->
   ga 'send', 'event', 'Reorder with handle', 'click'
 
-# Click a priority lozenge
-$(document).on 'click', '.priority', ->
-  ga 'send', 'event', 'Priority', 'click'
+# Click a tag color
+$(document).on 'click', '.tag', ->
+  ga 'send', 'event', 'tag color', 'click'
 
 # Click a task to complete / uncomplete it
-$(document).on 'mousedown', '.task > label', ->
+$(document).on 'mousedown', '.task > tag', ->
   ga 'send', 'event', 'Complete task', 'click'
 
 # Click a task link
