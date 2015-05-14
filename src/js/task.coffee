@@ -4,38 +4,38 @@ class Arrays
 
   # This class contains default arrays
 
-  # Arrays for priorities
-  @priorities = ['none', 'minor', 'major', 'blocker']
+  # Colors for the tags
+  @tags = ['gray', 'green', 'red', 'yellow', 'pink', 'purple', 'blue']
 
   # Default task data for new users
   @default_data = [{
                       'isDone':false,
                       'name':'Add a new task above',
-                      'priority':'blocker',
+                      'tag':'red',
                       'link':''
                     },
                     {
                       'isDone':false,
-                      'name':'Perhaps give it a priority or reorder it',
-                      'priority':'minor',
+                      'name':'Perhaps give it a tag or reorder it',
+                      'tag':'green',
                       'link':''
                     },
                     {
                       'isDone':false,
                       'name':'Refresh to see that your task is still here',
-                      'priority':'minor',
+                      'tag':'pink',
                       'link':''
                     },
                     {
                       'isDone':false,
                       'name':'Reference things by attaching a URL to tasks',
-                      'priority':'minor',
+                      'tag':'blue',
                       'link':'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
                     },
                     {
                       'isDone':false,
                       'name':'Follow @humphreybc on Twitter',
-                      'priority':'major',
+                      'tag':'yellow',
                       'link':'http://twitter.com/humphreybc'
                     }]
 
@@ -56,7 +56,7 @@ class Task
     task =
       isDone: false
       name: name
-      priority: 'none'
+      tag: 'gray'
       link: link
 
 
@@ -114,13 +114,13 @@ class Task
 
 
   # Change the attribute (in the DOM) and run updateAttr to change it in storage
-  # Used for arrays of things like priorities
+  # Used for arrays of things like tag colors
   # Takes three parameters: the task (li), the attribute to change, and the current value
   @cycleAttr: (li, attr, value) ->
 
-    # Attribute is currently always priority
-    if attr == 'priority'
-      array = Arrays.priorities
+    # Attribute is currently always tag
+    if attr == 'tag'
+      array = Arrays.tags
 
     # Get the current position in the attribute array
     currentIndex = $.inArray(value, array)

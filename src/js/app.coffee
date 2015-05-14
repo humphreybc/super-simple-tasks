@@ -39,7 +39,7 @@ sendTaskCount = (allTasks) ->
 
 # Write some standard stuff to the console
 standardLog = ->
-  console.log 'Super Simple Tasks v2.1.2'
+  console.log 'Super Simple Tasks v2.2'
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 
@@ -235,11 +235,11 @@ $(document).on 'mousedown', '.task > label', ->
       nextTourBus(tour)
 
 
-# Click on priority
-$(document).on 'click', '.priority', (e) ->
+# Click on tag color
+$(document).on 'click', '.tag', (e) ->
   e.preventDefault()
 
-  type_attr = 'priority'
+  type_attr = 'tag'
 
   value = $(this).attr(type_attr)
 

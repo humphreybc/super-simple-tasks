@@ -8,6 +8,15 @@ sendPageView = ->
   else
     ga('send', 'pageview', url[1])
 
+sendTagClickEvent = ->
+
+  window.clearTimeout(window.timeout)
+
+  window.timeout = setTimeout (->
+    ga 'send', 'event', 'Tag color', 'click'
+  ), 1000
+
+
 # Because this code is set as background code for the extension, we
 # don't want the pageviews firing all the time. So instead we
 # only send the pageview when the new task input has focus.
@@ -27,6 +36,10 @@ $(document).on 'click', '#task-submit', ->
 $(document).on 'click', '#clear-completed', ->
   ga 'send', 'event', 'Clear completed', 'click'
 
+# Click to open as a tab
+$(document).on 'click', '#expand', ->
+  ga 'send', 'event', 'Open as tab', 'click'
+
 # Click on Export tasks in footer
 $(document).on 'click', '#export-tasks', ->
   ga 'send', 'event', 'Export tasks', 'click'
@@ -39,12 +52,12 @@ document.querySelector('#task-list').addEventListener 'slip:reorder', (e) ->
 $(document).on 'click', '.drag-handle', ->
   ga 'send', 'event', 'Reorder with handle', 'click'
 
-# Click a priority lozenge
-$(document).on 'click', '.priority', ->
-  ga 'send', 'event', 'Priority', 'click'
+# Click a tag color
+$(document).on 'click', '.tag', ->
+  sendTagClickEvent()
 
 # Click a task to complete / uncomplete it
-$(document).on 'mousedown', '.task > label', ->
+$(document).on 'mousedown', '.task > tag', ->
   ga 'send', 'event', 'Complete task', 'click'
 
 # Click a task link

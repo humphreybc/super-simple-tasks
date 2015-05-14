@@ -12,7 +12,7 @@
 
   <meta name="description" content="The world’s simplest to-do list." />
 
-  <link rel="stylesheet" href="css/app.7861be54c5282822.css">
+  <link rel="stylesheet" href="css/app.fe78fe913f1d631b.css">
   <link rel="shortcut icon" href="favicon.png" />
 
 </head>
@@ -75,19 +75,16 @@
 
     <ol class="tourbus-legs" id="tour">
 
-      <li data-el="#new-task" data-orientation="bottom" data-margin="15" data-width="400">
+      <li data-el="#new-task" data-orientation="bottom" data-arrow="25%" data-margin="15" data-width="400">
         <p>Welcome! Start typing a new task. Hit <strong>Enter</strong> or click the <strong>+</strong> button to add it to your list.</p>
-        <a href="#" id="tour-bus-1" class="tourbus-next">Got it! Onto the next step...</a>
       </li>
 
-      <li data-el=".priority" data-orientation="left" data-margin="20" data-width="320">
-        <p>Change the priority by <strong>clicking a priority lozenge.</strong></p>
-        <a href="#" id="tour-bus-2" class="tourbus-next">Got it! Onto the next step...</a>
+      <li data-el=".tag" data-orientation="left" data-margin="20" data-top="130" data-width="320">
+        <p>Categorize your task by <strong>clicking a colored circle.</strong></p>
       </li>
 
-      <li data-el="#task-list" data-orientation="bottom" data-width="320">
+      <li data-el=".task" data-orientation="bottom" data-top="140" data-arrow="25%" data-width="320">
         <p>Lastly, complete a task by clicking the checkbox or its name.</p>
-        <a href="#" id="tour-bus-3" class="tourbus-stop" id="tour-stop">Easy, got it!</a>
       </li>
 
     </ol>
@@ -128,7 +125,7 @@
         <input type="checkbox" {{#if this.isDone}}checked="checked"{{/if}} class="task-checkbox">{{this.name}}
       </label>
       <span class="drag-handle right"></span>
-      <span class="priority right" type="priority" priority="{{this.priority}}">{{this.priority}}</span>
+      <span class="tag right" type="tag" tag="{{this.tag}}"></span>
       {{#if this.link}}
         <div class="task-link">
           <a href="{{this.link}}" target="_blank">{{this.link}}</a>
@@ -137,7 +134,7 @@
     </li>
   {{/each}}
   </script>
-  <script src="js/app.00bf2a8f61c73677.js"></script>
+  <script src="js/app.3fb384de35e084e8.js"></script>
 </body>
 
 </html>

@@ -1,18 +1,23 @@
 {
   "name": "super-simple-tasks",
-  "version": "2.1.2",
+  "version": "2.2",
   "devDependencies": {
     "coffee-script": "latest",
     "grunt": "latest",
-    "grunt-contrib-watch": "latest",
-    "grunt-contrib-coffee": "latest",
-    "grunt-coffeelint": "latest",
-    "grunt-contrib-stylus": "latest",
-    "grunt-contrib-cssmin": "latest",
-    "grunt-contrib-concat": "latest",
-    "grunt-contrib-uglify": "latest",
     "grunt-cache-bust": "latest",
+    "grunt-cli": "^0.1.13",
+    "grunt-coffeelint": "latest",
+    "grunt-contrib-coffee": "latest",
+    "grunt-contrib-concat": "latest",
+    "grunt-contrib-connect": "latest",
     "grunt-contrib-copy": "latest",
-    "grunt-contrib-connect": "latest"
+    "grunt-contrib-cssmin": "latest",
+    "grunt-contrib-stylus": "latest",
+    "grunt-contrib-uglify": "latest",
+    "grunt-contrib-watch": "latest"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/humphreybc/super-simple-tasks.git"
   }
 }
