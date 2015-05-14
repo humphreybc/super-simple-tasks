@@ -5075,7 +5075,6 @@ keyboardShortcuts = function(e) {
 completeTask = function(li) {
   var checkbox, isDone;
   checkbox = li.find('input');
-  debugger;
   isDone = !checkbox.prop('checked');
   Task.updateAttr(Views.getId(li), 'isDone', isDone);
   return checkbox.prop('checked', isDone);
@@ -5268,7 +5267,7 @@ Migrations = (function() {
 
   Migrations.changePrioritiesToColor = function(allTasks) {
     var i, j, len, task;
-    if (allTasks[0].tag === null) {
+    if (!allTasks[0].hasOwnProperty('tag')) {
       for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
         task = allTasks[i];
         task['tag'] = (function() {

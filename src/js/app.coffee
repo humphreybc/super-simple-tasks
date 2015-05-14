@@ -156,8 +156,6 @@ keyboardShortcuts = (e) ->
 completeTask = (li) ->
   checkbox = li.find('input')
 
-  debugger
-
   isDone = not checkbox.prop 'checked'
   Task.updateAttr(Views.getId(li), 'isDone', isDone)
 

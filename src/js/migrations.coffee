@@ -24,7 +24,7 @@ class Migrations
   # Go from priority to color tag when migrating to 2.2
   @changePrioritiesToColor: (allTasks) ->
 
-    if allTasks[0].tag == null
+    unless allTasks[0].hasOwnProperty('tag')
 
       for task, i in allTasks
         task['tag'] = switch task.priority
