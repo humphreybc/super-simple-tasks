@@ -69,12 +69,12 @@ $(document).on 'mousedown', '#whats-new-close', ->
   ga 'send', 'event', 'Close Whats New', 'click'
 
 # Tourbus stuff
-$(document).on 'mousedown', '#tour-bus-1', ->
-  ga 'send', 'event', 'Onboarding', 'click', 'Step 1', 33
+# $(document).on 'mousedown', '#tour-bus-1', ->
+#   ga 'send', 'event', 'Onboarding', 'click', 'Step 1', 33
 
-$(document).on 'mousedown', '#tour-bus-2', ->
-  ga 'send', 'event', 'Onboarding', 'click', 'Step 2', 66
+# $(document).on 'mousedown', '#tour-bus-2', ->
+#   ga 'send', 'event', 'Onboarding', 'click', 'Step 2', 66
 
-$(document).on 'mousedown', '#tour-bus-3', ->
-  ga 'send', 'event', 'Onboarding', 'click', 'Step 3', 100
+# $(document).on 'mousedown', '#tour-bus-3', ->
+#   ga 'send', 'event', 'Onboarding', 'click', 'Step 3', 100
 
