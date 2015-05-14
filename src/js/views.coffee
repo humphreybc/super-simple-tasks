@@ -5,11 +5,33 @@ class Views
   # Variable that we can clear if the timeout has to be stopped early
   timeout = 0
 
+  @catchSharingCode: ->
+    share_code = Utils.getUrlParameter('share')
+    
+    unless share_code == undefined
+      DB.db_key = share_code
+      localStorage.setItem('sync_key', DB.db_key)
+      DB.enableSync()
+      DB.setSyncStatus()
+      DB.createFirebase()
+
+
+  @setPopupClass: ->
+    if Utils.getUrlParameter('popup') == 'true'
+      $('body').addClass('popup')
+
+
+  @changeEmptyStateImage: (online) ->
+    if online
+      $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")')
+
+
   # Makes the content fade and slide in
   @animateContent: ->
     setTimeout (->
       $('#main-content').addClass('content-show')
     ), 150
+
 
   # Show / hide the link devices modal dialog
   # Could do with some abstraction
@@ -76,6 +98,45 @@ class Views
     task_list.html(tasks)
 
 
+  @addTaskTriggered: ->
+
+    $new_task_input = $('#new-task')
+    $link_input = $('#add-link-input')
+
+    Tour.nextTourBus(tour)
+
+    name = $new_task_input.val()
+
+    unless name == ''
+
+      link = $link_input.val()
+
+      Task.setNewTask(name, link)
+      
+      $new_task_input.val('')
+      $link_input.val('')
+
+      Views.displaySaveSuccess()
+
+    $new_task_input.focus()
+
+
+  @addLinkTriggered: ->
+
+    $body = $('body')
+    $new_task_input = $('#new-task')
+
+    linkActiveClass = 'link-active'
+    isLinkActive = $body.hasClass(linkActiveClass)
+
+    if isLinkActive
+      $body.removeClass(linkActiveClass)
+      $new_task_input.focus()
+    else
+      $body.addClass(linkActiveClass)
+      $link_input.focus()
+
+
   # Create the HTML markup for a single task li and returns it
   # Takes into account whether a link is present or task is done
   @createTaskHTML: (allTasks) ->
@@ -84,6 +145,16 @@ class Views
     template = Handlebars.compile(source)
 
     template({tasks: allTasks})
+
+
+  @completeTask: (li) ->
+    checkbox = li.find('input')
+
+    is_done = not checkbox.prop 'checked'
+    Task.updateAttr(@getId(li), 'isDone', is_done)
+
+    # Manually toggle the value of the checkbox
+    checkbox.prop 'checked', is_done
 
 
   # Show the empty state if there aren't any tasks

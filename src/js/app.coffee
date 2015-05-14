@@ -1,8 +1,5 @@
 # Catch user interaction
 
-$new_task_input = $('#new-task')
-$link_input = $('#add-link-input')
-$body = $('body')
 online = null
 tour = null
 
@@ -24,102 +21,13 @@ initialize = ->
 
   Views.animateContent()
 
-  $new_task_input.focus()
+  $('#new-task').focus()
 
 
-# Send an event with the task count
-sendTaskCount = (allTasks) ->
-  window.storageType.get DB.db_key, (allTasks) ->
-    ga 'send',
-      'hitType': 'event'
-      'eventCategory': 'Data'
-      'eventAction': 'Task count'
-      'eventValue': allTasks.length
-
-
-# Write some standard stuff to the console
 standardLog = ->
   console.log 'Super Simple Tasks v3.0'
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
-
-
-setPopupClass = ->
-  if Utils.getUrlParameter('popup') == 'true'
-    $body.addClass('popup')
-
-
-catchSharingCode = ->
-  share_code = Utils.getUrlParameter('share')
-  
-  unless share_code == undefined
-    DB.db_key = share_code
-    localStorage.setItem('sync_key', DB.db_key)
-    DB.enableSync()
-    DB.setSyncStatus()
-    DB.createFirebase()
-
-
-changeEmptyStateImage = (online) ->
-  if online
-    $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")')
-
-
-createTour = ->
-  $('#tour').tourbus
-    onStop: Views.finishTour
-    onLegStart: (leg, bus) ->
-      window.tourRunning = bus.running
-      leg.$el.addClass('animated fadeInDown')
-
-
-nextTourBus = (tour) ->
-  if window.tourRunning
-    tour.trigger('next.tourbus')
-
-
-addLinkTriggered = ->
-  linkActiveClass = 'link-active'
-  isLinkActive = $body.hasClass(linkActiveClass)
-
-  if isLinkActive
-    $body.removeClass(linkActiveClass)
-    $new_task_input.focus()
-  else
-    $body.addClass(linkActiveClass)
-    $link_input.focus()
-
-
-addTaskTriggered = ->
-  nextTourBus(tour)
-
-  name = $new_task_input.val()
-
-  unless name == ''
-
-    link = $link_input.val()
-
-    Task.setNewTask(name, link)
-    
-    $new_task_input.val('')
-    $link_input.val('')
-
-    Views.displaySaveSuccess()
-
-    sendTaskCount()
-
-  $new_task_input.focus()
-
-
-completeTask = (li) ->
-  checkbox = li.find('input')
-
-  is_done = not checkbox.prop 'checked'
-  Task.updateAttr(Views.getId(li), 'isDone', is_done)
-
-  # Manually toggle the value of the checkbox
-  checkbox.prop 'checked', is_done
-
 
 keyboardShortcuts = (e) ->
   evtobj = if window.event then event else e
@@ -129,7 +37,7 @@ keyboardShortcuts = (e) ->
   esc_key = 27
 
   if evtobj.keyCode == enter_key
-    addTaskTriggered()
+    Views.addTaskTriggered()
     ga 'send', 'event', 'Add task shortcut', 'shortcut'
 
   if (evtobj.keyCode == esc_key) and ($('#link-devices-modal').hasClass('modal-show'))
@@ -137,7 +45,7 @@ keyboardShortcuts = (e) ->
     ga 'send', 'event', 'Modal dialog close shortcut', 'shortcut'
 
   if evtobj.ctrl_key && evtobj.keyCode == lKey
-    addLinkTriggered()
+    Views.addLinkTriggered()
     ga 'send', 'event', 'Add link shortcut', 'shortcut'
 
 
@@ -162,8 +70,8 @@ $(document).on 'mousedown', '.task > label', ->
     unless holding
 
       li = $(this).closest('li')
-      completeTask(li)
-      nextTourBus(tour)
+      Views.completeTask(li)
+      Tour.nextTourBus(tour)
 
 
 $(document).on 'click', '.priority', (e) ->
@@ -177,13 +85,13 @@ $(document).on 'click', '.priority', (e) ->
   
   Task.cycleAttr(li, type_attr, value)
 
-  nextTourBus(tour)
+  Tour.nextTourBus(tour)
 
 
 # When hovering over the drag handle, unfocus the new task input field
 # This prevents people having to click twice, once to unfocus, the other to drag
 $(document).on 'mouseenter', '.drag-handle', (e) ->
-  $new_task_input.blur()
+  window.new_task_input.blur()
 
 
 $(document).on 'click', '#whats-new-close', (e) ->
@@ -191,10 +99,10 @@ $(document).on 'click', '#whats-new-close', (e) ->
   Views.closeWhatsNew()
 
 
-$(document).on 'click', '#task-submit', addTaskTriggered
+$(document).on 'click', '#task-submit', Views.addTaskTriggered
 
 
-$(document).on 'click', '#add-link', addLinkTriggered
+$(document).on 'click', '#add-link', Views.addLinkTriggered
 
 
 $(document).on 'click', '#clear-completed', (e) ->
@@ -225,9 +133,9 @@ $(document).on 'click', '#export-tasks', (e) ->
 
 $(document).ready ->
 
-  setPopupClass()
+  Views.setPopupClass()
 
-  catchSharingCode()
+  Views.catchSharingCode()
 
   standardLog()
 
@@ -243,7 +151,7 @@ $(document).ready ->
 
   document.onkeyup = keyboardShortcuts
 
-  tour = createTour() # This is badwrong
+  tour = Tour.createTour()
 
   initialize()
 
@@ -251,6 +159,6 @@ $(document).ready ->
 
     Utils.checkOnline()
 
-    changeEmptyStateImage(online)
+    Views.changeEmptyStateImage(online)
 
   ), 100

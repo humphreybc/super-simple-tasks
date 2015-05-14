@@ -1,19 +1,33 @@
 # Analytics events
 
-sendPageView = ->
-  url = window.location.href.split('://')
+class Analytics
 
-  if url[0] == 'chrome-extension'
-    ga('send', 'pageview', 'chrome-extension')
-  else
-    ga('send', 'pageview', url[1])
+
+  @sendPageView: ->
+    url = window.location.href.split('://')
+
+    if url[0] == 'chrome-extension'
+      ga('send', 'pageview', 'chrome-extension')
+    else
+      ga('send', 'pageview', url[1])
+
+
+  # Send an event with the task count
+  @sendTaskCount: (allTasks) ->
+    window.storageType.get DB.db_key, (allTasks) ->
+      ga 'send',
+        'hitType': 'event'
+        'eventCategory': 'Data'
+        'eventAction': 'Task count'
+        'eventValue': allTasks.length
+
 
 # Because this code is set as background code for the extension, we
 # don't want the pageviews firing all the time. So instead we
 # only send the pageview when the new task input has focus.
 # The new task input is focused by default when the page loads.
 $(window).focus ->
-  sendPageView()
+  Analytics.sendPageView()
 
 # Click on Add link button
 $(document).on 'click', '#add-link', ->

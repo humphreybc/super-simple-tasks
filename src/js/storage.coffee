@@ -6,9 +6,9 @@ class LocalStorage
   # Parses the JSON so it's an object instead of a string
   @get: (key, callback) ->
 
-    if window.sync_enabled
-      FirebaseSync.get key, (value) ->
-        callback(value)
+    # if window.sync_enabled
+    #   FirebaseSync.get key, (value) ->
+    #     callback(value)
 
     value = localStorage.getItem(key)
 

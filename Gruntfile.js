@@ -13,6 +13,7 @@ module.exports = function(grunt) {
                                     'src/js/export.coffee',
                                     'src/js/dragdrop.coffee',
                                     'src/js/migrations.coffee',
+                                    'src/js/tour.coffee',
                                     'src/js/app.coffee']
         },
         options: {

@@ -79,6 +79,9 @@ class Task
       # Show the tasks
       Views.showTasks(allTasks)
 
+      # Send task count
+      Analytics.sendTaskCount(allTasks)
+
 
   # Updates the order upon drag and drop
   # Takes oldLocation and newLocation from dragdrop.coffee

@@ -5160,11 +5160,6 @@ LocalStorage = (function() {
 
   LocalStorage.get = function(key, callback) {
     var value;
-    if (window.sync_enabled) {
-      FirebaseSync.get(key, function(value) {
-        return callback(value);
-      });
-    }
     value = localStorage.getItem(key);
     value = JSON.parse(value);
     return callback(value);
@@ -5358,20 +5353,38 @@ DB = (function() {
 
 })();
 
-var sendPageView;
+var Analytics;
 
-sendPageView = function() {
-  var url;
-  url = window.location.href.split('://');
-  if (url[0] === 'chrome-extension') {
-    return ga('send', 'pageview', 'chrome-extension');
-  } else {
-    return ga('send', 'pageview', url[1]);
-  }
-};
+Analytics = (function() {
+  function Analytics() {}
+
+  Analytics.sendPageView = function() {
+    var url;
+    url = window.location.href.split('://');
+    if (url[0] === 'chrome-extension') {
+      return ga('send', 'pageview', 'chrome-extension');
+    } else {
+      return ga('send', 'pageview', url[1]);
+    }
+  };
+
+  Analytics.sendTaskCount = function(allTasks) {
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      return ga('send', {
+        'hitType': 'event',
+        'eventCategory': 'Data',
+        'eventAction': 'Task count',
+        'eventValue': allTasks.length
+      });
+    });
+  };
+
+  return Analytics;
+
+})();
 
 $(window).focus(function() {
-  return sendPageView();
+  return Analytics.sendPageView();
 });
 
 $(document).on('click', '#add-link', function() {
@@ -5494,7 +5507,8 @@ Task = (function() {
     return window.storageType.get(DB.db_key, function(allTasks) {
       allTasks.unshift(newTask);
       window.storageType.set(DB.db_key, allTasks);
-      return Views.showTasks(allTasks);
+      Views.showTasks(allTasks);
+      return Analytics.sendTaskCount(allTasks);
     });
   };
 
@@ -5587,6 +5601,30 @@ Views = (function() {
 
   timeout = 0;
 
+  Views.catchSharingCode = function() {
+    var share_code;
+    share_code = Utils.getUrlParameter('share');
+    if (share_code !== void 0) {
+      DB.db_key = share_code;
+      localStorage.setItem('sync_key', DB.db_key);
+      DB.enableSync();
+      DB.setSyncStatus();
+      return DB.createFirebase();
+    }
+  };
+
+  Views.setPopupClass = function() {
+    if (Utils.getUrlParameter('popup') === 'true') {
+      return $('body').addClass('popup');
+    }
+  };
+
+  Views.changeEmptyStateImage = function(online) {
+    if (online) {
+      return $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")');
+    }
+  };
+
   Views.animateContent = function() {
     return setTimeout((function() {
       return $('#main-content').addClass('content-show');
@@ -5642,6 +5680,37 @@ Views = (function() {
     return task_list.html(tasks);
   };
 
+  Views.addTaskTriggered = function() {
+    var $link_input, $new_task_input, link, name;
+    $new_task_input = $('#new-task');
+    $link_input = $('#add-link-input');
+    Tour.nextTourBus(tour);
+    name = $new_task_input.val();
+    if (name !== '') {
+      link = $link_input.val();
+      Task.setNewTask(name, link);
+      $new_task_input.val('');
+      $link_input.val('');
+      Views.displaySaveSuccess();
+    }
+    return $new_task_input.focus();
+  };
+
+  Views.addLinkTriggered = function() {
+    var $body, $new_task_input, isLinkActive, linkActiveClass;
+    $body = $('body');
+    $new_task_input = $('#new-task');
+    linkActiveClass = 'link-active';
+    isLinkActive = $body.hasClass(linkActiveClass);
+    if (isLinkActive) {
+      $body.removeClass(linkActiveClass);
+      return $new_task_input.focus();
+    } else {
+      $body.addClass(linkActiveClass);
+      return $link_input.focus();
+    }
+  };
+
   Views.createTaskHTML = function(allTasks) {
     var source, template;
     source = $('#task-template').html();
@@ -5649,6 +5718,14 @@ Views = (function() {
     return template({
       tasks: allTasks
     });
+  };
+
+  Views.completeTask = function(li) {
+    var checkbox, is_done;
+    checkbox = li.find('input');
+    is_done = !checkbox.prop('checked');
+    Task.updateAttr(this.getId(li), 'isDone', is_done);
+    return checkbox.prop('checked', is_done);
   };
 
   Views.showEmptyState = function(allTasks) {
@@ -5803,13 +5880,32 @@ Migrations = (function() {
 
 })();
 
-var $body, $link_input, $new_task_input, addLinkTriggered, addTaskTriggered, catchSharingCode, changeEmptyStateImage, completeTask, createTour, initialize, keyboardShortcuts, nextTourBus, online, sendTaskCount, setPopupClass, standardLog, tour;
+var Tour;
 
-$new_task_input = $('#new-task');
+Tour = (function() {
+  function Tour() {}
 
-$link_input = $('#add-link-input');
+  Tour.createTour = function() {
+    return $('#tour').tourbus({
+      onStop: Views.finishTour,
+      onLegStart: function(leg, bus) {
+        window.tourRunning = bus.running;
+        return leg.$el.addClass('animated fadeInDown');
+      }
+    });
+  };
 
-$body = $('body');
+  Tour.nextTourBus = function(tour) {
+    if (window.tourRunning) {
+      return tour.trigger('next.tourbus');
+    }
+  };
+
+  return Tour;
+
+})();
+
+var initialize, keyboardShortcuts, online, standardLog, tour;
 
 online = null;
 
@@ -5824,99 +5920,12 @@ initialize = function() {
     return Views.checkWhatsNew();
   });
   Views.animateContent();
-  return $new_task_input.focus();
-};
-
-sendTaskCount = function(allTasks) {
-  return window.storageType.get(DB.db_key, function(allTasks) {
-    return ga('send', {
-      'hitType': 'event',
-      'eventCategory': 'Data',
-      'eventAction': 'Task count',
-      'eventValue': allTasks.length
-    });
-  });
+  return $('#new-task').focus();
 };
 
 standardLog = function() {
   console.log('Super Simple Tasks v3.0');
   return console.log('Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks');
-};
-
-setPopupClass = function() {
-  if (Utils.getUrlParameter('popup') === 'true') {
-    return $body.addClass('popup');
-  }
-};
-
-catchSharingCode = function() {
-  var share_code;
-  share_code = Utils.getUrlParameter('share');
-  if (share_code !== void 0) {
-    DB.db_key = share_code;
-    localStorage.setItem('sync_key', DB.db_key);
-    DB.enableSync();
-    DB.setSyncStatus();
-    return DB.createFirebase();
-  }
-};
-
-changeEmptyStateImage = function(online) {
-  if (online) {
-    return $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")');
-  }
-};
-
-createTour = function() {
-  return $('#tour').tourbus({
-    onStop: Views.finishTour,
-    onLegStart: function(leg, bus) {
-      window.tourRunning = bus.running;
-      return leg.$el.addClass('animated fadeInDown');
-    }
-  });
-};
-
-nextTourBus = function(tour) {
-  if (window.tourRunning) {
-    return tour.trigger('next.tourbus');
-  }
-};
-
-addLinkTriggered = function() {
-  var isLinkActive, linkActiveClass;
-  linkActiveClass = 'link-active';
-  isLinkActive = $body.hasClass(linkActiveClass);
-  if (isLinkActive) {
-    $body.removeClass(linkActiveClass);
-    return $new_task_input.focus();
-  } else {
-    $body.addClass(linkActiveClass);
-    return $link_input.focus();
-  }
-};
-
-addTaskTriggered = function() {
-  var link, name;
-  nextTourBus(tour);
-  name = $new_task_input.val();
-  if (name !== '') {
-    link = $link_input.val();
-    Task.setNewTask(name, link);
-    $new_task_input.val('');
-    $link_input.val('');
-    Views.displaySaveSuccess();
-    sendTaskCount();
-  }
-  return $new_task_input.focus();
-};
-
-completeTask = function(li) {
-  var checkbox, is_done;
-  checkbox = li.find('input');
-  is_done = !checkbox.prop('checked');
-  Task.updateAttr(Views.getId(li), 'isDone', is_done);
-  return checkbox.prop('checked', is_done);
 };
 
 keyboardShortcuts = function(e) {
@@ -5926,7 +5935,7 @@ keyboardShortcuts = function(e) {
   l_key = 76;
   esc_key = 27;
   if (evtobj.keyCode === enter_key) {
-    addTaskTriggered();
+    Views.addTaskTriggered();
     ga('send', 'event', 'Add task shortcut', 'shortcut');
   }
   if ((evtobj.keyCode === esc_key) && ($('#link-devices-modal').hasClass('modal-show'))) {
@@ -5934,7 +5943,7 @@ keyboardShortcuts = function(e) {
     ga('send', 'event', 'Modal dialog close shortcut', 'shortcut');
   }
   if (evtobj.ctrl_key && evtobj.keyCode === lKey) {
-    addLinkTriggered();
+    Views.addLinkTriggered();
     return ga('send', 'event', 'Add link shortcut', 'shortcut');
   }
 };
@@ -5953,8 +5962,8 @@ $(document).on('mousedown', '.task > label', function() {
     var li;
     if (!holding) {
       li = $(this).closest('li');
-      completeTask(li);
-      return nextTourBus(tour);
+      Views.completeTask(li);
+      return Tour.nextTourBus(tour);
     }
   });
 });
@@ -5966,11 +5975,11 @@ $(document).on('click', '.priority', function(e) {
   value = $(this).attr(type_attr);
   li = $(this).closest('li');
   Task.cycleAttr(li, type_attr, value);
-  return nextTourBus(tour);
+  return Tour.nextTourBus(tour);
 });
 
 $(document).on('mouseenter', '.drag-handle', function(e) {
-  return $new_task_input.blur();
+  return window.new_task_input.blur();
 });
 
 $(document).on('click', '#whats-new-close', function(e) {
@@ -5978,9 +5987,9 @@ $(document).on('click', '#whats-new-close', function(e) {
   return Views.closeWhatsNew();
 });
 
-$(document).on('click', '#task-submit', addTaskTriggered);
+$(document).on('click', '#task-submit', Views.addTaskTriggered);
 
-$(document).on('click', '#add-link', addLinkTriggered);
+$(document).on('click', '#add-link', Views.addLinkTriggered);
 
 $(document).on('click', '#clear-completed', function(e) {
   e.preventDefault();
@@ -6009,8 +6018,8 @@ $(document).on('click', '#export-tasks', function(e) {
 });
 
 $(document).ready(function() {
-  setPopupClass();
-  catchSharingCode();
+  Views.setPopupClass();
+  Views.catchSharingCode();
   standardLog();
   DB.setSyncStatus();
   DB.createFirebase();
@@ -6018,10 +6027,10 @@ $(document).ready(function() {
   DB.setSyncKey();
   window.tourRunning = false;
   document.onkeyup = keyboardShortcuts;
-  tour = createTour();
+  tour = Tour.createTour();
   initialize();
   return setTimeout((function() {
     Utils.checkOnline();
-    return changeEmptyStateImage(online);
+    return Views.changeEmptyStateImage(online);
   }), 100);
 });
