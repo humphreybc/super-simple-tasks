@@ -102,9 +102,13 @@ addLinkTriggered = ->
   if isLinkActive
     $body.removeClass(linkActiveClass)
     $new_task_input.focus()
+
+    $('.spotlight').css('height', '65px')
   else
     $body.addClass(linkActiveClass)
     $link_input.focus()
+
+    $('.spotlight').css('height', '100px')
 
 
 # Creates a new task
@@ -197,6 +201,29 @@ $(document).on 'mousedown', '.task > label', ->
       li = $(this).closest('li')
       completeTask(li)
       nextTourBus(tour)
+
+
+# Click on edit
+$(document).on 'click', '.edit', (e) ->
+  li = $(this).closest('li')
+  id = Views.getId(li)
+
+  window.storageType.get DB.db_key, (allTasks) ->
+    name = allTasks[id].name
+    link = allTasks[id].link
+    
+    $new_task_input.val(name)
+
+    $new_task_input.focus()
+
+    unless link == ''
+      $link_input.val(link)
+
+      $('.spotlight').css('height', '100px')
+
+      $body.addClass('link-active')
+
+    $('.spotlight').css('opacity', '1')
 
 
 # Click on tag color

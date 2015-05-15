@@ -11,6 +11,9 @@
 
     &:hover
       background-color background-gray
+      
+      .edit
+        display initial
 
     input[type='checkbox']
       cursor pointer
@@ -35,6 +38,23 @@
 
       &:hover
         cursor pointer
+        
+    .edit
+      display none
+      color light-gray
+      cursor pointer
+      font-size font-xsmall
+      margin 1px 10px 0 0
+      
+      &:hover
+        color green
+        
+    // .edit
+    //   background-image url('../img/edit.svg')
+    //   cursor pointer
+    //   height 16px
+    //   margin 4px -2px 0 10px
+    //   width 16px
 
     .tag
       margin-top 1px
@@ -84,6 +104,7 @@
 
       &:hover
         background lighten(purple, 2)
+
         
 // Completed tasks
 
