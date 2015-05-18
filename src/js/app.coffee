@@ -25,7 +25,7 @@ initialize = ->
 
 
 standardLog = ->
-  console.log 'Super Simple Tasks v3.0'
+  console.log 'Super Simple Tasks v2.2'
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 
@@ -74,10 +74,11 @@ $(document).on 'mousedown', '.task > label', ->
       Tour.nextTourBus(tour)
 
 
-$(document).on 'click', '.priority', (e) ->
+# Click on tag color
+$(document).on 'click', '.tag', (e) ->
   e.preventDefault()
 
-  type_attr = 'priority'
+  type_attr = 'tag'
 
   value = $(this).attr(type_attr)
 
@@ -91,7 +92,7 @@ $(document).on 'click', '.priority', (e) ->
 # When hovering over the drag handle, unfocus the new task input field
 # This prevents people having to click twice, once to unfocus, the other to drag
 $(document).on 'mouseenter', '.drag-handle', (e) ->
-  window.new_task_input.blur()
+  $('#new-task').blur()
 
 
 $(document).on 'click', '#whats-new-close', (e) ->

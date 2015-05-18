@@ -5353,7 +5353,7 @@ DB = (function() {
 
 })();
 
-var Analytics;
+var Analytics, sendTagClickEvent;
 
 Analytics = (function() {
   function Analytics() {}
@@ -5383,6 +5383,13 @@ Analytics = (function() {
 
 })();
 
+sendTagClickEvent = function() {
+  window.clearTimeout(window.timeout);
+  return window.timeout = setTimeout((function() {
+    return ga('send', 'event', 'Tag color', 'click');
+  }), 1000);
+};
+
 $(window).focus(function() {
   return Analytics.sendPageView();
 });
@@ -5403,6 +5410,10 @@ $(document).on('click', '#link-devices', function(e) {
   return ga('send', 'event', 'Link devices', 'click');
 });
 
+$(document).on('click', '#expand', function() {
+  return ga('send', 'event', 'Open as tab', 'click');
+});
+
 $(document).on('click', '#export-tasks', function() {
   return ga('send', 'event', 'Export tasks', 'click');
 });
@@ -5415,11 +5426,11 @@ $(document).on('click', '.drag-handle', function() {
   return ga('send', 'event', 'Reorder with handle', 'click');
 });
 
-$(document).on('click', '.priority', function() {
-  return ga('send', 'event', 'Priority', 'click');
+$(document).on('click', '.tag', function() {
+  return sendTagClickEvent();
 });
 
-$(document).on('mousedown', '.task > label', function() {
+$(document).on('mousedown', '.task > tag', function() {
   return ga('send', 'event', 'Complete task', 'click');
 });
 
@@ -5448,33 +5459,33 @@ var Arrays, Task;
 Arrays = (function() {
   function Arrays() {}
 
-  Arrays.priorities = ['none', 'minor', 'major', 'blocker'];
+  Arrays.tags = ['gray', 'green', 'red', 'yellow', 'pink', 'purple', 'blue'];
 
   Arrays.default_data = [
     {
       'isDone': false,
       'name': 'Add a new task above',
-      'priority': 'blocker',
+      'tag': 'red',
       'link': ''
     }, {
       'isDone': false,
-      'name': 'Perhaps give it a priority or reorder it',
-      'priority': 'minor',
+      'name': 'Perhaps give it a tag or reorder it',
+      'tag': 'green',
       'link': ''
     }, {
       'isDone': false,
       'name': 'Refresh to see that your task is still here',
-      'priority': 'minor',
+      'tag': 'pink',
       'link': ''
     }, {
       'isDone': false,
       'name': 'Reference things by attaching a URL to tasks',
-      'priority': 'minor',
+      'tag': 'blue',
       'link': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     }, {
       'isDone': false,
       'name': 'Follow @humphreybc on Twitter',
-      'priority': 'major',
+      'tag': 'yellow',
       'link': 'http://twitter.com/humphreybc'
     }
   ];
@@ -5496,7 +5507,7 @@ Task = (function() {
     return task = {
       isDone: false,
       name: name,
-      priority: 'none',
+      tag: 'gray',
       link: link
     };
   };
@@ -5534,8 +5545,8 @@ Task = (function() {
 
   Task.cycleAttr = function(li, attr, value) {
     var array, currentIndex, id;
-    if (attr === 'priority') {
-      array = Arrays.priorities;
+    if (attr === 'tag') {
+      array = Arrays.tags;
     }
     currentIndex = $.inArray(value, array);
     id = Views.getId(li);
@@ -5697,9 +5708,10 @@ Views = (function() {
   };
 
   Views.addLinkTriggered = function() {
-    var $body, $new_task_input, isLinkActive, linkActiveClass;
+    var $body, $link_input, $new_task_input, isLinkActive, linkActiveClass;
     $body = $('body');
     $new_task_input = $('#new-task');
+    $link_input = $('#add-link-input');
     linkActiveClass = 'link-active';
     isLinkActive = $body.hasClass(linkActiveClass);
     if (isLinkActive) {
@@ -5858,7 +5870,8 @@ Migrations = (function() {
   function Migrations() {}
 
   Migrations.run = function(allTasks) {
-    return this.addLinkProperty(allTasks);
+    this.addLinkProperty(allTasks);
+    return this.changePrioritiesToColor(allTasks);
   };
 
   Migrations.addLinkProperty = function(allTasks) {
@@ -5874,6 +5887,29 @@ Migrations = (function() {
         return window.storageType.set(DB.db_key, allTasks);
       }
     });
+  };
+
+  Migrations.changePrioritiesToColor = function(allTasks) {
+    var i, j, len, task;
+    if (!allTasks[0].hasOwnProperty('tag')) {
+      for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
+        task = allTasks[i];
+        task['tag'] = (function() {
+          switch (task.priority) {
+            case 'none':
+              return 'gray';
+            case 'minor':
+              return 'green';
+            case 'major':
+              return 'yellow';
+            case 'blocker':
+              return 'red';
+          }
+        })();
+        delete task.priority;
+      }
+      return window.storageType.set(DB.db_key, allTasks);
+    }
   };
 
   return Migrations;
@@ -5924,7 +5960,7 @@ initialize = function() {
 };
 
 standardLog = function() {
-  console.log('Super Simple Tasks v3.0');
+  console.log('Super Simple Tasks v2.2');
   return console.log('Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks');
 };
 
@@ -5968,10 +6004,10 @@ $(document).on('mousedown', '.task > label', function() {
   });
 });
 
-$(document).on('click', '.priority', function(e) {
+$(document).on('click', '.tag', function(e) {
   var li, type_attr, value;
   e.preventDefault();
-  type_attr = 'priority';
+  type_attr = 'tag';
   value = $(this).attr(type_attr);
   li = $(this).closest('li');
   Task.cycleAttr(li, type_attr, value);
@@ -5979,7 +6015,7 @@ $(document).on('click', '.priority', function(e) {
 });
 
 $(document).on('mouseenter', '.drag-handle', function(e) {
-  return window.new_task_input.blur();
+  return $('#new-task').blur();
 });
 
 $(document).on('click', '#whats-new-close', function(e) {

@@ -5,6 +5,7 @@ class Migrations
   # List of migrations to run
   @run: (allTasks) ->
     @addLinkProperty(allTasks)
+    @changePrioritiesToColor(allTasks)
 
 
   # Add empty 'link' property to each task when migrating to 2.0.1
@@ -19,3 +20,23 @@ class Migrations
 
         # Save all the tasks
         window.storageType.set(DB.db_key, allTasks)
+
+  # Go from priority to color tag when migrating to 2.2
+  @changePrioritiesToColor: (allTasks) ->
+
+    unless allTasks[0].hasOwnProperty('tag')
+
+      for task, i in allTasks
+        task['tag'] = switch task.priority
+          when 'none' then 'gray'
+          when 'minor' then 'green'
+          when 'major' then 'yellow'
+          when 'blocker' then 'red'
+
+        delete task.priority
+
+      window.storageType.set(DB.db_key, allTasks)
+
+
+
+

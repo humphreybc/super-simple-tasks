@@ -125,6 +125,7 @@ class Views
 
     $body = $('body')
     $new_task_input = $('#new-task')
+    $link_input = $('#add-link-input')
 
     linkActiveClass = 'link-active'
     isLinkActive = $body.hasClass(linkActiveClass)
