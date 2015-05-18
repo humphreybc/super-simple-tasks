@@ -89,20 +89,13 @@ class Task
       Analytics.sendTaskCount(allTasks)
 
 
-  @updateTask: (name, link, task_id) ->
+  # Updates an existing task
+  @updateTask: (name, link, id) ->
 
     window.storageType.get DB.db_key, (allTasks) ->
 
-      i = 0
-      
-      while i < allTasks.length
-        if allTasks[i].id == task_id
-          index = i
-          break
-        i++
-
-      allTasks[index].name = name
-      allTasks[index].link = link
+      allTasks[id].name = name
+      allTasks[id].link = link
 
       window.storageType.set(DB.db_key, allTasks)
 

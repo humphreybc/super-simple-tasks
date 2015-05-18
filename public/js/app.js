@@ -5517,19 +5517,10 @@ Task = (function() {
     });
   };
 
-  Task.updateTask = function(name, link, task_id) {
+  Task.updateTask = function(name, link, id) {
     return window.storageType.get(DB.db_key, function(allTasks) {
-      var i, index;
-      i = 0;
-      while (i < allTasks.length) {
-        if (allTasks[i].id === task_id) {
-          index = i;
-          break;
-        }
-        i++;
-      }
-      allTasks[index].name = name;
-      allTasks[index].link = link;
+      allTasks[id].name = name;
+      allTasks[id].link = link;
       window.storageType.set(DB.db_key, allTasks);
       return Views.showTasks(allTasks);
     });
@@ -5703,30 +5694,41 @@ Views = (function() {
     return task_list.html(tasks);
   };
 
+  Views.clearNewTaskInputs = function() {
+    $('#new-task').val('');
+    $('#add-link-input').val('');
+    return $('#edit-task-id').val('');
+  };
+
   Views.addTaskTriggered = function() {
-    var $edit_task_id, $link_input, $new_task_input, link, name, task_id;
-    $new_task_input = $('#new-task');
-    $link_input = $('#add-link-input');
-    $edit_task_id = $('#edit-task-id');
-    task_id = $edit_task_id.val();
-    name = $new_task_input.val();
-    link = $link_input.val();
-    Tour.nextTourBus(tour);
-    if (task_id) {
-      Task.updateTask(name, link, task_id);
-      $('#edit-task-overlay').css('opacity', '0');
-      $new_task_input.val('');
-      $link_input.val('');
-      $edit_task_id.val('');
-      return;
-    }
+    var id, link, name, task;
+    name = $('#new-task').val();
+    link = $('#add-link-input').val();
+    id = $('#edit-task-id').val();
     if (name !== '') {
+      if (id) {
+        Task.updateTask(name, link, id);
+        $('#edit-task-overlay').css('opacity', '0');
+        Views.clearNewTaskInputs();
+        $('body').removeClass('link-active');
+        id = parseInt(id) + 1;
+        task = $('#task-list li:nth-child(' + id + ')');
+        task.addClass('edited-transition');
+        task.addClass('edited');
+        setTimeout((function() {
+          return task.removeClass('edited');
+        }), 1000);
+        setTimeout((function() {
+          return task.removeClass('edited-transition');
+        }), 2000);
+        return;
+      }
       Task.setNewTask(name, link);
-      $new_task_input.val('');
-      $link_input.val('');
+      Views.clearNewTaskInputs();
       Views.displaySaveSuccess();
+      Tour.nextTourBus(tour);
     }
-    return $new_task_input.focus();
+    return $('#new-task').focus();
   };
 
   Views.addLinkTriggered = function() {
@@ -5758,12 +5760,12 @@ Views = (function() {
 
   Views.editTask = function(id) {
     return window.storageType.get(DB.db_key, function(allTasks) {
-      var link, name, task_id;
+      var link, name;
       name = allTasks[id].name;
       link = allTasks[id].link;
-      task_id = allTasks[id].id;
-      $('#edit-task-id').val(task_id);
+      $('#edit-task-id').val(id);
       $('#new-task').val(name);
+      $('#edit-task-overlay').css('height', '65px');
       $('#new-task').focus();
       if (link !== '') {
         $('#add-link-input').val(link);

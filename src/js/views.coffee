@@ -98,42 +98,57 @@ class Views
     task_list.html(tasks)
 
 
+  @clearNewTaskInputs: ->
+    $('#new-task').val('')
+    $('#add-link-input').val('')
+    $('#edit-task-id').val('')
+
+
   @addTaskTriggered: ->
-
-    $new_task_input = $('#new-task')
-    $link_input = $('#add-link-input')
-    $edit_task_id = $('#edit-task-id')
-
-    task_id = $edit_task_id.val()
-    name = $new_task_input.val()
-    link = $link_input.val()
-
-    Tour.nextTourBus(tour)
-
-    if task_id
-      Task.updateTask(name, link, task_id)
-      $('#edit-task-overlay').css('opacity', '0')
-
-      $new_task_input.val('')
-      $link_input.val('')
-      $edit_task_id.val('')
-
-      return
+    name = $('#new-task').val()
+    link = $('#add-link-input').val()
+    id = $('#edit-task-id').val()
 
     unless name == ''
 
+      if id
+        Task.updateTask(name, link, id)
+
+        $('#edit-task-overlay').css('opacity', '0')
+
+        Views.clearNewTaskInputs()
+
+        $('body').removeClass('link-active')
+
+        id = parseInt(id) + 1
+
+        task = $('#task-list li:nth-child(' + id + ')')
+
+        task.addClass('edited-transition')
+        task.addClass('edited')
+
+        setTimeout (->
+          task.removeClass('edited')
+        ), 1000
+
+        setTimeout (->
+          task.removeClass('edited-transition')
+        ), 2000
+
+        return
+
       Task.setNewTask(name, link)
       
-      $new_task_input.val('')
-      $link_input.val('')
+      Views.clearNewTaskInputs()
 
       Views.displaySaveSuccess()
 
-    $new_task_input.focus()
+      Tour.nextTourBus(tour)
+
+    $('#new-task').focus()
 
 
   @addLinkTriggered: ->
-
     $body = $('body')
     $new_task_input = $('#new-task')
     $link_input = $('#add-link-input')
@@ -161,15 +176,18 @@ class Views
     template({tasks: allTasks})
 
 
+  # Populates the create task form with the task to be edited
   @editTask: (id) ->
     window.storageType.get DB.db_key, (allTasks) ->
+
       name = allTasks[id].name
       link = allTasks[id].link
-      task_id = allTasks[id].id
       
-      $('#edit-task-id').val(task_id)
-
+      $('#edit-task-id').val(id)
       $('#new-task').val(name)
+
+      $('#edit-task-overlay').css('height', '65px')
+
       $('#new-task').focus()
 
       unless link == ''
