@@ -113,6 +113,7 @@ addLinkTriggered = ->
 
 # Creates a new task
 addTaskTriggered = () ->
+
   nextTourBus(tour)
 
   name = $new_task_input.val()
@@ -205,25 +206,11 @@ $(document).on 'mousedown', '.task > label', ->
 
 # Click on edit
 $(document).on 'click', '.edit', (e) ->
+
   li = $(this).closest('li')
   id = Views.getId(li)
 
-  window.storageType.get DB.db_key, (allTasks) ->
-    name = allTasks[id].name
-    link = allTasks[id].link
-    
-    $new_task_input.val(name)
-
-    $new_task_input.focus()
-
-    unless link == ''
-      $link_input.val(link)
-
-      $('#edit-task-overlay').css('height', '100px')
-
-      $body.addClass('link-active')
-
-    $('#edit-task-overlay').css('opacity', '1')
+  Views.editTask(id)
 
 
 # Click on tag color

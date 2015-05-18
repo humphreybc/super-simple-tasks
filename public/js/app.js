@@ -5108,19 +5108,7 @@ $(document).on('click', '.edit', function(e) {
   var id, li;
   li = $(this).closest('li');
   id = Views.getId(li);
-  return window.storageType.get(DB.db_key, function(allTasks) {
-    var link, name;
-    name = allTasks[id].name;
-    link = allTasks[id].link;
-    $new_task_input.val(name);
-    $new_task_input.focus();
-    if (link !== '') {
-      $link_input.val(link);
-      $('#edit-task-overlay').css('height', '100px');
-      $body.addClass('link-active');
-    }
-    return $('#edit-task-overlay').css('opacity', '1');
-  });
+  return Views.editTask(id);
 });
 
 $(document).on('click', '.tag', function(e) {
@@ -5575,6 +5563,30 @@ Views = (function() {
     template = Handlebars.compile(source);
     return template({
       tasks: allTasks
+    });
+  };
+
+  Views.editTask = function(id) {
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      var i, link, name, position;
+      name = allTasks[id].name;
+      link = allTasks[id].link;
+      i = 0;
+      while (i < allTasks.length) {
+        if (allTasks[i].name === name) {
+          position = i;
+          break;
+        }
+        i++;
+      }
+      $('#new-task').val(name);
+      $('#new-task').focus();
+      if (link !== '') {
+        $('#add-link-input').val(link);
+        $('#edit-task-overlay').css('height', '100px');
+        $('body').addClass('link-active');
+      }
+      return $('#edit-task-overlay').css('opacity', '1');
     });
   };
 

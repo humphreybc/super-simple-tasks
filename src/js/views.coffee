@@ -46,6 +46,33 @@ class Views
     template({tasks: allTasks})
 
 
+  # Editing a task
+  @editTask: (id) ->
+    window.storageType.get DB.db_key, (allTasks) ->
+      name = allTasks[id].name
+      link = allTasks[id].link
+
+      i = 0
+
+      while i < allTasks.length
+        if allTasks[i].name == name
+          position = i
+          break
+        i++
+      
+      $('#new-task').val(name)
+      $('#new-task').focus()
+
+      unless link == ''
+        $('#add-link-input').val(link)
+
+        $('#edit-task-overlay').css('height', '100px')
+
+        $('body').addClass('link-active')
+
+      $('#edit-task-overlay').css('opacity', '1')
+
+
   # Show the empty state if there aren't any tasks
   # Also focus the new task field
   @showEmptyState: (allTasks) ->
