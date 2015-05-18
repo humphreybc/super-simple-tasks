@@ -1,10 +1,8 @@
 class Extension
 
-  @setBrowserActionBadge: (allTasks) ->
-    url = window.location.href.split('://')
+  @setBrowserActionBadge: (allTasks) =>
 
-    # I should probably make this a global at some point
-    if url[0] == 'chrome-extension'
+    if @isExtension()
 
       task_count = allTasks.filter((task) ->
         task.isDone == false
@@ -26,3 +24,7 @@ class Extension
       if task_count > 15
         chrome.browserAction.setBadgeBackgroundColor
           'color': '#FF4444'
+
+  @isExtension: ->
+    url = window.location.href.split('://')
+    url[0] == 'chrome-extension'

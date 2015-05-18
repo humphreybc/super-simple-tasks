@@ -1,0 +1,56 @@
+// You guessed it, styles for the modal dialog
+
+.modal-blanket
+  opacity 0
+  background-color rgba(0, 0, 0, 0.6)
+  bottom 0
+  display none
+  height 100%
+  left 0
+  position fixed
+  right 0
+  top 0
+  transition opacity 250ms ease-in-out
+  width 100%
+  z-index 125
+  
+.modal
+  background-color white
+  border-bottom-left-radius radius * 2
+  border-bottom-right-radius radius * 2
+  box-shadow 0px 3px 6px rgba(0,0,0,0.15)
+  width 700px
+  min-height 300px
+  position absolute
+  padding 20px
+  left 50%
+  top -200%
+  transform translateX(-50%)
+  transition top 500ms ease-in-out
+  z-index 150
+  
+  
+  .modal-header
+    overflow hidden
+    
+    img
+      margin-top 5px
+      
+    #modal-close:hover
+      cursor pointer
+      opacity 0.6
+  
+  .modal-section
+    margin-top 40px
+    
+  .modal-footer p
+    font-size font-xsmall - 0.1
+    color light-gray
+    
+  
+.modal-show
+  top 48px
+  
+.fade
+  opacity 1
+  

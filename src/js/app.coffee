@@ -1,8 +1,5 @@
-# User interaction with the DOM
+# Catch user interaction
 
-$new_task_input = $('#new-task')
-$link_input = $('#add-link-input')
-$body = $('body')
 online = null
 tour = null
 
@@ -12,7 +9,7 @@ initialize = ->
 
   window.storageType.get DB.db_key, (allTasks) ->
 
-    allTasks = handleNoTasks(allTasks)
+    allTasks = Task.handleNoTasks(allTasks)
 
     Migrations.run(allTasks)
 
@@ -22,161 +19,35 @@ initialize = ->
 
     Views.checkWhatsNew()
 
-  animateContent()
+  Views.animateContent()
 
-  $new_task_input.focus()
-
-
-# Send an event with the task count
-sendTaskCount = (allTasks) ->
-  window.storageType.get DB.db_key, (allTasks) ->
-    ga 'send',
-      'hitType': 'event'
-      'eventCategory': 'Data'
-      'eventAction': 'Task count'
-      'eventValue': allTasks.length
+  $('#new-task').focus()
 
 
-# Write some standard stuff to the console
 standardLog = ->
   console.log 'Super Simple Tasks v2.2'
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 
 
-checkStorageMethod = ->
-  if !!window.chrome and chrome.storage
-    console.log 'Using chrome.storage.sync to save'
-    window.storageType = ChromeStorage
-  else
-    console.log 'Using localStorage to save'
-    window.storageType = LocalStorage
-
-
-checkOnline = ->
-  online = navigator.onLine
-  return online
-
-
-setPopupClass = ->
-  if Utils.getUrlParameter('popup') == 'true'
-    $body.addClass('popup')
-
-
-changeEmptyStateImage = (online) ->
-  if online
-    $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")')
-
-
-createTour = ->
-  $('#tour').tourbus
-    onStop: Views.finishTour
-    onLegStart: (leg, bus) ->
-      window.tourRunning = bus.running
-      leg.$el.addClass('animated fadeInDown')
-
-
-handleNoTasks = (allTasks) ->
-  if allTasks == null
-    allTasks = Arrays.default_data
-    window.storageType.set(DB.db_key, allTasks)
-
-  return allTasks
-
-
-animateContent = ->
-  setTimeout (->
-    $('#main-content').addClass('content-show')
-  ), 150
-
-
-nextTourBus = (tour) ->
-  if window.tourRunning
-    tour.trigger('next.tourbus')
-
-
-addLinkTriggered = ->
-  linkActiveClass = 'link-active'
-  isLinkActive = $body.hasClass(linkActiveClass)
-
-  if isLinkActive
-    $body.removeClass(linkActiveClass)
-    $new_task_input.focus()
-
-    $('.spotlight').css('height', '65px')
-  else
-    $body.addClass(linkActiveClass)
-    $link_input.focus()
-
-    $('.spotlight').css('height', '100px')
-
-
-# Creates a new task
-addTaskTriggered = () ->
-
-  nextTourBus(tour)
-
-  name = $new_task_input.val()
-
-  unless name == ''
-
-    link = $link_input.val()
-
-    Task.setNewTask(name, link)
-    
-    $new_task_input.val('')
-    $link_input.val('')
-
-    displaySaveSuccess()
-
-    sendTaskCount()
-
-  $new_task_input.focus()
-
-
-# Does the little animation on the task submit button
-displaySaveSuccess = ->
-  $('#task-submit').addClass('task-submitted')
-
-  setTimeout (->
-    $('#task-submit').removeClass('task-submitted')
-  ), 1000
-
-
 keyboardShortcuts = (e) ->
   evtobj = if window.event then event else e
 
-  enterKey = 13
-  lKey = 76
+  enter_key = 13
+  l_key = 76
+  esc_key = 27
 
-  if evtobj.keyCode == enterKey
-    addTaskTriggered()
+  if evtobj.keyCode == enter_key
+    Views.addTaskTriggered()
     ga 'send', 'event', 'Add task shortcut', 'shortcut'
 
-  if evtobj.ctrlKey && evtobj.keyCode == lKey
-    addLinkTriggered()
+  if (evtobj.keyCode == esc_key) and ($('#link-devices-modal').hasClass('modal-show'))
+    Views.toggleModalDialog()
+    ga 'send', 'event', 'Modal dialog close shortcut', 'shortcut'
+
+  if evtobj.ctrl_key && evtobj.keyCode == lKey
+    Views.addLinkTriggered()
     ga 'send', 'event', 'Add link shortcut', 'shortcut'
-
-
-completeTask = (li) ->
-  checkbox = li.find('input')
-
-  isDone = not checkbox.prop 'checked'
-  Task.updateAttr(Views.getId(li), 'isDone', isDone)
-
-  # Manually toggle the value of the checkbox
-  checkbox.prop 'checked', isDone
-
-
-clearCompleted = ->
-  window.storageType.get DB.db_key, (allTasks) ->
-    unless allTasks.length == 0
-      Task.clearCompleted()
-
-
-exportTasks = ->
-  window.storageType.get DB.db_key, (allTasks) ->
-    Exporter(allTasks, 'super simple tasks backup')
 
 
 # We'll manage checking the checkbox thank you very much
@@ -200,8 +71,8 @@ $(document).on 'mousedown', '.task > label', ->
     unless holding
 
       li = $(this).closest('li')
-      completeTask(li)
-      nextTourBus(tour)
+      Views.completeTask(li)
+      Tour.nextTourBus(tour)
 
 
 # Click on edit
@@ -225,13 +96,13 @@ $(document).on 'click', '.tag', (e) ->
   
   Task.cycleAttr(li, type_attr, value)
 
-  nextTourBus(tour)
+  Tour.nextTourBus(tour)
 
 
 # When hovering over the drag handle, unfocus the new task input field
 # This prevents people having to click twice, once to unfocus, the other to drag
 $(document).on 'mouseenter', '.drag-handle', (e) ->
-  $new_task_input.blur()
+  $('#new-task').blur()
 
 
 $(document).on 'click', '#whats-new-close', (e) ->
@@ -239,41 +110,66 @@ $(document).on 'click', '#whats-new-close', (e) ->
   Views.closeWhatsNew()
 
 
-$(document).on 'click', '#task-submit', addTaskTriggered
+$(document).on 'click', '#task-submit', Views.addTaskTriggered
 
 
-$(document).on 'click', '#add-link', addLinkTriggered
+$(document).on 'click', '#add-link', Views.addLinkTriggered
 
 
 $(document).on 'click', '#clear-completed', (e) ->
   e.preventDefault()
-  clearCompleted()
+  Task.clearCompleted()
+
+
+$(document).on 'click', '#link-devices', (e) ->
+  e.preventDefault()
+  DB.linkDevices()
+
+
+$(document).on 'click', '#disconnect-devices', (e) ->
+  e.preventDefault()
+  DB.disconnectDevices()
+  location.reload()
+
+
+$(document).on 'click', '#modal-close', (e) ->
+  e.preventDefault()
+  Views.toggleModalDialog()
+
 
 $(document).on 'click', '#export-tasks', (e) ->
   e.preventDefault()
-  exportTasks()
+  Task.exportTasks()
 
 
 $(document).ready ->
 
-  setPopupClass()
+  Views.setPopupClass()
+
+  Views.catchSharingCode()
 
   standardLog()
 
-  checkStorageMethod()
+  DB.setSyncStatus()
+
+  DB.createFirebase()
+
+  DB.checkStorageMethod()
+
+  DB.setSyncKey()
 
   window.tourRunning = false
 
-  document.onkeydown = keyboardShortcuts
+  document.onkeyup = keyboardShortcuts
 
-  tour = createTour() # This is badwrong
+  tour = Tour.createTour()
 
   initialize()
 
   setTimeout (->
 
-    checkOnline()
+    Utils.checkOnline()
 
-    changeEmptyStateImage(online)
+    Views.changeEmptyStateImage(online)
 
   ), 100

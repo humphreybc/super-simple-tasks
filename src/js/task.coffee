@@ -79,6 +79,9 @@ class Task
       # Show the tasks
       Views.showTasks(allTasks)
 
+      # Send task count
+      Analytics.sendTaskCount(allTasks)
+
 
   # Updates the order upon drag and drop
   # Takes oldLocation and newLocation from dragdrop.coffee
@@ -182,6 +185,20 @@ class Task
 
       # Return allTasks, except now without tasks with isDone: true
       Views.showTasks(allTasks)
+
+
+  @handleNoTasks: (allTasks) ->
+    if allTasks == null
+      allTasks = Arrays.default_data
+      window.storageType.set(DB.db_key, allTasks)
+
+    return allTasks
+
+
+
+  @exportTasks: ->
+    window.storageType.get DB.db_key, (allTasks) ->
+      Exporter(allTasks, 'super simple tasks backup')
 
 
 

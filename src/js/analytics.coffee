@@ -1,12 +1,26 @@
 # Analytics events
 
-sendPageView = ->
-  url = window.location.href.split('://')
+class Analytics
 
-  if url[0] == 'chrome-extension'
-    ga('send', 'pageview', 'chrome-extension')
-  else
-    ga('send', 'pageview', url[1])
+
+  @sendPageView: ->
+    url = window.location.href.split('://')
+
+    if url[0] == 'chrome-extension'
+      ga('send', 'pageview', 'chrome-extension')
+    else
+      ga('send', 'pageview', url[1])
+
+
+  # Send an event with the task count
+  @sendTaskCount: (allTasks) ->
+    window.storageType.get DB.db_key, (allTasks) ->
+      ga 'send',
+        'hitType': 'event'
+        'eventCategory': 'Data'
+        'eventAction': 'Task count'
+        'eventValue': allTasks.length
+
 
 sendTagClickEvent = ->
 
@@ -22,7 +36,7 @@ sendTagClickEvent = ->
 # only send the pageview when the new task input has focus.
 # The new task input is focused by default when the page loads.
 $(window).focus ->
-  sendPageView()
+  Analytics.sendPageView()
 
 # Click on Add link button
 $(document).on 'click', '#add-link', ->
@@ -35,6 +49,9 @@ $(document).on 'click', '#task-submit', ->
 # Click on Clear completed in navigation
 $(document).on 'click', '#clear-completed', ->
   ga 'send', 'event', 'Clear completed', 'click'
+
+$(document).on 'click', '#link-devices', (e) ->
+  ga 'send', 'event', 'Link devices', 'click'
 
 # Click to open as a tab
 $(document).on 'click', '#expand', ->
