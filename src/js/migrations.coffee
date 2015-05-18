@@ -6,6 +6,7 @@ class Migrations
   @run: (allTasks) ->
     @addLinkProperty(allTasks)
     @changePrioritiesToColor(allTasks)
+    @addTaskID(allTasks)
 
 
   # Add empty 'link' property to each task when migrating to 2.0.1
@@ -34,6 +35,16 @@ class Migrations
           when 'blocker' then 'red'
 
         delete task.priority
+
+      window.storageType.set(DB.db_key, allTasks)
+
+
+  @addTaskID: (allTasks) ->
+
+    unless allTasks[0].hasOwnProperty('id')
+
+      for task, i in allTasks
+        task.id = Utils.generateID()
 
       window.storageType.set(DB.db_key, allTasks)
 
