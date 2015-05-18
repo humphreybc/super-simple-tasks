@@ -102,14 +102,25 @@ class Views
 
     $new_task_input = $('#new-task')
     $link_input = $('#add-link-input')
+    $edit_task_id = $('#edit-task-id')
+
+    task_id = $edit_task_id.val()
+    name = $new_task_input.val()
+    link = $link_input.val()
 
     Tour.nextTourBus(tour)
 
-    name = $new_task_input.val()
+    if task_id
+      Task.updateTask(name, link, task_id)
+      $('#edit-task-overlay').css('opacity', '0')
+
+      $new_task_input.val('')
+      $link_input.val('')
+      $edit_task_id.val('')
+
+      return
 
     unless name == ''
-
-      link = $link_input.val()
 
       Task.setNewTask(name, link)
       
@@ -133,9 +144,11 @@ class Views
     if isLinkActive
       $body.removeClass(linkActiveClass)
       $new_task_input.focus()
+      $('#edit-task-overlay').css('height', '65px')
     else
       $body.addClass(linkActiveClass)
       $link_input.focus()
+      $('#edit-task-overlay').css('height', '100px')
 
 
   # Create the HTML markup for a single task li and returns it
@@ -152,15 +165,10 @@ class Views
     window.storageType.get DB.db_key, (allTasks) ->
       name = allTasks[id].name
       link = allTasks[id].link
-
-      i = 0
-
-      while i < allTasks.length
-        if allTasks[i].name == name
-          position = i
-          break
-        i++
+      task_id = allTasks[id].id
       
+      $('#edit-task-id').val(task_id)
+
       $('#new-task').val(name)
       $('#new-task').focus()
 

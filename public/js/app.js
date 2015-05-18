@@ -5517,6 +5517,24 @@ Task = (function() {
     });
   };
 
+  Task.updateTask = function(name, link, task_id) {
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      var i, index;
+      i = 0;
+      while (i < allTasks.length) {
+        if (allTasks[i].id === task_id) {
+          index = i;
+          break;
+        }
+        i++;
+      }
+      allTasks[index].name = name;
+      allTasks[index].link = link;
+      window.storageType.set(DB.db_key, allTasks);
+      return Views.showTasks(allTasks);
+    });
+  };
+
   Task.updateOrder = function(oldLocation, newLocation) {
     if (oldLocation === newLocation) {
       return;
@@ -5686,13 +5704,23 @@ Views = (function() {
   };
 
   Views.addTaskTriggered = function() {
-    var $link_input, $new_task_input, link, name;
+    var $edit_task_id, $link_input, $new_task_input, link, name, task_id;
     $new_task_input = $('#new-task');
     $link_input = $('#add-link-input');
-    Tour.nextTourBus(tour);
+    $edit_task_id = $('#edit-task-id');
+    task_id = $edit_task_id.val();
     name = $new_task_input.val();
+    link = $link_input.val();
+    Tour.nextTourBus(tour);
+    if (task_id) {
+      Task.updateTask(name, link, task_id);
+      $('#edit-task-overlay').css('opacity', '0');
+      $new_task_input.val('');
+      $link_input.val('');
+      $edit_task_id.val('');
+      return;
+    }
     if (name !== '') {
-      link = $link_input.val();
       Task.setNewTask(name, link);
       $new_task_input.val('');
       $link_input.val('');
@@ -5710,10 +5738,12 @@ Views = (function() {
     isLinkActive = $body.hasClass(linkActiveClass);
     if (isLinkActive) {
       $body.removeClass(linkActiveClass);
-      return $new_task_input.focus();
+      $new_task_input.focus();
+      return $('#edit-task-overlay').css('height', '65px');
     } else {
       $body.addClass(linkActiveClass);
-      return $link_input.focus();
+      $link_input.focus();
+      return $('#edit-task-overlay').css('height', '100px');
     }
   };
 
@@ -5728,17 +5758,11 @@ Views = (function() {
 
   Views.editTask = function(id) {
     return window.storageType.get(DB.db_key, function(allTasks) {
-      var i, link, name, position;
+      var link, name, task_id;
       name = allTasks[id].name;
       link = allTasks[id].link;
-      i = 0;
-      while (i < allTasks.length) {
-        if (allTasks[i].name === name) {
-          position = i;
-          break;
-        }
-        i++;
-      }
+      task_id = allTasks[id].id;
+      $('#edit-task-id').val(task_id);
       $('#new-task').val(name);
       $('#new-task').focus();
       if (link !== '') {

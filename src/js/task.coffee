@@ -89,6 +89,26 @@ class Task
       Analytics.sendTaskCount(allTasks)
 
 
+  @updateTask: (name, link, task_id) ->
+
+    window.storageType.get DB.db_key, (allTasks) ->
+
+      i = 0
+      
+      while i < allTasks.length
+        if allTasks[i].id == task_id
+          index = i
+          break
+        i++
+
+      allTasks[index].name = name
+      allTasks[index].link = link
+
+      window.storageType.set(DB.db_key, allTasks)
+
+      Views.showTasks(allTasks)
+
+
   # Updates the order upon drag and drop
   # Takes oldLocation and newLocation from dragdrop.coffee
   @updateOrder: (oldLocation, newLocation) ->
