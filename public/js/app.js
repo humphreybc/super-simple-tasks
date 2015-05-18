@@ -5463,26 +5463,31 @@ Arrays = (function() {
 
   Arrays.default_data = [
     {
+      'id': Utils.generateID(),
       'isDone': false,
       'name': 'Add a new task above',
       'tag': 'red',
       'link': ''
     }, {
+      'id': Utils.generateID(),
       'isDone': false,
       'name': 'Perhaps give it a tag or reorder it',
       'tag': 'green',
       'link': ''
     }, {
+      'id': Utils.generateID(),
       'isDone': false,
       'name': 'Refresh to see that your task is still here',
       'tag': 'pink',
       'link': ''
     }, {
+      'id': Utils.generateID(),
       'isDone': false,
       'name': 'Reference things by attaching a URL to tasks',
       'tag': 'blue',
       'link': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     }, {
+      'id': Utils.generateID(),
       'isDone': false,
       'name': 'Follow @humphreybc on Twitter',
       'tag': 'yellow',
@@ -5505,6 +5510,7 @@ Task = (function() {
       }
     }
     return task = {
+      id: Utils.generateID(),
       isDone: false,
       name: name,
       tag: 'gray',
@@ -5871,7 +5877,8 @@ Migrations = (function() {
 
   Migrations.run = function(allTasks) {
     this.addLinkProperty(allTasks);
-    return this.changePrioritiesToColor(allTasks);
+    this.changePrioritiesToColor(allTasks);
+    return this.addTaskID(allTasks);
   };
 
   Migrations.addLinkProperty = function(allTasks) {
@@ -5907,6 +5914,17 @@ Migrations = (function() {
           }
         })();
         delete task.priority;
+      }
+      return window.storageType.set(DB.db_key, allTasks);
+    }
+  };
+
+  Migrations.addTaskID = function(allTasks) {
+    var i, j, len, task;
+    if (!allTasks[0].hasOwnProperty('id')) {
+      for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
+        task = allTasks[i];
+        task.id = Utils.generateID();
       }
       return window.storageType.set(DB.db_key, allTasks);
     }
