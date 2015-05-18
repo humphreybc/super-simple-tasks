@@ -219,11 +219,11 @@ $(document).on 'click', '.edit', (e) ->
     unless link == ''
       $link_input.val(link)
 
-      $('.spotlight').css('height', '100px')
+      $('#edit-task-overlay').css('height', '100px')
 
       $body.addClass('link-active')
 
-    $('.spotlight').css('opacity', '1')
+    $('#edit-task-overlay').css('opacity', '1')
 
 
 # Click on tag color

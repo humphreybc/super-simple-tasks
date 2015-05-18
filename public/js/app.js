@@ -5116,10 +5116,10 @@ $(document).on('click', '.edit', function(e) {
     $new_task_input.focus();
     if (link !== '') {
       $link_input.val(link);
-      $('.spotlight').css('height', '100px');
+      $('#edit-task-overlay').css('height', '100px');
       $body.addClass('link-active');
     }
-    return $('.spotlight').css('opacity', '1');
+    return $('#edit-task-overlay').css('opacity', '1');
   });
 });
 

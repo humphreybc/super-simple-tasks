@@ -8,7 +8,7 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 
 * Completely free (as in beer and in freedom)
 * No account required
-* Works offline thorugh localStorage
+* Works offline through localStorage and chrome.storage.sync
 * 100% client-side
 * Easy to use
 * Drag and drop to reorder tasks (even works on mobile!)
