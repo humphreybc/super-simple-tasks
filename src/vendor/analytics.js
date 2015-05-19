@@ -13,7 +13,6 @@ var getTrackingCode = function() {
     trackingCode = 'UA-37638548-1';
   };
 
-  console.log(trackingCode)
   return trackingCode;
 };
 
