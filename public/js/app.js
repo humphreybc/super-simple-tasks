@@ -5680,16 +5680,12 @@ Views = (function() {
     return $device_link_code.val('http://' + host + '?share=' + DB.db_key);
   };
 
-  Views.displaySaveSuccess = function() {
-    $('#task-submit').addClass('task-submitted');
-    return setTimeout((function() {
-      return $('#task-submit').removeClass('task-submitted');
-    }), 1000);
+  Views.getId = function(li) {
+    return $(li).parent().children().index(li);
   };
 
-  Views.getId = function(li) {
-    var id;
-    return id = $(li).parent().children().index(li);
+  Views.getLi = function(id) {
+    return $('#task-list li:nth-child(' + (id + 1) + ')');
   };
 
   Views.showTasks = function(allTasks) {
@@ -5714,52 +5710,69 @@ Views = (function() {
     return $('#edit-task-id').val('');
   };
 
+  Views.taskAddedAnimation = function() {
+    $('#task-submit').addClass('task-submitted');
+    return setTimeout((function() {
+      return $('#task-submit').removeClass('task-submitted');
+    }), 1000);
+  };
+
+  Views.taskEditedAnimation = function(id) {
+    var task;
+    task = Views.getLi(id);
+    task.addClass('edited-transition');
+    task.addClass('edited');
+    setTimeout((function() {
+      return task.removeClass('edited');
+    }), 1000);
+    return setTimeout((function() {
+      return task.removeClass('edited-transition');
+    }), 2000);
+  };
+
+  Views.editTaskTriggered = function(name, link, id) {
+    id = parseInt(id);
+    Task.updateTask(name, link, id);
+    $('#edit-task-overlay').removeClass('fade');
+    Views.clearNewTaskInputs();
+    Views.toggleAddLinkInput();
+    return Views.taskEditedAnimation(id);
+  };
+
   Views.addTaskTriggered = function() {
-    var id, link, name, task;
+    var id, link, name;
     name = $('#new-task').val();
     link = $('#add-link-input').val();
     id = $('#edit-task-id').val();
-    if (name !== '') {
+    if (name) {
       if (id) {
-        Task.updateTask(name, link, id);
-        $('#edit-task-overlay').css('opacity', '0');
+        Views.editTaskTriggered(name, link, id);
+      } else {
+        Task.setNewTask(name, link);
         Views.clearNewTaskInputs();
-        $('body').removeClass('link-active');
-        id = parseInt(id) + 1;
-        task = $('#task-list li:nth-child(' + id + ')');
-        task.addClass('edited-transition');
-        task.addClass('edited');
-        setTimeout((function() {
-          return task.removeClass('edited');
-        }), 1000);
-        setTimeout((function() {
-          return task.removeClass('edited-transition');
-        }), 2000);
-        return;
+        Views.taskAddedAnimation();
+        Tour.nextTourBus(tour);
       }
-      Task.setNewTask(name, link);
-      Views.clearNewTaskInputs();
-      Views.displaySaveSuccess();
-      Tour.nextTourBus(tour);
     }
     return $('#new-task').focus();
   };
 
-  Views.addLinkTriggered = function() {
+  Views.toggleAddLinkInput = function(toggle_open) {
     var $body, $link_input, $new_task_input, isLinkActive, linkActiveClass;
+    if (toggle_open == null) {
+      toggle_open = true;
+    }
     $body = $('body');
     $new_task_input = $('#new-task');
     $link_input = $('#add-link-input');
     linkActiveClass = 'link-active';
     isLinkActive = $body.hasClass(linkActiveClass);
-    if (isLinkActive) {
+    if (isLinkActive || !toggle_open) {
       $body.removeClass(linkActiveClass);
-      $new_task_input.focus();
-      return $('#edit-task-overlay').css('height', '65px');
+      return $new_task_input.focus();
     } else {
       $body.addClass(linkActiveClass);
-      $link_input.focus();
-      return $('#edit-task-overlay').css('height', '100px');
+      return $link_input.focus();
     }
   };
 
@@ -5779,14 +5792,12 @@ Views = (function() {
       link = allTasks[id].link;
       $('#edit-task-id').val(id);
       $('#new-task').val(name);
-      $('#edit-task-overlay').css('height', '65px');
-      $('#new-task').focus();
-      if (link !== '') {
+      if (link) {
         $('#add-link-input').val(link);
-        $('#edit-task-overlay').css('height', '100px');
-        $('body').addClass('link-active');
+        Views.toggleAddLinkInput();
       }
-      return $('#edit-task-overlay').css('opacity', '1');
+      $('#edit-task-overlay').addClass('fade');
+      return $('#new-task').focus();
     });
   };
 
@@ -6035,21 +6046,27 @@ standardLog = function() {
 };
 
 keyboardShortcuts = function(e) {
-  var enter_key, esc_key, evtobj, l_key;
+  var enter_key, esc_key, evtobj, l_key, shift_key;
   evtobj = window.event ? event : e;
   enter_key = 13;
   l_key = 76;
   esc_key = 27;
+  shift_key = 16;
   if (evtobj.keyCode === enter_key) {
     Views.addTaskTriggered();
     ga('send', 'event', 'Add task shortcut', 'shortcut');
+  }
+  if (evtobj.keyCode === esc_key) {
+    $('#edit-task-overlay').removeClass('fade');
+    Views.clearNewTaskInputs();
+    Views.toggleAddLinkInput(false);
   }
   if ((evtobj.keyCode === esc_key) && ($('#link-devices-modal').hasClass('modal-show'))) {
     Views.toggleModalDialog();
     ga('send', 'event', 'Modal dialog close shortcut', 'shortcut');
   }
-  if (evtobj.ctrl_key && evtobj.keyCode === lKey) {
-    Views.addLinkTriggered();
+  if (evtobj.altKey && evtobj.keyCode === l_key) {
+    Views.toggleAddLinkInput();
     return ga('send', 'event', 'Add link shortcut', 'shortcut');
   }
 };
@@ -6075,10 +6092,9 @@ $(document).on('mousedown', '.task > label', function() {
 });
 
 $(document).on('click', '.edit', function(e) {
-  var id, li;
+  var li;
   li = $(this).closest('li');
-  id = Views.getId(li);
-  return Views.editTask(id);
+  return Views.editTask(Views.getId(li));
 });
 
 $(document).on('click', '.tag', function(e) {
@@ -6102,7 +6118,7 @@ $(document).on('click', '#whats-new-close', function(e) {
 
 $(document).on('click', '#task-submit', Views.addTaskTriggered);
 
-$(document).on('click', '#add-link', Views.addLinkTriggered);
+$(document).on('click', '#add-link', Views.toggleAddLinkInput);
 
 $(document).on('click', '#clear-completed', function(e) {
   e.preventDefault();
