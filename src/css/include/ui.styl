@@ -27,7 +27,7 @@ input, button, textarea
 
 .content
   margin 0 auto 40px
-  padding 70px 5px 0
+  padding 60px 0 0
   min-height 640px
   opacity 0
   transition opacity 250ms, transform 250ms
@@ -36,6 +36,20 @@ input, button, textarea
 .content-show
   opacity 1
   transform scale(1, 1)
+
+#edit-task-overlay
+  opacity 0
+  transition opacity 250ms ease-in-out
+  pointer-events none
+  position absolute
+  border-radius radius
+  top 5px
+  left 50%
+  transform translateX(-50%)
+  width 760px
+  height 65px
+  z-index 1500
+  box-shadow 0 800px 0 1600px rgba(0, 0, 0, 0.25)
 
 // Fonts
 
