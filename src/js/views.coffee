@@ -229,7 +229,7 @@ class Views
 
   # Show the what's new dialog if the user has seen the tour, hasn't seen the dialog
   @checkWhatsNew: ->
-    window.storageType.get 'whats-new-2-0-1', (whatsNew) ->
+    window.storageType.get 'whats-new-2-2-0', (whatsNew) ->
       if (whatsNew == null) and (window.tourRunning == false)
         $('.whats-new').show()
 
@@ -250,5 +250,5 @@ class Views
 
   # Saves a state in storage when the user has closed the What's new dialog
   @closeWhatsNew: ->
-    window.storageType.set('whats-new-2-0-1', 1)
+    window.storageType.set('whats-new-2-2-0', 1)
 

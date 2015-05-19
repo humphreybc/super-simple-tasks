@@ -5816,7 +5816,7 @@ Views = (function() {
   };
 
   Views.checkWhatsNew = function() {
-    return window.storageType.get('whats-new-2-0-1', function(whatsNew) {
+    return window.storageType.get('whats-new-2-2-0', function(whatsNew) {
       if ((whatsNew === null) && (window.tourRunning === false)) {
         return $('.whats-new').show();
       }
@@ -5831,7 +5831,7 @@ Views = (function() {
   };
 
   Views.closeWhatsNew = function() {
-    return window.storageType.set('whats-new-2-0-1', 1);
+    return window.storageType.set('whats-new-2-2-0', 1);
   };
 
   return Views;
