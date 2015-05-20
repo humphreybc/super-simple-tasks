@@ -37,4 +37,3 @@ class Utils
 
   @checkOnline: ->
     online = navigator.onLine
-    return online

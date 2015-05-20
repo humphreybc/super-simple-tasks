@@ -2,7 +2,6 @@
 
 class Analytics
 
-
   @sendPageView: ->
     url = window.location.href.split('://')
 
@@ -12,7 +11,6 @@ class Analytics
       ga('send', 'pageview', url[1])
 
 
-  # Send an event with the task count
   @sendTaskCount: (allTasks) ->
     window.storageType.get DB.db_key, (allTasks) ->
       ga 'send',
@@ -22,13 +20,12 @@ class Analytics
         'eventValue': allTasks.length
 
 
-sendTagClickEvent = ->
+  @sendTagClickEvent: ->
+    window.clearTimeout(window.timeout)
 
-  window.clearTimeout(window.timeout)
-
-  window.timeout = setTimeout (->
-    ga 'send', 'event', 'Tag color', 'click'
-  ), 1000
+    window.timeout = setTimeout (->
+      ga 'send', 'event', 'Tag color', 'click'
+    ), 1000
 
 
 # Because this code is set as background code for the extension, we
@@ -50,6 +47,7 @@ $(document).on 'click', '#task-submit', ->
 $(document).on 'click', '#clear-completed', ->
   ga 'send', 'event', 'Clear completed', 'click'
 
+# Click on link devices icon
 $(document).on 'click', '#link-devices', (e) ->
   ga 'send', 'event', 'Link devices', 'click'
 
@@ -69,9 +67,13 @@ document.querySelector('#task-list').addEventListener 'slip:reorder', (e) ->
 $(document).on 'click', '.drag-handle', ->
   ga 'send', 'event', 'Reorder with handle', 'click'
 
+# Click on edit task
+$(document).on 'click', '.edit', ->
+  ga 'send', 'event', 'Edit task', 'click'
+
 # Click a tag color
 $(document).on 'click', '.tag', ->
-  sendTagClickEvent()
+  Analytics.sendTagClickEvent()
 
 # Click a task to complete / uncomplete it
 $(document).on 'mousedown', '.task > tag', ->
@@ -84,14 +86,4 @@ $(document).on 'click', '.task-link', ->
 # Close What's New dialog
 $(document).on 'mousedown', '#whats-new-close', ->
   ga 'send', 'event', 'Close Whats New', 'click'
-
-# Tourbus stuff
-# $(document).on 'mousedown', '#tour-bus-1', ->
-#   ga 'send', 'event', 'Onboarding', 'click', 'Step 1', 33
-
-# $(document).on 'mousedown', '#tour-bus-2', ->
-#   ga 'send', 'event', 'Onboarding', 'click', 'Step 2', 66
-
-# $(document).on 'mousedown', '#tour-bus-3', ->
-#   ga 'send', 'event', 'Onboarding', 'click', 'Step 3', 100
 

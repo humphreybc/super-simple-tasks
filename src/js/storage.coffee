@@ -182,8 +182,6 @@ class DB
     else
       @db_key = 'todo'
 
-    console.log 'Your sync key is: ' + @db_key
-
 
   @disconnectDevices: ->
     localStorage.removeItem('sync_enabled')

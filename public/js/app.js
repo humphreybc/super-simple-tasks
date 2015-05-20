@@ -5159,8 +5159,7 @@ Utils = (function() {
 
   Utils.checkOnline = function() {
     var online;
-    online = navigator.onLine;
-    return online;
+    return online = navigator.onLine;
   };
 
   return Utils;
@@ -5352,12 +5351,11 @@ DB = (function() {
         new_key = Utils.generateID();
         this.db_key = this.migrateKey(new_key);
         localStorage.setItem('sync_key', this.db_key);
-        console.log('Your sync key has been set to: ' + this.db_key);
+        return console.log('Your sync key has been set to: ' + this.db_key);
       }
     } else {
-      this.db_key = 'todo';
+      return this.db_key = 'todo';
     }
-    return console.log('Your sync key is: ' + this.db_key);
   };
 
   DB.disconnectDevices = function() {
@@ -5370,7 +5368,7 @@ DB = (function() {
 
 })();
 
-var Analytics, sendTagClickEvent;
+var Analytics;
 
 Analytics = (function() {
   function Analytics() {}
@@ -5396,16 +5394,16 @@ Analytics = (function() {
     });
   };
 
+  Analytics.sendTagClickEvent = function() {
+    window.clearTimeout(window.timeout);
+    return window.timeout = setTimeout((function() {
+      return ga('send', 'event', 'Tag color', 'click');
+    }), 1000);
+  };
+
   return Analytics;
 
 })();
-
-sendTagClickEvent = function() {
-  window.clearTimeout(window.timeout);
-  return window.timeout = setTimeout((function() {
-    return ga('send', 'event', 'Tag color', 'click');
-  }), 1000);
-};
 
 $(window).focus(function() {
   return Analytics.sendPageView();
@@ -5443,8 +5441,12 @@ $(document).on('click', '.drag-handle', function() {
   return ga('send', 'event', 'Reorder with handle', 'click');
 });
 
+$(document).on('click', '.edit', function() {
+  return ga('send', 'event', 'Edit task', 'click');
+});
+
 $(document).on('click', '.tag', function() {
-  return sendTagClickEvent();
+  return Analytics.sendTagClickEvent();
 });
 
 $(document).on('mousedown', '.task > tag', function() {
