@@ -123,7 +123,7 @@ class Views
     $('#edit-task-overlay').removeClass('fade')
 
     Views.clearNewTaskInputs()
-    Views.toggleAddLinkInput()
+    Views.toggleAddLinkInput(false)
     Views.taskEditedAnimation(id)
 
 

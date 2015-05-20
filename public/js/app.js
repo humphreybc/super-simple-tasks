@@ -5735,7 +5735,7 @@ Views = (function() {
     Task.updateTask(name, link, id);
     $('#edit-task-overlay').removeClass('fade');
     Views.clearNewTaskInputs();
-    Views.toggleAddLinkInput();
+    Views.toggleAddLinkInput(false);
     return Views.taskEditedAnimation(id);
   };
 
