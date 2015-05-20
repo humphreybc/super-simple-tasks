@@ -5717,14 +5717,16 @@ Views = (function() {
   Views.taskEditedAnimation = function(id) {
     var task;
     task = Views.getLi(id);
-    task.addClass('edited-transition');
-    task.addClass('edited');
+    setTimeout((function() {
+      task.addClass('edited-transition');
+      return task.addClass('edited');
+    }), 250);
     setTimeout((function() {
       return task.removeClass('edited');
-    }), 1000);
+    }), 2000);
     return setTimeout((function() {
       return task.removeClass('edited-transition');
-    }), 2000);
+    }), 2500);
   };
 
   Views.editTaskTriggered = function(name, link, id) {

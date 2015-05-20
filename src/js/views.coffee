@@ -103,16 +103,18 @@ class Views
   @taskEditedAnimation: (id) ->
     task = Views.getLi(id)
 
-    task.addClass('edited-transition')
-    task.addClass('edited')
+    setTimeout (->
+      task.addClass('edited-transition')
+      task.addClass('edited')
+    ), 250
 
     setTimeout (->
       task.removeClass('edited')
-    ), 1000
+    ), 2000
 
     setTimeout (->
       task.removeClass('edited-transition')
-    ), 2000
+    ), 2500
 
 
   @editTaskTriggered: (name, link, id) ->
