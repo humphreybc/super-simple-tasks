@@ -1,0 +1,31 @@
+*
+  box-sizing border-box
+
+body
+  background-color white
+  color gray
+  font-family 'Roboto', sans-serif
+  font-size 14px
+  margin 0px
+  padding 0px 0px 20px
+  -webkit-font-smoothing antialiased
+  
+.popup
+  width 500px
+
+input, button, textarea
+  -webkit-font-smoothing antialiased
+  font-family 'Roboto', sans-serif
+
+.content
+  margin 0 auto 40px
+  padding 60px 0 0
+  max-width 750px
+  min-height 640px
+  opacity 0
+  transition opacity 250ms, transform 250ms
+  transform scale(0.95, 0.95)
+  
+.content-show
+  opacity 1
+  transform scale(1, 1)

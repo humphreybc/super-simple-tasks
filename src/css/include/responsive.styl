@@ -1,16 +1,8 @@
-// Responsive for mobile devices
-
 @media screen and (max-width: 420px)
-
-  .content, .footer, #task-submit, #new-task
-    width 100%
-
-  #new-task-wrapper td, #new-task-input
-    display inline-table
-    width 100% !important
-
-  input[type='checkbox']
-    vertical-align middle
+  #create-task
+    #new-task-wrapper td, #new-task-input
+      display inline-table
+      width 100% !important
     
   #edit-task-overlay
     display none
@@ -19,15 +11,11 @@
 
     li
       position relative
-      padding-right 70px
-
-      label
-        max-width 100%
 
       .tag
         position absolute
-        top 10px
         right 10px
+        top 10px
 
       .drag-handle
         display none
@@ -35,11 +23,11 @@
       &:hover .edit
         display none !important
 
-  .footer ul li
-    width 100%
+  footer ul li
     margin-bottom 5px
+    width 100%
     
 
 @media screen and (max-width: 500px)
   .modal
-      width 95%
+    width 95%

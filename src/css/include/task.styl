@@ -1,135 +1,123 @@
-// What an individual task looks like
+.task
+  border 2px solid transparent
+  border-radius radius
+  overflow hidden
+  padding 10px
+  user-select none
 
-#task-list
+  &:hover
+    background background-gray
+    
+    .edit
+      display initial
 
-  li
-    padding 10px
-    border 2px solid transparent
-    border-radius radius
-    overflow hidden
-    user-select none
+  .task-checkbox
+    cursor pointer
+    height 15px
+    margin 0
+    width 28px
+
+  label
+    font-size font-small
+    max-width 85%
+    padding-left 28px
+    text-indent -28px
+
+  .drag-handle
+    background-image url('../img/drag.svg')
+    height 16px
+    margin 4px -2px 0 10px
+    width 16px
 
     &:hover
-      background background-gray
+      cursor -webkit-grab
+      cursor -moz-grab
       
-      .edit
-        display initial
-
-    input[type='checkbox']
-      cursor pointer
-      width 28px
-      height 15px
-      margin 0
-      position relative
-      overflow hidden
-
-    label
-      max-width 80%
-      font-weight 500
-      padding-left 28px
-      text-indent -28px
-      font-size font-small
-
-    .drag-handle
-      margin 4px -2px 0 10px
-      background-image url('../img/drag.svg')
-      width 16px
-      height 16px
-
-      &:hover
-        cursor pointer
-        
-    .edit
-      display none
-      color light-gray
-      cursor pointer
-      font-size font-xsmall
-      margin 1px 10px 0 0
-      
-      &:hover
-        color green
-
-    .tag
-      margin-top 1px
-      border-radius 20px
-      cursor pointer
-      height 20px
-      width 20px
-
-    [tag='gray']
-      background xlight-gray
-
-      &:hover
-        background lighten(xlight-gray, 2)
-
-    [tag='red']
-      background red
-
-      &:hover
-        background lighten(red, 5)
-
-    [tag='yellow']
-      background yellow
-
-      &:hover
-        background lighten(yellow, 5)  
-
-    [tag='green']
-      background green
-
-      &:hover
-        background lighten(green, 2)
-        
-    [tag='blue']
-      background blue
-
-      &:hover
-        background lighten(blue, 2)
-        
-    [tag='pink']
-      background pink
-
-      &:hover
-        background lighten(pink, 2)
-        
-    [tag='purple']
-      background purple
-
-      &:hover
-        background lighten(purple, 2)
-        
-  .edited
-    border 2px solid yellow
+  .edit
+    color light-gray
+    cursor pointer
+    display none
+    font-size font-xsmall
+    margin 1px 10px 0 0
     
-  .edited-transition
-    transition border 1000ms ease-out
+    &:hover
+      color gray
 
-        
-// Completed tasks
+  .tag
+    border-radius 20px
+    cursor pointer
+    height 20px
+    margin-top 1px
+    width 20px
 
-.task-completed
+  [tag='gray']
+    background xlight-gray
+
+    &:hover
+      background lighten(xlight-gray, 2)
+
+  [tag='red']
+    background red
+
+    &:hover
+      background lighten(red, 5)
+
+  [tag='yellow']
+    background yellow
+
+    &:hover
+      background lighten(yellow, 5)  
+
+  [tag='green']
+    background green
+
+    &:hover
+      background lighten(green, 2)
+      
+  [tag='blue']
+    background blue
+
+    &:hover
+      background lighten(blue, 2)
+      
+  [tag='pink']
+    background pink
+
+    &:hover
+      background lighten(pink, 2)
+      
+  [tag='purple']
+    background purple
+
+    &:hover
+      background lighten(purple, 2)
+      
+.task.edited
+  border 2px solid yellow
   
-  label, .tag, .drag-handle, .task-link
-    opacity 0.5
+.task.edited-transition
+  transition border 1000ms ease-out
+
+.task.task-completed
+  
+  label, .tag, .drag-handle, .task-link, .edit
+    opacity 0.25
   
   label
     text-decoration line-through
-
-// Task links
   
 .task-link
   clear both
   padding-left 28px
   
   a
+    color lighter-gray
     display inline-block
+    font-size font-xsmall - 0.1em
     max-width 80%
     overflow hidden
     text-overflow ellipsis
     white-space nowrap
-    color lighter-gray
-    font-size font-xsmall - 0.1em
     
     &:hover
       color blue
-    

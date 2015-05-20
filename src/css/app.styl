@@ -1,28 +1,56 @@
-black = #222
-gray = #444
-light-gray = #888
-lighter-gray = #aaa
-xlight-gray = #ddd
-background-gray = #f7f6f5
+// Colors
 
-blue = #5AA6FF
-green = #67ab49
-yellow = #FFBB33
-red = #FF4444
-pink = #F691B2
-purple = #9370B7
+black                 = #222
+gray                  = #444
+light-gray            = #888
+lighter-gray          = #aaa
+xlight-gray           = #ddd
+background-gray       = #f7f6f5
 
-dark-blue = darken(blue, 5)
-dark-green = darken(green, 5)
-dark-yellow = darken(yellow, 5)
-dark-red = darken(red, 5)
+blue                  = #5AA6FF
+green                 = #67ab49
+yellow                = #FFBB33
+red                   = #FF4444
+pink                  = #F691B2
+purple                = #9370B7
 
-font-xsmall = 1em
-font-small = 1.2em
-font-large = 1.6em
+dark-blue             = darken(blue, 5)
+dark-green            = darken(green, 5)
+dark-yellow           = darken(yellow, 5)
+dark-red              = darken(red, 5)
 
-radius = 3px
+// Fonts
 
-transition-speed = 150ms
+font-xsmall           = 1em
+font-small            = 1.2em
+font-large            = 1.6em
 
+// Border radius
+
+radius                = 3px
+
+// Transitions
+
+transition-speed      = 250ms
+transition-speed-fast = 150ms
+transition-speed-slow = 500ms
+
+// Z-index
+
+z-index-header        = 500
+z-index-modal         = 400
+z-index-modal-blanket = 300
+z-index-edit-overlay  = 200
+z-index-reorder       = 100
+
+// Onboarding tour
+
+tooltip-color         = white
+tooltip-text          = black
+tooltip-link          = blue
+tooltip-link-hover    = dark-blue
+tooltip-border-color  = blue
+
+@import 'nib'
 @import 'include/*'
+

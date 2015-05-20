@@ -1,55 +1,3 @@
-// Create task input and button
-
-#create-task
-  min-height 117px
-  padding 10px 0 20px
-  position relative
-
-#edit-task-overlay
-  opacity 0
-  transition opacity 250ms ease-in-out
-  pointer-events none
-  position absolute
-  border-radius radius
-  top 5px
-  left 50%
-  transform translateX(-50%)
-  width 750px
-  height 65px
-  z-index 1500
-  box-shadow 0 800px 0 1600px rgba(0, 0, 0, 0.25)
-  
-.link-active #edit-task-overlay
-  height 100px
-
-// Add a new task
-
-#new-task-wrapper
-  position relative
-  overflow hidden
-  
-  table
-    border-spacing 3px
-  
-  table
-    width 100%
-    
-#new-task
-  &:hover, &:focus
-    border 1px solid green
-    outline none
-    
-#task-submit
-  background-repeat no-repeat
-  background-image url('../img/add.svg')
-  background-position 50% 7px
-  transition background-position 150ms ease-in-out
-  
-.task-submitted
-  background-position 50% -26px !important
-  
-// The main task list
-
 #task-list
   list-style-type none
   margin -40px 0 0
@@ -57,10 +5,8 @@
   position relative
   transition margin 250ms ease-in-out
 
-// Styles for dragging & dropping
-
 .slip-reordering
-  z-index 500
+  z-index z-index-reorder
   border 2px solid blue !important
   background-color white !important
   box-shadow 0 2px 8px rgba(0,0,0,0.10)

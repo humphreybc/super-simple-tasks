@@ -1,25 +1,21 @@
-// Blank / empty state message
-
 #all-done
-  opacity 0
-  height 1px
-  overflow hidden
-  margin-top 40px
-  text-align center
   color light-gray
+  height 1px
+  margin-top 40px
+  opacity 0
+  text-align center
+  pointer-events none
   
-.show-empty-state
-  opacity 1 !important
-  height auto !important
+#all-done.show-empty-state
+  opacity 1
+  height auto
   transition opacity 250ms
   
 #empty-state-image
   background-image url('../img/empty-state-default.jpg')
   background-size cover
   background-color background-gray
-  border-radius 5px
-  cursor pointer
+  border-radius radius
   height 220px
-  margin 0px auto
-  text-align center
+  margin 0 auto
   width 340px
