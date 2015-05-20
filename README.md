@@ -15,68 +15,6 @@ A very simple, 100% client-side tasks app that uses localStorage to save the lis
 * Mobile support
 
 
-## Backlog
-
-### 1.3 - released
-
-* **[DONE]** Updated visual style with header
-* **[DONE]** Change to green highlight colour
-
-### 1.4 - released
-
-* **[DONE]** Export tasks
-* **[DONE]** Drag and drop to rearrange tasks
-* **[DONE]** Update jQuery to latest
-
-### 1.4.3 - released
-
-* **[DONE]** Remove tabs permission from Chrome Web Store manifest file
-* **[DONE]** Fix up web app icons
-* **[DONE]** Add link to the Chrome Web Store in the footer
-* **[DONE]** Add comments and clean up code
-* **[DONE]** Refactor showNewTasks() method
-
-### 1.4.4 - released
-
-* **[DONE]** Fix a bug where long tasks don't wrap the text correctly
-* **[DONE]** Fix a bug where onboarding tooltips stay in the DOM after completing the onboarding
-* **[DONE]** Fix a bug where the task will be completed when dragging and dropping in the same place
-* **[DONE]** Support for no priority
-* **[DONE]** Auto advance to the next step when the user completes an onboarding action
-* **[DONE]** Slide & fade animation for onboarding tour tooltips
-
-### 2.0 - released
-
-* **[DONE]** Write [Storage API](http://stackoverflow.com/q/26249133/1105159) for handling different storage types
-* **[DONE]** Personal task sync with Google account and chrome.storage.sync
-* **[DONE]** Fix a bug where reordering a task and changing its priority sometimes wouldn't work
-
-### 2.0.1 - released
-
-* **[DONE]** Add support for links
-* **[DONE]** Refactor create task HTML and CSS
-* **[DONE]** Add migration logic
-* **[DONE]** Miscellaneous bug fixes and refactoring
-
-### 2.0.2 - released
-
-* **[DONE]** Bug fixes
-
-### 2.0.3
-
-* Show completed tasks
-* Replace 'mark all done' with 'Clear completed' 
-
-### The distant future
-
-* Multiple lists
-* List names
-* Import tasks from JSON
-* Share lists with others
-* Collaborate on task lists in real time
-* Investigate [Chrome Platform Analytics](https://github.com/GoogleChrome/chrome-platform-analytics/wiki)
-
-
 ## Dependencies
 
 Uses [Coffeescript](http://coffeescript.org/) and [Stylus](http://learnboost.github.com/stylus/) along with a few other bits and pieces. Have a look in package.json to see what you'll need, and install with npm install.
