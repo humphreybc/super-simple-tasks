@@ -36,17 +36,23 @@ keyboardShortcuts = (e) ->
   enter_key = 13
   l_key = 76
   esc_key = 27
+  shift_key = 16
 
   if evtobj.keyCode == enter_key
     Views.addTaskTriggered()
     ga 'send', 'event', 'Add task shortcut', 'shortcut'
+    
+  if evtobj.keyCode == esc_key
+    $('#edit-task-overlay').removeClass('fade')
+    Views.clearNewTaskInputs()
+    Views.toggleAddLinkInput(false)
 
   if (evtobj.keyCode == esc_key) and ($('#link-devices-modal').hasClass('modal-show'))
     Views.toggleModalDialog()
     ga 'send', 'event', 'Modal dialog close shortcut', 'shortcut'
-
-  if evtobj.ctrl_key && evtobj.keyCode == lKey
-    Views.addLinkTriggered()
+  
+  if evtobj.altKey && evtobj.keyCode == l_key
+    Views.toggleAddLinkInput()
     ga 'send', 'event', 'Add link shortcut', 'shortcut'
 
 
@@ -79,9 +85,8 @@ $(document).on 'mousedown', '.task > label', ->
 $(document).on 'click', '.edit', (e) ->
 
   li = $(this).closest('li')
-  id = Views.getId(li)
 
-  Views.editTask(id)
+  Views.editTask(Views.getId(li))
 
 
 # Click on tag color
@@ -113,7 +118,7 @@ $(document).on 'click', '#whats-new-close', (e) ->
 $(document).on 'click', '#task-submit', Views.addTaskTriggered
 
 
-$(document).on 'click', '#add-link', Views.addLinkTriggered
+$(document).on 'click', '#add-link', Views.toggleAddLinkInput
 
 
 $(document).on 'click', '#clear-completed', (e) ->
