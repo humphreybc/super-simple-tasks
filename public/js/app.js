@@ -5180,7 +5180,6 @@ LocalStorage = (function() {
   };
 
   LocalStorage.set = function(key, value) {
-    FirebaseSync.set(key, value, function() {});
     value = JSON.stringify(value);
     return localStorage.setItem(key, value);
   };
@@ -5205,7 +5204,6 @@ ChromeStorage = (function() {
 
   ChromeStorage.set = function(key, value, callback) {
     var params;
-    FirebaseSync.set(key, value, function() {});
     params = {};
     params[key] = value;
     return chrome.storage.sync.set(params, function() {});
@@ -5306,16 +5304,13 @@ DB = (function() {
   };
 
   DB.setSyncStatus = function() {
-    window.sync_enabled = localStorage.getItem('sync_enabled');
-    if (window.sync_enabled === null) {
-      return window.sync_enabled = false;
-    } else {
-      return window.sync_enabled = true;
-    }
+    return window.sync_enabled = false;
   };
 
   DB.createFirebase = function() {
-    return this.remote_ref = new Firebase('https://supersimpletasks.firebaseio.com/data');
+    if (window.sync_enabled) {
+      return this.remote_ref = new Firebase('https://supersimpletasks.firebaseio.com/data');
+    }
   };
 
   DB.migrateKey = function(new_key) {
@@ -5334,9 +5329,11 @@ DB = (function() {
 
   DB.checkStorageMethod = function() {
     if (!!window.chrome && chrome.storage) {
-      return window.storageType = ChromeStorage;
+      window.storageType = ChromeStorage;
+      return console.log('Using chrome.storage.sync to save');
     } else {
-      return window.storageType = LocalStorage;
+      window.storageType = LocalStorage;
+      return console.log('Using localStorage to save');
     }
   };
 
@@ -6041,7 +6038,7 @@ initialize = function() {
 };
 
 standardLog = function() {
-  console.log('Super Simple Tasks v2.2');
+  console.log('Super Simple Tasks v2.2.0');
   return console.log('Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks');
 };
 

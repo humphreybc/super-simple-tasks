@@ -20,8 +20,6 @@ class LocalStorage
   # Sets something to localStorage given a key and value
   @set: (key, value) ->
 
-    FirebaseSync.set key, value, () ->
-
     value = JSON.stringify(value)
 
     localStorage.setItem(key, value)
@@ -46,8 +44,6 @@ class ChromeStorage
   # Set all the tasks given the key
   # Usually a JSON array of all the tasks
   @set: (key, value, callback) ->
-
-    FirebaseSync.set key, value, () ->
 
     params = {}
     params[key] = value
@@ -155,17 +151,20 @@ class DB
 
   @setSyncStatus: ->
 
-    window.sync_enabled = localStorage.getItem('sync_enabled')
+    window.sync_enabled = false
 
-    if window.sync_enabled == null
-      window.sync_enabled = false
-    else
-      window.sync_enabled = true
+    # window.sync_enabled = localStorage.getItem('sync_enabled')
+
+    # if window.sync_enabled == null
+    #   window.sync_enabled = false
+    # else
+    #   window.sync_enabled = true
 
   
   @createFirebase: ->
 
-    @remote_ref = new Firebase('https://supersimpletasks.firebaseio.com/data')
+    if window.sync_enabled
+      @remote_ref = new Firebase('https://supersimpletasks.firebaseio.com/data')
 
 
   @migrateKey: (new_key) ->
@@ -190,8 +189,10 @@ class DB
 
     if !!window.chrome and chrome.storage
       window.storageType = ChromeStorage
+      console.log 'Using chrome.storage.sync to save'
     else
       window.storageType = LocalStorage
+      console.log 'Using localStorage to save'
 
 
   @setSyncKey: ->
