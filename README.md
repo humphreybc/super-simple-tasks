@@ -41,13 +41,12 @@ A Gruntfile with a 'dev' task is available for development.
     rm -r public/
     grunt build
 
-## Testing on mobile
+## Start server
 
-The easiest way to test on mobile locally is to start a server with grunt connect:
-
+    cd public/
     grunt connect
 
-Now visit <youripaddress>:8000/public to see Super Simple Tasks on your phone.
+Now visit localhost:9001 to see Super Simple Tasks.
 
 
 ## Deployment
