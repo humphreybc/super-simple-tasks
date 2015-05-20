@@ -173,7 +173,7 @@ $(document).ready ->
 
   setTimeout (->
 
-    Utils.checkOnline()
+    online = Utils.checkOnline()
 
     Views.changeEmptyStateImage(online)
 

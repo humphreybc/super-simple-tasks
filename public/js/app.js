@@ -5958,35 +5958,39 @@ Migrations = (function() {
 
   Migrations.changePrioritiesToColor = function(allTasks) {
     var i, j, len, task;
-    if (!allTasks[0].hasOwnProperty('tag')) {
-      for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
-        task = allTasks[i];
-        task['tag'] = (function() {
-          switch (task.priority) {
-            case 'none':
-              return 'gray';
-            case 'minor':
-              return 'green';
-            case 'major':
-              return 'yellow';
-            case 'blocker':
-              return 'red';
-          }
-        })();
-        delete task.priority;
+    if (allTasks.length > 0) {
+      if (!allTasks[0].hasOwnProperty('tag')) {
+        for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
+          task = allTasks[i];
+          task['tag'] = (function() {
+            switch (task.priority) {
+              case 'none':
+                return 'gray';
+              case 'minor':
+                return 'green';
+              case 'major':
+                return 'yellow';
+              case 'blocker':
+                return 'red';
+            }
+          })();
+          delete task.priority;
+        }
+        return window.storageType.set(DB.db_key, allTasks);
       }
-      return window.storageType.set(DB.db_key, allTasks);
     }
   };
 
   Migrations.addTaskID = function(allTasks) {
     var i, j, len, task;
-    if (!allTasks[0].hasOwnProperty('id')) {
-      for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
-        task = allTasks[i];
-        task.id = Utils.generateID();
+    if (allTasks.length > 0) {
+      if (!allTasks[0].hasOwnProperty('id')) {
+        for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
+          task = allTasks[i];
+          task.id = Utils.generateID();
+        }
+        return window.storageType.set(DB.db_key, allTasks);
       }
-      return window.storageType.set(DB.db_key, allTasks);
     }
   };
 
@@ -6156,7 +6160,7 @@ $(document).ready(function() {
   tour = Tour.createTour();
   initialize();
   return setTimeout((function() {
-    Utils.checkOnline();
+    online = Utils.checkOnline();
     return Views.changeEmptyStateImage(online);
   }), 100);
 });

@@ -25,28 +25,30 @@ class Migrations
   # Go from priority to color tag when migrating to 2.2
   @changePrioritiesToColor: (allTasks) ->
 
-    unless allTasks[0].hasOwnProperty('tag')
+    if allTasks.length > 0
+      unless allTasks[0].hasOwnProperty('tag')
 
-      for task, i in allTasks
-        task['tag'] = switch task.priority
-          when 'none' then 'gray'
-          when 'minor' then 'green'
-          when 'major' then 'yellow'
-          when 'blocker' then 'red'
+        for task, i in allTasks
+          task['tag'] = switch task.priority
+            when 'none' then 'gray'
+            when 'minor' then 'green'
+            when 'major' then 'yellow'
+            when 'blocker' then 'red'
 
-        delete task.priority
+          delete task.priority
 
-      window.storageType.set(DB.db_key, allTasks)
+        window.storageType.set(DB.db_key, allTasks)
 
 
   @addTaskID: (allTasks) ->
 
-    unless allTasks[0].hasOwnProperty('id')
+    if allTasks.length > 0
+      unless allTasks[0].hasOwnProperty('id')
 
-      for task, i in allTasks
-        task.id = Utils.generateID()
+        for task, i in allTasks
+          task.id = Utils.generateID()
 
-      window.storageType.set(DB.db_key, allTasks)
+        window.storageType.set(DB.db_key, allTasks)
 
 
 
