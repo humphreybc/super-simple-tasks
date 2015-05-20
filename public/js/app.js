@@ -5456,18 +5456,6 @@ $(document).on('mousedown', '#whats-new-close', function() {
   return ga('send', 'event', 'Close Whats New', 'click');
 });
 
-$(document).on('mousedown', '#tour-bus-1', function() {
-  return ga('send', 'event', 'Onboarding', 'click', 'Step 1', 33);
-});
-
-$(document).on('mousedown', '#tour-bus-2', function() {
-  return ga('send', 'event', 'Onboarding', 'click', 'Step 2', 66);
-});
-
-$(document).on('mousedown', '#tour-bus-3', function() {
-  return ga('send', 'event', 'Onboarding', 'click', 'Step 3', 100);
-});
-
 var Arrays, Task;
 
 Arrays = (function() {
@@ -5540,6 +5528,15 @@ Task = (function() {
       window.storageType.set(DB.db_key, allTasks);
       Views.showTasks(allTasks);
       return Analytics.sendTaskCount(allTasks);
+    });
+  };
+
+  Task.updateTask = function(name, link, id) {
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      allTasks[id].name = name;
+      allTasks[id].link = link;
+      window.storageType.set(DB.db_key, allTasks);
+      return Views.showTasks(allTasks);
     });
   };
 
@@ -5683,16 +5680,12 @@ Views = (function() {
     return $device_link_code.val('http://' + host + '?share=' + DB.db_key);
   };
 
-  Views.displaySaveSuccess = function() {
-    $('#task-submit').addClass('task-submitted');
-    return setTimeout((function() {
-      return $('#task-submit').removeClass('task-submitted');
-    }), 1000);
+  Views.getId = function(li) {
+    return $(li).parent().children().index(li);
   };
 
-  Views.getId = function(li) {
-    var id;
-    return id = $(li).parent().children().index(li);
+  Views.getLi = function(id) {
+    return $('#task-list li:nth-child(' + (id + 1) + ')');
   };
 
   Views.showTasks = function(allTasks) {
@@ -5711,30 +5704,70 @@ Views = (function() {
     return task_list.html(tasks);
   };
 
-  Views.addTaskTriggered = function() {
-    var $link_input, $new_task_input, link, name;
-    $new_task_input = $('#new-task');
-    $link_input = $('#add-link-input');
-    Tour.nextTourBus(tour);
-    name = $new_task_input.val();
-    if (name !== '') {
-      link = $link_input.val();
-      Task.setNewTask(name, link);
-      $new_task_input.val('');
-      $link_input.val('');
-      Views.displaySaveSuccess();
-    }
-    return $new_task_input.focus();
+  Views.clearNewTaskInputs = function() {
+    $('#new-task').val('');
+    $('#add-link-input').val('');
+    return $('#edit-task-id').val('');
   };
 
-  Views.addLinkTriggered = function() {
+  Views.taskAddedAnimation = function() {
+    $('#task-submit').addClass('task-submitted');
+    return setTimeout((function() {
+      return $('#task-submit').removeClass('task-submitted');
+    }), 1000);
+  };
+
+  Views.taskEditedAnimation = function(id) {
+    var task;
+    task = Views.getLi(id);
+    task.addClass('edited-transition');
+    task.addClass('edited');
+    setTimeout((function() {
+      return task.removeClass('edited');
+    }), 1000);
+    return setTimeout((function() {
+      return task.removeClass('edited-transition');
+    }), 2000);
+  };
+
+  Views.editTaskTriggered = function(name, link, id) {
+    id = parseInt(id);
+    Task.updateTask(name, link, id);
+    $('#edit-task-overlay').removeClass('fade');
+    Views.clearNewTaskInputs();
+    Views.toggleAddLinkInput(false);
+    return Views.taskEditedAnimation(id);
+  };
+
+  Views.addTaskTriggered = function() {
+    var id, link, name;
+    name = $('#new-task').val();
+    link = $('#add-link-input').val();
+    id = $('#edit-task-id').val();
+    if (name) {
+      if (id) {
+        Views.editTaskTriggered(name, link, id);
+      } else {
+        Task.setNewTask(name, link);
+        Views.clearNewTaskInputs();
+        Views.taskAddedAnimation();
+        Tour.nextTourBus(tour);
+      }
+    }
+    return $('#new-task').focus();
+  };
+
+  Views.toggleAddLinkInput = function(toggle_open) {
     var $body, $link_input, $new_task_input, isLinkActive, linkActiveClass;
+    if (toggle_open == null) {
+      toggle_open = true;
+    }
     $body = $('body');
     $new_task_input = $('#new-task');
     $link_input = $('#add-link-input');
     linkActiveClass = 'link-active';
     isLinkActive = $body.hasClass(linkActiveClass);
-    if (isLinkActive) {
+    if (isLinkActive || !toggle_open) {
       $body.removeClass(linkActiveClass);
       return $new_task_input.focus();
     } else {
@@ -5749,6 +5782,22 @@ Views = (function() {
     template = Handlebars.compile(source);
     return template({
       tasks: allTasks
+    });
+  };
+
+  Views.editTask = function(id) {
+    return window.storageType.get(DB.db_key, function(allTasks) {
+      var link, name;
+      name = allTasks[id].name;
+      link = allTasks[id].link;
+      $('#edit-task-id').val(id);
+      $('#new-task').val(name);
+      if (link) {
+        $('#add-link-input').val(link);
+        Views.toggleAddLinkInput();
+      }
+      $('#edit-task-overlay').addClass('fade');
+      return $('#new-task').focus();
     });
   };
 
@@ -5778,7 +5827,7 @@ Views = (function() {
   };
 
   Views.checkWhatsNew = function() {
-    return window.storageType.get('whats-new-2-0-1', function(whatsNew) {
+    return window.storageType.get('whats-new-2-2-0', function(whatsNew) {
       if ((whatsNew === null) && (window.tourRunning === false)) {
         return $('.whats-new').show();
       }
@@ -5793,7 +5842,7 @@ Views = (function() {
   };
 
   Views.closeWhatsNew = function() {
-    return window.storageType.set('whats-new-2-0-1', 1);
+    return window.storageType.set('whats-new-2-2-0', 1);
   };
 
   return Views;
@@ -5997,21 +6046,27 @@ standardLog = function() {
 };
 
 keyboardShortcuts = function(e) {
-  var enter_key, esc_key, evtobj, l_key;
+  var enter_key, esc_key, evtobj, l_key, shift_key;
   evtobj = window.event ? event : e;
   enter_key = 13;
   l_key = 76;
   esc_key = 27;
+  shift_key = 16;
   if (evtobj.keyCode === enter_key) {
     Views.addTaskTriggered();
     ga('send', 'event', 'Add task shortcut', 'shortcut');
+  }
+  if (evtobj.keyCode === esc_key) {
+    $('#edit-task-overlay').removeClass('fade');
+    Views.clearNewTaskInputs();
+    Views.toggleAddLinkInput(false);
   }
   if ((evtobj.keyCode === esc_key) && ($('#link-devices-modal').hasClass('modal-show'))) {
     Views.toggleModalDialog();
     ga('send', 'event', 'Modal dialog close shortcut', 'shortcut');
   }
-  if (evtobj.ctrl_key && evtobj.keyCode === lKey) {
-    Views.addLinkTriggered();
+  if (evtobj.altKey && evtobj.keyCode === l_key) {
+    Views.toggleAddLinkInput();
     return ga('send', 'event', 'Add link shortcut', 'shortcut');
   }
 };
@@ -6036,6 +6091,12 @@ $(document).on('mousedown', '.task > label', function() {
   });
 });
 
+$(document).on('click', '.edit', function(e) {
+  var li;
+  li = $(this).closest('li');
+  return Views.editTask(Views.getId(li));
+});
+
 $(document).on('click', '.tag', function(e) {
   var li, type_attr, value;
   e.preventDefault();
@@ -6057,7 +6118,7 @@ $(document).on('click', '#whats-new-close', function(e) {
 
 $(document).on('click', '#task-submit', Views.addTaskTriggered);
 
-$(document).on('click', '#add-link', Views.addLinkTriggered);
+$(document).on('click', '#add-link', Views.toggleAddLinkInput);
 
 $(document).on('click', '#clear-completed', function(e) {
   e.preventDefault();

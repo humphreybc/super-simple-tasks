@@ -1,8 +1,6 @@
 # DOM manipulation
 
 class Views
-
-  # Variable that we can clear if the timeout has to be stopped early
   timeout = 0
 
   @catchSharingCode: ->
@@ -59,18 +57,14 @@ class Views
     $device_link_code.val('http://' + host + '?share=' + DB.db_key)
 
 
-  # Does the little animation on the task submit button
-  @displaySaveSuccess: ->
-    $('#task-submit').addClass('task-submitted')
-
-    setTimeout (->
-      $('#task-submit').removeClass('task-submitted')
-    ), 1000
-
-
   # Takes a task li and returns its id with jQuery
   @getId: (li) ->
-    id = $(li).parent().children().index(li)
+    $(li).parent().children().index(li)
+    
+  
+  # Takes an id integer and returns its associated li
+  @getLi: (id) ->
+    $('#task-list li:nth-child(' + (id + 1) + ')')
 
 
   # If there are no tasks, shows the #all-done blank state div
@@ -79,50 +73,78 @@ class Views
     if allTasks == undefined
       allTasks = []
 
-    # Show the trophy if there's nothing in allTasks
     @showEmptyState(allTasks)
-
-    # Generate HTML
     @addHTML(allTasks)
 
     # Set the badge action for the extension
     Extension.setBrowserActionBadge(allTasks)
 
 
-  # Creates the task list in HTML
   @addHTML: (allTasks) ->
     task_list = $('#task-list')
-
     tasks = @createTaskHTML(allTasks)
-
     task_list.html(tasks)
 
 
+  @clearNewTaskInputs: ->
+    $('#new-task').val('')
+    $('#add-link-input').val('')
+    $('#edit-task-id').val('')
+  
+
+  @taskAddedAnimation: ->
+    $('#task-submit').addClass('task-submitted')
+
+    setTimeout (->
+      $('#task-submit').removeClass('task-submitted')
+    ), 1000
+
+    
+  @taskEditedAnimation: (id) ->
+    task = Views.getLi(id)
+
+    task.addClass('edited-transition')
+    task.addClass('edited')
+
+    setTimeout (->
+      task.removeClass('edited')
+    ), 1000
+
+    setTimeout (->
+      task.removeClass('edited-transition')
+    ), 2000
+
+
+  @editTaskTriggered: (name, link, id) ->
+    id = parseInt(id)
+        
+    Task.updateTask(name, link, id)
+
+    $('#edit-task-overlay').removeClass('fade')
+
+    Views.clearNewTaskInputs()
+    Views.toggleAddLinkInput(false)
+    Views.taskEditedAnimation(id)
+
+
   @addTaskTriggered: ->
+    name = $('#new-task').val()
+    link = $('#add-link-input').val()
+    id = $('#edit-task-id').val()
 
-    $new_task_input = $('#new-task')
-    $link_input = $('#add-link-input')
+    if name
+      if id
+        Views.editTaskTriggered(name, link, id)
+      else
+        Task.setNewTask(name, link)
+        Views.clearNewTaskInputs()
+        Views.taskAddedAnimation()
+        Tour.nextTourBus(tour)
 
-    Tour.nextTourBus(tour)
-
-    name = $new_task_input.val()
-
-    unless name == ''
-
-      link = $link_input.val()
-
-      Task.setNewTask(name, link)
-      
-      $new_task_input.val('')
-      $link_input.val('')
-
-      Views.displaySaveSuccess()
-
-    $new_task_input.focus()
+    $('#new-task').focus()
 
 
-  @addLinkTriggered: ->
-
+  @toggleAddLinkInput: (toggle_open = true) ->
     $body = $('body')
     $new_task_input = $('#new-task')
     $link_input = $('#add-link-input')
@@ -130,7 +152,7 @@ class Views
     linkActiveClass = 'link-active'
     isLinkActive = $body.hasClass(linkActiveClass)
 
-    if isLinkActive
+    if isLinkActive or !toggle_open
       $body.removeClass(linkActiveClass)
       $new_task_input.focus()
     else
@@ -141,11 +163,28 @@ class Views
   # Create the HTML markup for a single task li and returns it
   # Takes into account whether a link is present or task is done
   @createTaskHTML: (allTasks) ->
-
     source = $('#task-template').html()
     template = Handlebars.compile(source)
 
     template({tasks: allTasks})
+
+
+  # Populates the create task form with the task to be edited
+  @editTask: (id) ->
+    window.storageType.get DB.db_key, (allTasks) ->
+
+      name = allTasks[id].name
+      link = allTasks[id].link
+      
+      $('#edit-task-id').val(id)
+      $('#new-task').val(name)
+
+      if link
+        $('#add-link-input').val(link)
+        Views.toggleAddLinkInput()
+
+      $('#edit-task-overlay').addClass('fade')
+      $('#new-task').focus()
 
 
   @completeTask: (li) ->
@@ -177,17 +216,14 @@ class Views
 
   # Show the what's new dialog if the user has seen the tour, hasn't seen the dialog
   @checkWhatsNew: ->
-    window.storageType.get 'whats-new-2-0-1', (whatsNew) ->
+    window.storageType.get 'whats-new-2-2-0', (whatsNew) ->
       if (whatsNew == null) and (window.tourRunning == false)
         $('.whats-new').show()
 
 
   # Saves a state in storage when the tour is over
   @finishTour: ->
-    # Set this guy to false
     window.tourRunning = false
-
-    # Set the onboarding tooltips to display:none
     $('.tourbus-leg').hide()
 
     # Get rid of the # at the end of the URL
@@ -198,5 +234,5 @@ class Views
 
   # Saves a state in storage when the user has closed the What's new dialog
   @closeWhatsNew: ->
-    window.storageType.set('whats-new-2-0-1', 1)
+    window.storageType.set('whats-new-2-2-0', 1)
 

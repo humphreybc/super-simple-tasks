@@ -10,7 +10,10 @@
     user-select none
 
     &:hover
-      background-color background-gray
+      background background-gray
+      
+      .edit
+        display initial
 
     input[type='checkbox']
       cursor pointer
@@ -35,6 +38,16 @@
 
       &:hover
         cursor pointer
+        
+    .edit
+      display none
+      color light-gray
+      cursor pointer
+      font-size font-xsmall
+      margin 1px 10px 0 0
+      
+      &:hover
+        color green
 
     .tag
       margin-top 1px
@@ -84,6 +97,13 @@
 
       &:hover
         background lighten(purple, 2)
+        
+  .edited
+    border 2px solid yellow
+    
+  .edited-transition
+    transition border 1000ms ease-out
+
         
 // Completed tasks
 

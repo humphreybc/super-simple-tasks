@@ -18,6 +18,7 @@
 
 </head>
 <body>
+
   <header>
     <div class="header-left left">
       <img src="img/logo-white.svg" width="32" height="32" class="left" />
@@ -40,11 +41,14 @@
 
     <div class="whats-new">
       <div id="whats-new-close"></div>
-      <h2>Welcome to the future</h2>
-      <p>You can now attach links to a task. Click the link button and paste a URL, or if you're feeling extra frisky, use the keyboard shortcut CTRL + L. Go on, try it now!</p> 
+      <h2>What’s new in 2.2.0</h2>
+      <p>You can now edit a task! Hover over the task on your computer and click <b>Edit</b> to change its details. Also new: a wider range of colored dots to categorize your tasks.</p>
     </div>
 
     <div id="create-task">
+
+      <div id="edit-task-overlay"></div>
+
       <div id="new-task-wrapper">
         <table>
           <tr>
@@ -52,7 +56,7 @@
               <input type="text" tabindex="1" autocomplete="off" autocorrect="on" autocapitalize="on" spellcheck="true" placeholder="What do you need to do?" id="new-task" style="height:45px;">
             </td>
             <td>
-              <button class="button button-gray" tabindex="2" id="add-link" title="Attach a link (Ctrl + L)"></button>
+              <button class="button button-gray" tabindex="2" id="add-link" title="Attach a link (Alt + L)"></button>
             </td>
             <td>
               <button class="button button-green" tabindex="3" id="task-submit" title="Add task (Enter)"></button>
@@ -64,6 +68,8 @@
             </td>
           </tr>
         </table>
+
+        <input type="hidden" id="edit-task-id" />
       </div>
     </div>
 
@@ -127,6 +133,7 @@
       </label>
       <span class="drag-handle right"></span>
       <span class="tag right" type="tag" tag="{{this.tag}}"></span>
+      <span class="edit right">Edit</span>
       {{#if this.link}}
         <div class="task-link">
           <a href="{{this.link}}" target="_blank">{{this.link}}</a>

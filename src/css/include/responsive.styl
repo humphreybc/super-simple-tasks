@@ -11,12 +11,15 @@
 
   input[type='checkbox']
     vertical-align middle
+    
+  #edit-task-overlay
+    display none
 
   #task-list 
 
     li
       position relative
-      padding-right 100px
+      padding-right 70px
 
       label
         max-width 100%
@@ -28,6 +31,9 @@
 
       .drag-handle
         display none
+        
+      &:hover .edit
+        display none !important
 
   .footer ul li
     width 100%
