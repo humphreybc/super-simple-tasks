@@ -5179,6 +5179,12 @@ LocalStorage = (function() {
     return callback(value);
   };
 
+  LocalStorage.getSync = function(key) {
+    var value;
+    value = localStorage.getItem(key);
+    return JSON.parse(value);
+  };
+
   LocalStorage.set = function(key, value) {
     value = JSON.stringify(value);
     return localStorage.setItem(key, value);
@@ -5533,7 +5539,8 @@ Task = (function() {
       allTasks[id].name = name;
       allTasks[id].link = link;
       window.storageType.set(DB.db_key, allTasks);
-      return Views.showTasks(allTasks);
+      Views.showTasks(allTasks);
+      return Views.taskEditedAnimation(id);
     });
   };
 
@@ -5682,7 +5689,8 @@ Views = (function() {
   };
 
   Views.getLi = function(id) {
-    return $('#task-list li:nth-child(' + (id + 1) + ')');
+    var task;
+    return task = $('#task-list li:nth-child(' + (id + 1) + ')');
   };
 
   Views.showTasks = function(allTasks) {
@@ -5726,7 +5734,7 @@ Views = (function() {
     }), 2000);
     return setTimeout((function() {
       return task.removeClass('edited-transition');
-    }), 2500);
+    }), 3000);
   };
 
   Views.editTaskTriggered = function(name, link, id) {
@@ -5734,8 +5742,7 @@ Views = (function() {
     Task.updateTask(name, link, id);
     $('#edit-task-overlay').removeClass('fade');
     Views.clearNewTaskInputs();
-    Views.toggleAddLinkInput(false);
-    return Views.taskEditedAnimation(id);
+    return Views.toggleAddLinkInput(false);
   };
 
   Views.addTaskTriggered = function() {

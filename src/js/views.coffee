@@ -64,7 +64,7 @@ class Views
   
   # Takes an id integer and returns its associated li
   @getLi: (id) ->
-    $('#task-list li:nth-child(' + (id + 1) + ')')
+    task = $('#task-list li:nth-child(' + (id + 1) + ')')
 
 
   # If there are no tasks, shows the #all-done blank state div
@@ -114,7 +114,7 @@ class Views
 
     setTimeout (->
       task.removeClass('edited-transition')
-    ), 2500
+    ), 3000
 
 
   @editTaskTriggered: (name, link, id) ->
@@ -126,7 +126,6 @@ class Views
 
     Views.clearNewTaskInputs()
     Views.toggleAddLinkInput(false)
-    Views.taskEditedAnimation(id)
 
 
   @addTaskTriggered: ->

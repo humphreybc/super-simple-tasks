@@ -101,6 +101,8 @@ class Task
 
       Views.showTasks(allTasks)
 
+      Views.taskEditedAnimation(id)
+
 
   # Updates the order upon drag and drop
   # Takes oldLocation and newLocation from dragdrop.coffee

@@ -11,17 +11,19 @@ class LocalStorage
     #     callback(value)
 
     value = localStorage.getItem(key)
-
     value = JSON.parse(value)
 
     callback(value)
 
 
+  @getSync: (key) ->
+    value = localStorage.getItem(key)
+    JSON.parse(value)
+
+
   # Sets something to localStorage given a key and value
   @set: (key, value) ->
-
     value = JSON.stringify(value)
-
     localStorage.setItem(key, value)
 
 
@@ -34,7 +36,6 @@ class ChromeStorage
 
   # Return all the tasks given the key
   @get: (key, callback) ->
-    
     chrome.storage.sync.get key, (value) ->
       value = value[key] || null || LocalStorage.getSync(key)
 
@@ -44,7 +45,6 @@ class ChromeStorage
   # Set all the tasks given the key
   # Usually a JSON array of all the tasks
   @set: (key, value, callback) ->
-
     params = {}
     params[key] = value
 
@@ -53,7 +53,6 @@ class ChromeStorage
 
   # Remove a whole entry from chrome.storage.sync given its key
   @remove: (key) ->
-
     chrome.storage.sync.remove key, () ->
 
 
@@ -72,15 +71,10 @@ class FirebaseSync
   @get: (key, callback) ->
 
     if key == DB.db_key and window.sync_enabled
-
       ref = DB.remote_ref
-
       child = ref.child(key)
-
       child.once 'value', (value) ->
-
         allTasks = value.val()
-
         callback(allTasks)
 
 
@@ -88,22 +82,16 @@ class FirebaseSync
   @set: (key, value, callback) ->
 
     if key == DB.db_key and window.sync_enabled
-
       ref = DB.remote_ref
-
       child = ref.child(key)
-
       child.set value, () ->
 
 
   @on: (key, callback) ->
-
     ref = DB.remote_ref
 
     ref.on 'value', ((value) ->
-      
       allTasks = value.val()
-
       callback(allTasks.todo)
 
     ), (errorObject) ->
@@ -112,45 +100,33 @@ class FirebaseSync
 
 
   @update: (key, value, callback) ->
-
     ref = DB.remote_ref
-
     child = ref.child(key)
-
     child.update value, () ->
 
 
   @remove: ->
-
     console.log 'remove'
 
 
 class DB
 
   @linkDevices: ->
-
     unless window.sync_enabled
-
       @enableSync()
-
       @setSyncStatus()
-
       @createFirebase()
-
       @setSyncKey()
-
       @reSaveTasks()
 
     Views.toggleModalDialog()
 
 
   @enableSync: ->
-
     localStorage.setItem('sync_enabled', true)
 
 
   @setSyncStatus: ->
-
     window.sync_enabled = false
 
     # window.sync_enabled = localStorage.getItem('sync_enabled')
@@ -162,31 +138,24 @@ class DB
 
   
   @createFirebase: ->
-
     if window.sync_enabled
       @remote_ref = new Firebase('https://supersimpletasks.firebaseio.com/data')
 
 
   @migrateKey: (new_key) ->
-
     window.storageType.get @db_key, (allTasks) ->
-      
       @db_key = new_key
-
       window.storageType.set(@db_key, allTasks)
 
       @db_key
 
 
   @reSaveTasks: ->
-
     window.storageType.get @db_key, (allTasks) ->
-
       window.storageType.set(@db_key, allTasks)
 
 
   @checkStorageMethod: ->
-
     if !!window.chrome and chrome.storage
       window.storageType = ChromeStorage
       console.log 'Using chrome.storage.sync to save'
@@ -196,7 +165,6 @@ class DB
 
 
   @setSyncKey: ->
-
     if window.sync_enabled
       @db_key = localStorage.getItem('sync_key')
 
