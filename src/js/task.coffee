@@ -1,5 +1,3 @@
-# Manipulating tasks
-
 class Arrays
 
   # This class contains default arrays
@@ -47,9 +45,6 @@ class Arrays
 
 class Task
 
-  # This class contains most of the logic for manipulating tasks and saving them
-
-  # Creates a new task object with some defaults if they're not set
   @createTask: (name, link) ->
 
     # Regex to add http:// if it's missing from the user input
@@ -66,30 +61,20 @@ class Task
       link: link
 
 
-  # Sets a new task
-  # Receives name and link from the inputs
   @setNewTask: (name, link) ->
 
-    # Sends the task to @createTask() to make a new task
     newTask = @createTask(name, link)
 
-    # Get all the tasks
     window.storageType.get DB.db_key, (allTasks) ->
 
       # Adds that new task to the end of the array
       allTasks.unshift newTask
-
-      # Save all the tasks
       window.storageType.set(DB.db_key, allTasks)
+      ListView.showTasks(allTasks)
 
-      # Show the tasks
-      Views.showTasks(allTasks)
-
-      # Send task count
       Analytics.sendTaskCount(allTasks)
 
 
-  # Updates an existing task
   @updateTask: (name, link, id) ->
 
     window.storageType.get DB.db_key, (allTasks) ->
@@ -98,10 +83,8 @@ class Task
       allTasks[id].link = link
 
       window.storageType.set DB.db_key, allTasks, () ->
-
-        Views.showTasks(allTasks)
-
-        Views.taskEditedAnimation(id)
+        ListView.showTasks(allTasks)
+        TaskView.taskEditedAnimation(id)
 
 
   # Updates the order upon drag and drop
@@ -112,10 +95,8 @@ class Task
     if oldLocation == newLocation
       return
 
-    # Get the tasks
     window.storageType.get DB.db_key, (allTasks) ->
 
-      # The task we want to move
       toMove = allTasks[oldLocation]
 
       # If the current position (oldLocation) is above (rendered on the screen) the new location
@@ -130,62 +111,39 @@ class Task
         oldLocation += 1
       allTasks.splice(oldLocation, 1)
       
-      # Save the tasks
       window.storageType.set(DB.db_key, allTasks)
-
-      # Show the tasks again
-      Views.showTasks(allTasks)
+      ListView.showTasks(allTasks)
 
 
-  # Change the attribute (in the DOM) and run updateAttr to change it in storage
-  # Used for arrays of things like tag colors
-  # Takes three parameters: the task (li), the attribute to change, and the current value
   @cycleAttr: (li, attr, value) ->
 
-    # Attribute is currently always tag
     if attr == 'tag'
       array = Arrays.tags
 
     # Get the current position in the attribute array
     currentIndex = $.inArray(value, array)
 
-    # Get the ID of the task given its li
-    id = Views.getId(li)
+    id = TaskView.getId(li)
 
     # Handle the current attribute if it's at the end of the attribute array
     if currentIndex == array.length - 1
       currentIndex = -1
 
-    # Update attribute
     value = array[currentIndex + 1]
-
     @updateAttr(id, attr, value)
 
 
-  # Updates a particular attribute in storage
   @updateAttr: (id, attr, value) ->
 
-    # Get all the tasks
     window.storageType.get DB.db_key, (allTasks) ->
-
-      # Find the particular task to update
       task = allTasks[id]
-
-      # Set the new attribute
       task[attr] = value
-
-      # Save all the tasks
       window.storageType.set(DB.db_key, allTasks)
-
-      # Show the tasks!
-      Views.showTasks(allTasks)
+      ListView.showTasks(allTasks)
 
 
-
-  # Clears storage and then runs Views.showTasks() to show the blank state message
   @clearCompleted: ->
 
-    # Gets the list of tasks
     window.storageType.get DB.db_key, (allTasks) ->
 
       if allTasks == null
@@ -201,11 +159,8 @@ class Task
           allTasks.splice(index, 1)
         index--
 
-      # Save all the tasks
       window.storageType.set(DB.db_key, allTasks)
-
-      # Return allTasks, except now without tasks with isDone: true
-      Views.showTasks(allTasks)
+      ListView.showTasks(allTasks)
 
 
   @handleNoTasks: (allTasks) ->
@@ -214,7 +169,6 @@ class Task
       window.storageType.set(DB.db_key, allTasks)
 
     return allTasks
-
 
 
   @exportTasks: ->

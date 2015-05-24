@@ -1,5 +1,3 @@
-# Catch user interaction
-
 online = null
 tour = null
 
@@ -13,7 +11,7 @@ initialize = ->
 
     Migrations.run(allTasks)
 
-    Views.showTasks(allTasks)
+    ListView.showTasks(allTasks)
 
     Views.checkOnboarding(allTasks, tour)
 
@@ -39,12 +37,12 @@ keyboardShortcuts = (e) ->
   shift_key = 16
 
   if evtobj.keyCode == enter_key
-    Views.addTaskTriggered()
+    TaskView.addTaskTriggered()
     ga 'send', 'event', 'Add task shortcut', 'shortcut'
     
   if evtobj.keyCode == esc_key
     $('#edit-task-overlay').removeClass('fade')
-    Views.clearNewTaskInputs()
+    ListView.clearNewTaskInputs()
     Views.toggleAddLinkInput(false)
 
   if (evtobj.keyCode == esc_key) and ($('#link-devices-modal').hasClass('modal-show'))
@@ -77,7 +75,7 @@ $(document).on 'mousedown', '.task > label', ->
     unless holding
 
       li = $(this).closest('li')
-      Views.completeTask(li)
+      TaskView.completeTask(li)
       Tour.nextTourBus(tour)
 
 
@@ -86,7 +84,7 @@ $(document).on 'click', '.edit', (e) ->
 
   li = $(this).closest('li')
 
-  Views.editTask(Views.getId(li))
+  TaskView.editTask(TaskView.getId(li))
 
 
 # Click on tag color
@@ -116,7 +114,7 @@ $(document).on 'click', '#whats-new-close', (e) ->
 
 
 $(document).on 'click', '#task-submit', (e) ->
-  Views.addTaskTriggered()
+  TaskView.addTaskTriggered()
 
 
 $(document).on 'click', '#add-link', (e) ->
@@ -151,7 +149,7 @@ $(document).on 'click', '#export-tasks', (e) ->
 
 $(document).ready ->
 
-  Views.setPopupClass()
+  Extension.setPopupClass()
 
   Views.catchSharingCode()
 
@@ -177,6 +175,6 @@ $(document).ready ->
 
     online = Utils.checkOnline()
 
-    Views.changeEmptyStateImage(online)
+    ListView.changeEmptyStateImage(online)
 
   ), 100

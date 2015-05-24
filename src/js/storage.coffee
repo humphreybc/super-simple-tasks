@@ -1,9 +1,5 @@
-# Saving tasks using either localStorage or chrome.storage.sync
-
 class LocalStorage
 
-  # Gets a generic value from localStorage given a particular key
-  # Parses the JSON so it's an object instead of a string
   @get: (key, callback) ->
 
     # if window.sync_enabled
@@ -21,7 +17,6 @@ class LocalStorage
     JSON.parse(value)
 
 
-  # Sets something to localStorage given a key and value
   @set: (key, value, callback) ->
     value = JSON.stringify(value)
     localStorage.setItem(key, value)
@@ -30,14 +25,12 @@ class LocalStorage
       callback()
 
 
-  # Removes something from localStorage given a key
   @remove: (key) ->
     localStorage.removeItem(key)
 
 
 class ChromeStorage
 
-  # Return all the tasks given the key
   @get: (key, callback) ->
     chrome.storage.sync.get key, (value) ->
       value = value[key] || null || LocalStorage.getSync(key)
@@ -45,8 +38,6 @@ class ChromeStorage
       callback(value)
  
 
-  # Set all the tasks given the key
-  # Usually a JSON array of all the tasks
   @set: (key, value, callback) ->
 
     params = {}
@@ -58,19 +49,18 @@ class ChromeStorage
         callback()
 
 
-  # Remove a whole entry from chrome.storage.sync given its key
   @remove: (key) ->
     chrome.storage.sync.remove key, () ->
 
 
-  # Listen for changes and run Views.showTasks when a change happens
+  # Listen for changes and run ListView.showTasks when a change happens
   if !!window.chrome and chrome.storage
 
     chrome.storage.onChanged.addListener (changes, namespace) ->
       for key of changes
         if key == DB.db_key
           storageChange = changes[key]
-          Views.showTasks(storageChange.newValue)
+          ListView.showTasks(storageChange.newValue)
 
 
 class FirebaseSync

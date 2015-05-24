@@ -1,6 +1,11 @@
 class Extension
 
-  @setBrowserActionBadge: (allTasks) =>
+  @setPopupClass: ->
+    if Utils.getUrlParameter('popup') == 'true'
+      $('body').addClass('popup')
+
+
+  @setBrowserActionBadge: (allTasks) ->
 
     if @isExtension()
 
