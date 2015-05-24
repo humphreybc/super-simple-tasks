@@ -19,6 +19,8 @@ initialize = ->
 
   Views.animateContent()
 
+  Views.setListName()
+
   $('#new-task').focus()
 
 
@@ -37,8 +39,12 @@ keyboardShortcuts = (e) ->
   shift_key = 16
 
   if evtobj.keyCode == enter_key
-    TaskView.addTaskTriggered()
-    ga 'send', 'event', 'Add task shortcut', 'shortcut'
+    if $('#list-name').is(':focus')
+      Views.storeListName()
+      $('#list-name').blur()
+    else
+      TaskView.addTaskTriggered()
+      ga 'send', 'event', 'Add task shortcut', 'shortcut'
     
   if evtobj.keyCode == esc_key
     $('#edit-task-overlay').removeClass('fade')
@@ -106,6 +112,10 @@ $(document).on 'click', '.tag', (e) ->
 # This prevents people having to click twice, once to unfocus, the other to drag
 $(document).on 'mouseenter', '.drag-handle', (e) ->
   $('#new-task').blur()
+
+
+$(document).on 'blur', '#list-name', (e) ->
+  Views.storeListName()
 
 
 $(document).on 'click', '#whats-new-close', (e) ->

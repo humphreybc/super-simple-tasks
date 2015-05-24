@@ -12,6 +12,16 @@ class Views
       DB.createFirebase()
 
 
+  @setListName: ->
+    window.storageType.get 'name', (list_name) ->
+      $('#list-name').val(list_name)
+
+
+  @storeListName: ->
+    list_name = $('#list-name').val()
+    window.storageType.set('name', list_name)
+
+
   @animateContent: ->
     setTimeout (->
       $('#main-content').addClass('content-show')

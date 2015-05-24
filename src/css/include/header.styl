@@ -19,9 +19,37 @@ header
   .header-left
     margin 2px 0 0 10px
     
+    img
+      margin-right 5px
+    
 
 #expand
   display none
   
 .popup #expand
     display inherit
+    
+#list-name
+  background none
+  border none
+  border-radius radius
+  color white
+  font-size font-large
+  outline none
+  padding 2px 5px
+  width auto
+  
+  &:hover
+    background darken(green, 5)
+    
+  &:focus
+    background darken(green, 5)
+    
+  &::-webkit-input-placeholder
+    color rgba(255,255,255,0.5)
+   
+  &::-moz-placeholder
+    color rgba(255,255,255,0.5)
+   
+  &:-ms-input-placeholder 
+    color rgba(255,255,255,0.5)
