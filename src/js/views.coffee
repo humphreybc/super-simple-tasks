@@ -153,30 +153,20 @@ class Views
     linkActiveClass = 'link-active'
     isOpen = $body.hasClass(linkActiveClass)
 
-    openLinkDrawer = () ->
+    if isOpen == forceOpen
+      return
+
+    if forceOpen == null
+      shouldOpenDrawer = !isOpen
+    else
+      shouldOpenDrawer = forceOpen
+
+    if shouldOpenDrawer
       $body.addClass(linkActiveClass)
       $link_input.focus()
-
-    closeLinkDrawer = () ->
+    else
       $body.removeClass(linkActiveClass)
       $new_task_input.focus()
-
-    if forceOpen == true
-      if isOpen
-        return
-      else
-        openLinkDrawer()
-    else if forceOpen == false
-      if isOpen
-        closeLinkDrawer()
-      else
-        return
-    else
-      if isOpen
-        closeLinkDrawer()
-      else
-        openLinkDrawer()
-
 
   # Create the HTML markup for a single task li and returns it
   # Takes into account whether a link is present or task is done
@@ -200,6 +190,8 @@ class Views
       if link
         $('#add-link-input').val(link)
         Views.toggleAddLinkInput(true)
+      else
+        Views.toggleAddLinkInput(false)
 
       $('#edit-task-overlay').addClass('fade')
       $('#new-task').focus()

@@ -115,10 +115,12 @@ $(document).on 'click', '#whats-new-close', (e) ->
   Views.closeWhatsNew()
 
 
-$(document).on 'click', '#task-submit', Views.addTaskTriggered
+$(document).on 'click', '#task-submit', (e) ->
+  Views.addTaskTriggered()
 
 
-$(document).on 'click', '#add-link', Views.toggleAddLinkInput
+$(document).on 'click', '#add-link', (e) ->
+  Views.toggleAddLinkInput()
 
 
 $(document).on 'click', '#clear-completed', (e) ->
