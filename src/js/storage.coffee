@@ -22,9 +22,12 @@ class LocalStorage
 
 
   # Sets something to localStorage given a key and value
-  @set: (key, value) ->
+  @set: (key, value, callback) ->
     value = JSON.stringify(value)
     localStorage.setItem(key, value)
+
+    if callback
+      callback()
 
 
   # Removes something from localStorage given a key
@@ -45,10 +48,14 @@ class ChromeStorage
   # Set all the tasks given the key
   # Usually a JSON array of all the tasks
   @set: (key, value, callback) ->
+
     params = {}
     params[key] = value
 
     chrome.storage.sync.set params, () ->
+
+      if callback
+        callback()
 
 
   # Remove a whole entry from chrome.storage.sync given its key

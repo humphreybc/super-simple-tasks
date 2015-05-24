@@ -97,11 +97,11 @@ class Task
       allTasks[id].name = name
       allTasks[id].link = link
 
-      window.storageType.set(DB.db_key, allTasks)
+      window.storageType.set DB.db_key, allTasks, () ->
 
-      Views.showTasks(allTasks)
+        Views.showTasks(allTasks)
 
-      Views.taskEditedAnimation(id)
+        Views.taskEditedAnimation(id)
 
 
   # Updates the order upon drag and drop
