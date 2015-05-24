@@ -50,6 +50,7 @@ class TaskView
 
       $('#edit-task-overlay').addClass('fade')
       $('#new-task').focus()
+      $('#new-task').select()
 
 
   @editTaskTriggered: (name, link, id) ->
