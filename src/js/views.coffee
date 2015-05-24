@@ -145,20 +145,37 @@ class Views
     $('#new-task').focus()
 
 
-  @toggleAddLinkInput: (toggle_open = true) ->
+  @toggleAddLinkInput: (forceOpen = null) ->
     $body = $('body')
     $new_task_input = $('#new-task')
     $link_input = $('#add-link-input')
 
     linkActiveClass = 'link-active'
-    isLinkActive = $body.hasClass(linkActiveClass)
+    isOpen = $body.hasClass(linkActiveClass)
 
-    if isLinkActive or !toggle_open
-      $body.removeClass(linkActiveClass)
-      $new_task_input.focus()
-    else
+    openLinkDrawer = () ->
       $body.addClass(linkActiveClass)
       $link_input.focus()
+
+    closeLinkDrawer = () ->
+      $body.removeClass(linkActiveClass)
+      $new_task_input.focus()
+
+    if forceOpen == true
+      if isOpen
+        return
+      else
+        openLinkDrawer()
+    else if forceOpen == false
+      if isOpen
+        closeLinkDrawer()
+      else
+        return
+    else
+      if isOpen
+        closeLinkDrawer()
+      else
+        openLinkDrawer()
 
 
   # Create the HTML markup for a single task li and returns it
@@ -182,7 +199,7 @@ class Views
 
       if link
         $('#add-link-input').val(link)
-        Views.toggleAddLinkInput()
+        Views.toggleAddLinkInput(true)
 
       $('#edit-task-overlay').addClass('fade')
       $('#new-task').focus()
