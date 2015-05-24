@@ -9,6 +9,8 @@ module.exports = function(grunt) {
                                     'src/js/analytics.coffee',
                                     'src/js/task.coffee',
                                     'src/js/views.coffee',
+                                    'src/js/listview.coffee',
+                                    'src/js/taskview.coffee',
                                     'src/js/extension.coffee',
                                     'src/js/export.coffee',
                                     'src/js/dragdrop.coffee',
