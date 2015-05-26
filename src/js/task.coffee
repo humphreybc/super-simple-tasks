@@ -49,6 +49,7 @@ class Task
 
     # Regex to add http:// if it's missing from the user input
     if link != ''
+      debugger
       if !link.match(/^[a-zA-Z]+:\/\//)
         link = 'http://' + link
 
