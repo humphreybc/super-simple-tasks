@@ -35,6 +35,9 @@ class Analytics
 $(window).focus ->
   Analytics.sendPageView()
 
+$(document).on 'blur', '#list-name', (e) ->
+  ga 'send', 'event', 'Name task list', 'click'
+
 # Click on Add link button
 $(document).on 'click', '#add-link', ->
   ga 'send', 'event', 'Add link button', 'click'
