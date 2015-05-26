@@ -1,11 +1,12 @@
 online = null
 tour = null
 
+SST = SST || {}
 
 # All the goodness
 initialize = ->
 
-  window.storageType.get DB.db_key, (allTasks) ->
+  SST.storage.getTasks (allTasks) ->
 
     allTasks = Task.handleNoTasks(allTasks)
 
@@ -138,12 +139,12 @@ $(document).on 'click', '#clear-completed', (e) ->
 
 $(document).on 'click', '#link-devices', (e) ->
   e.preventDefault()
-  DB.linkDevices()
+  SST.storage.linkDevices()
 
 
 $(document).on 'click', '#disconnect-devices', (e) ->
   e.preventDefault()
-  DB.disconnectDevices()
+  SST.storage.disconnectDevices()
   location.reload()
 
 
@@ -161,17 +162,9 @@ $(document).ready ->
 
   Extension.setPopupClass()
 
-  Views.catchSharingCode()
+  SST.storage = new Storage()
 
   standardLog()
-
-  DB.setSyncStatus()
-
-  DB.createFirebase()
-
-  DB.checkStorageMethod()
-
-  DB.setSyncKey()
 
   window.tourRunning = false
 

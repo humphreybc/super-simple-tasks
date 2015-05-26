@@ -12,7 +12,7 @@ class Analytics
 
 
   @sendTaskCount: (allTasks) ->
-    window.storageType.get DB.db_key, (allTasks) ->
+    SST.storage.getTasks (allTasks) ->
       ga 'send',
         'hitType': 'event'
         'eventCategory': 'Data'

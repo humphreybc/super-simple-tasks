@@ -34,7 +34,7 @@ class TaskView
 
 
   @editTask: (id) ->
-    window.storageType.get DB.db_key, (allTasks) ->
+    SST.storage.getTasks (allTasks) ->
 
       name = allTasks[id].name
       link = allTasks[id].link

@@ -65,11 +65,11 @@ class Task
 
     newTask = @createTask(name, link)
 
-    window.storageType.get DB.db_key, (allTasks) ->
+    SST.storage.getTasks (allTasks) ->
 
       # Adds that new task to the end of the array
       allTasks.unshift newTask
-      window.storageType.set(DB.db_key, allTasks)
+      SST.storage.setTasks(allTasks)
       ListView.showTasks(allTasks)
 
       Analytics.sendTaskCount(allTasks)
@@ -77,12 +77,12 @@ class Task
 
   @updateTask: (name, link, id) ->
 
-    window.storageType.get DB.db_key, (allTasks) ->
+    SST.storage.getTasks (allTasks) ->
 
       allTasks[id].name = name
       allTasks[id].link = link
 
-      window.storageType.set DB.db_key, allTasks, () ->
+      SST.storage.setTasks allTasks, () ->
         ListView.showTasks(allTasks)
         TaskView.taskEditedAnimation(id)
 
@@ -95,7 +95,7 @@ class Task
     if oldLocation == newLocation
       return
 
-    window.storageType.get DB.db_key, (allTasks) ->
+    SST.storage.getTasks (allTasks) ->
 
       toMove = allTasks[oldLocation]
 
@@ -111,7 +111,7 @@ class Task
         oldLocation += 1
       allTasks.splice(oldLocation, 1)
       
-      window.storageType.set(DB.db_key, allTasks)
+      SST.storage.setTasks(allTasks)
       ListView.showTasks(allTasks)
 
 
@@ -135,16 +135,16 @@ class Task
 
   @updateAttr: (id, attr, value) ->
 
-    window.storageType.get DB.db_key, (allTasks) ->
+    SST.storage.get SST.storage.db_key, (allTasks) ->
       task = allTasks[id]
       task[attr] = value
-      window.storageType.set(DB.db_key, allTasks)
+      SST.storage.setTasks(allTasks)
       ListView.showTasks(allTasks)
 
 
   @clearCompleted: ->
 
-    window.storageType.get DB.db_key, (allTasks) ->
+    SST.storage.get SST.storage.db_key, (allTasks) ->
 
       if allTasks == null
         return
@@ -159,20 +159,20 @@ class Task
           allTasks.splice(index, 1)
         index--
 
-      window.storageType.set(DB.db_key, allTasks)
+      SST.storage.setTasks(allTasks)
       ListView.showTasks(allTasks)
 
 
   @handleNoTasks: (allTasks) ->
     if allTasks == null
       allTasks = Arrays.default_data
-      window.storageType.set(DB.db_key, allTasks)
+      SST.storage.setTasks(allTasks)
 
     return allTasks
 
 
   @exportTasks: ->
-    window.storageType.get DB.db_key, (allTasks) ->
+    SST.storage.get SST.storage.db_key, (allTasks) ->
       Exporter(allTasks, 'super simple tasks backup')
 
 
