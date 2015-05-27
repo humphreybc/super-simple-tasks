@@ -17,4 +17,3 @@ build:
     - 'copy'
     - 'uglify'
     - 'cacheBust'
-    - 'notify'
