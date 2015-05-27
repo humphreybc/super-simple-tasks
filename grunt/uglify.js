@@ -1,7 +1,7 @@
 module.exports = {
   app: {
     files: {
-      'public/js/app.js': ['public/js/app.js']
+      '.tmp/concat/js/app.js': ['.tmp/concat/js/app.js']
     }
   }
 };
