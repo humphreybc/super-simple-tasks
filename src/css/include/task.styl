@@ -25,13 +25,15 @@
 
   .drag-handle
     background-image url('../img/drag.svg')
-    height 16px
-    margin 4px -2px 0 10px
-    width 16px
+    height 15px
+    opacity 0.25
+    margin 3px 0 0 8px
+    width 10px
 
     &:hover
       cursor -webkit-grab
       cursor -moz-grab
+      opacity 0.5
       
   .edit
     color light-gray
@@ -100,8 +102,11 @@
 
 .task.task-completed
   
-  label, .tag, .drag-handle, .task-link, .edit
+  label, .tag, .task-link, .edit
     opacity 0.25
+    
+  .drag-handle
+    opacity 0.1
   
   label
     text-decoration line-through
