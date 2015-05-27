@@ -1,4 +1,8 @@
 module.exports = function(grunt) {
+
+  require('load-grunt-tasks')(grunt);
+  require('time-grunt')(grunt);
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     coffee: {
@@ -92,24 +96,24 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: 'src/js/*.coffee',
-        tasks: ['coffeelint', 'coffee:scripts', 'concat:app']
+        tasks: ['coffeelint', 'newer:coffee:scripts', 'newer:concat:app']
       },
       styles: {
         files: 'src/css/**/*.styl',
-        tasks: ['stylus']
+        tasks: ['newer:stylus']
       },
       livereload: {
         options: { livereload: true },
-        files: ['public/**/*'],
+        files: ['public/css/*'],
         tasks: []
       },
       copyImg: {
         files: ['src/img/*'],
-        tasks: ['copy']
+        tasks: ['newer:copy']
       },
       copyRoot: {
         files: ['src/*'],
-        tasks: ['copy']
+        tasks: ['newer:copy']
       },
       options: {
         atBegin: true
@@ -125,17 +129,6 @@ module.exports = function(grunt) {
       }
     }
   });
-
-  grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.loadNpmTasks('grunt-contrib-coffee');
-  grunt.loadNpmTasks('grunt-coffeelint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-stylus');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-cache-bust');
 
   grunt.registerTask('dev', [
     'watch'
