@@ -55,101 +55,111 @@ class ChromeStorage
   if !!window.chrome and chrome.storage
     chrome.storage.onChanged.addListener (changes, namespace) ->
       for key of changes
-        if key == SST.storage.db_key
+        if key == SST.storage.dbKey
           storageChange = changes[key]
           ListView.showTasks(storageChange.newValue)
 
 
-class FirebaseSync
+class RemoteSync
 
-  @get: (key, callback) ->
+  @get: () ->
 
-    if key == SST.storage.db_key and @sync_enabled
+    if SST.storage.syncEnabled
+
+      key = SST.storage.dbKey
+
       ref = SST.storage.remote_ref
       child = ref.child(key)
+
+      SST.storage.getTasks (localTasks) ->
+        console.log 'Local tasks: '
+        console.log localTasks
+
       child.once 'value', (value) ->
-        allTasks = value.val()
-        callback(allTasks)
+        remoteTasks = value.val()
+        console.log 'Remote tasks: '
+        console.log remoteTasks
+
+        SST.storage.setTasks(remoteTasks)
 
 
-  @set: (key, value, callback) ->
-
-    if key == SST.storage.db_key and @sync_enabled
-      ref = SST.storage.remote_ref
-      child = ref.child(key)
-      child.set value, () ->
+      # Check for equality and fix any merge conflicts
+      # equalTasks = _.isEqual(remoteTasks, localTasks)
+      # console.log equalTasks
 
 
-  @on: (key, callback) ->
-    ref = SST.storage.remote_ref
+  @set: () ->
 
-    ref.on 'value', ((value) ->
-      allTasks = value.val()
-      callback(allTasks.todo)
+    if SST.storage.syncEnabled
 
-    ), (errorObject) ->
-      console.log 'The read failed: ' + errorObject.code
-      return
+      key = SST.storage.dbKey
 
+      SST.storage.getTasks (localTasks) ->
 
-  @update: (key, value, callback) ->
-    ref = SST.storage.remote_ref
-    child = ref.child(key)
-    child.update value, () ->
-
-
-  @remove: ->
-    console.log 'remove'
+        ref = SST.storage.remote_ref
+        child = ref.child(key)
+        child.set localTasks, () ->
 
 
 class Storage
 
   constructor: () ->
     if !!window.chrome and chrome.storage
-      @storage_type = ChromeStorage
+      @storageType = ChromeStorage
       console.log 'Using chrome.storage.sync to save'
     else
-      @storage_type = LocalStorage
+      @storageType = LocalStorage
       console.log 'Using localStorage to save'
 
-    share_code = Utils.getUrlParameter('share')
-    @sync_enabled = false
+    @syncKey = localStorage.getItem('sync_key')
+
+    if @syncKey == null
+      @syncEnabled = false
+    else
+      @syncEnabled = true
+
+    shareCode = Utils.getUrlParameter('share')
     
-    unless share_code == undefined
-      @db_key = share_code
-      localStorage.setItem('sync_key', share_code)
-      @sync_enabled = true
+    unless shareCode == undefined
+      @dbKey = shareCode
+      localStorage.setItem('sync_key', shareCode)
+      @syncEnabled = true
 
     @createFirebase()
     @setSyncKey()
 
+
   # Primary storage stuff
 
   get: (key, callback) ->
-    @storage_type.get(key, callback)
+    @storageType.get(key, callback)
 
   
   getSync: (key) ->
-    @storage_type.getSync(key)
+    @storageType.getSync(key)
 
 
   set: (key, value, callback) ->
-    @storage_type.set(key, value, callback)
+    @storageType.set(key, value, callback)
+
 
   remove: (key) ->
-    @storage_type.remove(key)
+    @storageType.remove(key)
+
 
   # Fetching tasks
 
   getTasks: (callback) ->
-    @get(@db_key, callback)
+    @get(@dbKey, callback)
+
 
   setTasks: (value, callback) ->
-    @set(@db_key, value, callback)
+    @set(@dbKey, value, callback)
+
 
   linkDevices: ->
-    unless @sync_enabled
-      @sync_enabled = true
+    unless @syncEnabled
+      @syncEnabled = true
       @createFirebase()
       @setSyncKey()
       @reSaveTasks()
@@ -158,43 +168,43 @@ class Storage
 
   
   createFirebase: ->
-    if @sync_enabled
+    if @syncEnabled
       @remote_ref = new Firebase('https://supersimpletasks.firebaseio.com/data')
 
 
   migrateKey: (new_key) ->
-    SST.storage.get @db_key, (allTasks) ->
-      @db_key = new_key
-      SST.storage.set(@db_key, allTasks)
+    SST.storage.get @dbKey, (allTasks) ->
+      @dbKey = new_key
+      SST.storage.set(@dbKey, allTasks)
 
-      @db_key
+      @dbKey
 
 
   reSaveTasks: ->
-    SST.storage.get @db_key, (allTasks) ->
-      SST.storage.set(@db_key, allTasks)
+    SST.storage.get @dbKey, (allTasks) ->
+      SST.storage.set(@dbKey, allTasks)
 
 
   setSyncKey: ->
-    if @sync_enabled
-      @db_key = localStorage.getItem('sync_key')
+    if @syncEnabled
+      @dbKey = localStorage.getItem('sync_key')
 
-      if @db_key == null
-        @db_key = 'todo'
+      if @dbKey == null
+        @dbKey = 'todo'
 
         new_key = Utils.generateID()
 
-        @db_key = @migrateKey(new_key)
+        @dbKey = @migrateKey(new_key)
 
-        localStorage.setItem('sync_key', @db_key)
+        localStorage.setItem('sync_key', @dbKey)
 
-        console.log 'Your sync key has been set to: ' + @db_key
+        console.log 'Your sync key has been set to: ' + @dbKey
 
     else
-      @db_key = 'todo'
+      @dbKey = 'todo'
 
 
-    console.log 'Your sync is: ' + @db_key
+    console.log 'Your sync code is: ' + @dbKey
 
 
   disconnectDevices: ->

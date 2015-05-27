@@ -38,7 +38,7 @@ class Views
 
     host = Utils.getUrlAttribute('host')
 
-    $device_link_code.val('http://' + host + '?share=' + SST.storage.db_key)
+    $device_link_code.val('http://' + host + '?share=' + SST.storage.dbKey)
 
 
   @toggleAddLinkInput: (forceOpen = null) ->

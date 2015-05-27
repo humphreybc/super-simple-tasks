@@ -135,7 +135,7 @@ class Task
 
   @updateAttr: (id, attr, value) ->
 
-    SST.storage.get SST.storage.db_key, (allTasks) ->
+    SST.storage.getTasks (allTasks) ->
       task = allTasks[id]
       task[attr] = value
       SST.storage.setTasks(allTasks)
@@ -144,7 +144,7 @@ class Task
 
   @clearCompleted: ->
 
-    SST.storage.get SST.storage.db_key, (allTasks) ->
+    SST.storage.getTasks (allTasks) ->
 
       if allTasks == null
         return
@@ -172,7 +172,7 @@ class Task
 
 
   @exportTasks: ->
-    SST.storage.get SST.storage.db_key, (allTasks) ->
+    SST.storage.getTasks (allTasks) ->
       Exporter(allTasks, 'super simple tasks backup')
 
 
