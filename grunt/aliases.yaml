@@ -1,0 +1,20 @@
+default:
+  description: 'Default (production) build'
+  tasks:
+    - build
+dev:
+  description: 'Development build'
+  tasks:
+    - 'watch'
+build:
+  description: 'Production build'
+  tasks:
+    - 'exec'
+    - 'coffeelint'
+    - 'coffee'
+    - 'stylus'
+    - 'concat'
+    - 'copy'
+    - 'uglify'
+    - 'cacheBust'
+    - 'notify'
