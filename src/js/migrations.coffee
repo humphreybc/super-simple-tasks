@@ -11,7 +11,7 @@ class Migrations
 
   # Add empty 'link' property to each task when migrating to 2.0.1
   @addLinkProperty: (allTasks) ->
-    window.storageType.get 'whats-new-2-0-1', (whatsNew) ->
+    SST.storage.get 'whats-new-2-0-1', (whatsNew) ->
       if (whatsNew == null)
 
         # Add empty link to each
@@ -20,7 +20,7 @@ class Migrations
             task.link = ''
 
         # Save all the tasks
-        window.storageType.set(DB.db_key, allTasks)
+        SST.storage.setTasks(allTasks)
 
   # Go from priority to color tag when migrating to 2.2
   @changePrioritiesToColor: (allTasks) ->
@@ -37,7 +37,7 @@ class Migrations
 
           delete task.priority
 
-        window.storageType.set(DB.db_key, allTasks)
+        SST.storage.setTasks(allTasks)
 
 
   @addTaskID: (allTasks) ->
@@ -48,7 +48,7 @@ class Migrations
         for task, i in allTasks
           task.id = Utils.generateID()
 
-        window.storageType.set(DB.db_key, allTasks)
+        SST.storage.setTasks(allTasks)
 
 
 
