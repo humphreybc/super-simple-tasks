@@ -5254,21 +5254,36 @@ RemoteSync = (function() {
   function RemoteSync() {}
 
   RemoteSync.get = function() {
-    var child, key, ref;
+    var child, key, localTasks, mergeTasks, ref, remoteTasks;
     if (SST.storage.syncEnabled) {
+      localTasks = null;
+      remoteTasks = null;
       key = SST.storage.dbKey;
       ref = SST.storage.remote_ref;
       child = ref.child(key);
-      SST.storage.getTasks(function(localTasks) {
+      mergeTasks = function() {
+        var equalTasks;
+        if (localTasks && remoteTasks) {
+          equalTasks = _.isEqual(remoteTasks, localTasks);
+          console.log('Tasks are equal: ' + equalTasks);
+          if (equalTasks) {
+
+          } else {
+            return SST.storage.setTasks(remoteTasks);
+          }
+        }
+      };
+      SST.storage.getTasks(function(value) {
+        localTasks = value;
         console.log('Local tasks: ');
-        return console.log(localTasks);
+        console.log(localTasks);
+        return mergeTasks();
       });
       return child.once('value', function(value) {
-        var remoteTasks;
         remoteTasks = value.val();
         console.log('Remote tasks: ');
         console.log(remoteTasks);
-        return SST.storage.setTasks(remoteTasks);
+        return mergeTasks();
       });
     }
   };
@@ -5565,7 +5580,8 @@ Task = (function() {
       allTasks.unshift(newTask);
       SST.storage.setTasks(allTasks);
       ListView.showTasks(allTasks);
-      return Analytics.sendTaskCount(allTasks);
+      Analytics.sendTaskCount(allTasks);
+      return RemoteSync.set();
     });
   };
 
@@ -6240,7 +6256,6 @@ $(document).on('click', '#export-tasks', function(e) {
 $(document).ready(function() {
   Extension.setPopupClass();
   SST.storage = new Storage();
-  RemoteSync.set();
   RemoteSync.get(function() {});
   standardLog();
   window.tourRunning = false;

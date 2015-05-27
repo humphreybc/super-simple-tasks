@@ -64,28 +64,51 @@ class RemoteSync
 
   @get: () ->
 
+    # Only do this stuff if sync is enabled (needs refactor)
     if SST.storage.syncEnabled
 
-      key = SST.storage.dbKey
+      # Create these outside the scope so everyone has access
+      localTasks = null
+      remoteTasks = null
 
+      key = SST.storage.dbKey
       ref = SST.storage.remote_ref
       child = ref.child(key)
 
-      SST.storage.getTasks (localTasks) ->
+
+      # Runs when both the get methods return with local and remote tasks
+      # Checks for equality
+      # Merges and sets tasks if remote and local are different
+      mergeTasks = () ->
+        if localTasks and remoteTasks
+          equalTasks = _.isEqual(remoteTasks, localTasks)
+
+          console.log 'Tasks are equal: ' + equalTasks
+          
+          if equalTasks
+            return
+          else
+            # Overwrites local tasks with remote tasks, instead
+            # we should do a merge
+            SST.storage.setTasks(remoteTasks)
+
+
+      SST.storage.getTasks (value) ->
+        localTasks = value
+
         console.log 'Local tasks: '
         console.log localTasks
 
+        mergeTasks()
+
+
       child.once 'value', (value) ->
         remoteTasks = value.val()
+
         console.log 'Remote tasks: '
         console.log remoteTasks
 
-        SST.storage.setTasks(remoteTasks)
-
-
-      # Check for equality and fix any merge conflicts
-      # equalTasks = _.isEqual(remoteTasks, localTasks)
-      # console.log equalTasks
+        mergeTasks()
 
 
   @set: () ->

@@ -74,6 +74,9 @@ class Task
 
       Analytics.sendTaskCount(allTasks)
 
+      # Hack city
+      RemoteSync.set()
+
 
   @updateTask: (name, link, id) ->
 
