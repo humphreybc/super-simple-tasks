@@ -62,6 +62,9 @@ module.exports = function(grunt) {
         }
       }
     },
+    exec: {
+      remove_public: 'rm -r public/'
+    },
     copy: {
       main: {
         files: [
@@ -135,6 +138,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
+    'exec',
     'coffeelint',
     'coffee',
     'stylus',
