@@ -1136,8 +1136,7 @@ ListView = (function() {
 
   ListView.showEmptyState = function(allTasks) {
     if (allTasks.length === 0) {
-      $('#all-done').addClass('show-empty-state');
-      return $('#new-task').focus();
+      return $('#all-done').addClass('show-empty-state');
     } else {
       return $('#all-done').removeClass('show-empty-state');
     }

@@ -32,7 +32,6 @@ class ListView
   @showEmptyState: (allTasks) ->
     if allTasks.length == 0
       $('#all-done').addClass('show-empty-state')
-      $('#new-task').focus()
     else
       $('#all-done').removeClass('show-empty-state')
 
