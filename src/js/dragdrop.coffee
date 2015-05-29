@@ -11,6 +11,7 @@ new Slip(list)
 # Swipe a task
 list.addEventListener 'slip:swipe', (e) ->
   e.preventDefault()
+  # e.target.parentNode.removeChild e.target
 
 
 # Reorder a task

@@ -59,15 +59,17 @@ class Views
 
     if shouldOpenDrawer
       $body.addClass(linkActiveClass)
-      $link_input.focus()
+      unless mobile
+        $link_input.focus()
     else
       $body.removeClass(linkActiveClass)
-      $new_task_input.focus()
+      unless mobile
+        $new_task_input.focus()
 
 
   @checkOnboarding: (allTasks, tour) ->
     SST.storage.get 'sst-tour', (sstTour) ->
-      if (sstTour == null) and ($(window).width() > 499) and (allTasks.length > 0)
+      if (sstTour == null) and (!mobile) and (allTasks.length > 0)
         tour.trigger 'depart.tourbus'
 
 

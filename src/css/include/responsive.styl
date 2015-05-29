@@ -8,7 +8,7 @@
   #edit-task-overlay
     display none
 
-  #task-list li
+  .task
     position relative
 
     .tag
@@ -18,6 +18,9 @@
 
     .drag-handle
       display none
+      
+    &:hover
+      background-color transparent !important
       
     &:hover .edit
       display none !important

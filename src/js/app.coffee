@@ -1,5 +1,6 @@
 online = null
 tour = null
+mobile = null
 
 SST = SST || {}
 
@@ -22,7 +23,8 @@ initialize = ->
 
   Views.setListName()
 
-  $('#new-task').focus()
+  unless mobile
+    $('#new-task').focus()
 
 
 standardLog = ->
@@ -173,6 +175,11 @@ $(document).ready ->
   document.onkeyup = keyboardShortcuts
 
   tour = Tour.createTour()
+
+  mobile = ($(window).width() < 499)
+
+  document.addEventListener 'touchstart', (->
+  ), true
 
   initialize()
 
