@@ -20,6 +20,7 @@ class ListView
 
 
   @showTasks: (allTasks) ->
+
     if allTasks == undefined
       allTasks = []
 

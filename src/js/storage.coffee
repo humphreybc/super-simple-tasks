@@ -1,11 +1,19 @@
 class LocalStorage
 
-  @get: (key, callback) ->
+  @get: (key, callback, returnTasks = false) ->
 
     value = localStorage.getItem(key)
+
     value = JSON.parse(value)
 
-    callback(value)
+    if value == null
+      callback(value)
+      return
+
+    if returnTasks
+      callback(value.tasks)
+    else
+      callback(value)
 
 
   @getSync: (key) ->
@@ -75,25 +83,27 @@ class RemoteSync
       ref = SST.storage.remote_ref
       child = ref.child(key)
 
-
       # Runs when both the get methods return with local and remote tasks
-      # Checks for equality
-      # Merges and sets tasks if remote and local are different
+      # Checks timestamp and preferences most recent set of tasks
       mergeTasks = () ->
+
         if localTasks and remoteTasks
-          equalTasks = _.isEqual(remoteTasks, localTasks)
 
-          console.log 'Tasks are equal: ' + equalTasks
-          
-          if equalTasks
-            return
+          local = localTasks.timestamp
+          remote = remoteTasks.timestamp
+
+          # Overwrite local with remote since it's newer
+          if local > remote
+            tasks = localTasks.tasks
           else
-            # Overwrites local tasks with remote tasks, instead
-            # we should do a merge
-            SST.storage.setTasks(remoteTasks)
+            tasks = remoteTasks.tasks
+
+          SST.storage.setTasks(tasks)
+          ListView.showTasks(tasks)
+          RemoteSync.set()
 
 
-      SST.storage.getTasks (value) ->
+      SST.storage.get key, (value) ->
         localTasks = value
 
         console.log 'Local tasks: '
@@ -103,7 +113,7 @@ class RemoteSync
 
 
       child.once 'value', (value) ->
-        remoteTasks = value.val()
+        remoteTasks = value.val() || []
 
         console.log 'Remote tasks: '
         console.log remoteTasks
@@ -117,11 +127,11 @@ class RemoteSync
 
       key = SST.storage.dbKey
 
-      SST.storage.getTasks (localTasks) ->
+      SST.storage.get key, (value) ->
 
         ref = SST.storage.remote_ref
         child = ref.child(key)
-        child.set localTasks, () ->
+        child.set value, () ->
 
 
 class Storage
@@ -173,10 +183,16 @@ class Storage
   # Fetching tasks
 
   getTasks: (callback) ->
-    @get(@dbKey, callback)
+    @storageType.get(@dbKey, callback, true)
 
 
   setTasks: (value, callback) ->
+
+    value = {
+      'tasks': value
+      'timestamp': Date.now()
+    }
+
     @set(@dbKey, value, callback)
 
 

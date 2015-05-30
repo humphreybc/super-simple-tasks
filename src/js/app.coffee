@@ -160,13 +160,21 @@ $(document).on 'click', '#export-tasks', (e) ->
   Task.exportTasks()
 
 
+$(document).on 'click', '#sync-get', (e) ->
+  e.preventDefault()
+  RemoteSync.get () ->
+
+
+$(document).on 'click', '#sync-set', (e) ->
+  e.preventDefault()
+  RemoteSync.set()
+
+
 $(document).ready ->
 
   Extension.setPopupClass()
 
   SST.storage = new Storage()
-
-  RemoteSync.get () ->
 
   standardLog()
 

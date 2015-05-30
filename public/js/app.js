@@ -488,11 +488,22 @@ var ChromeStorage, LocalStorage, RemoteSync, Storage;
 LocalStorage = (function() {
   function LocalStorage() {}
 
-  LocalStorage.get = function(key, callback) {
+  LocalStorage.get = function(key, callback, returnTasks) {
     var value;
+    if (returnTasks == null) {
+      returnTasks = false;
+    }
     value = localStorage.getItem(key);
     value = JSON.parse(value);
-    return callback(value);
+    if (value === null) {
+      callback(value);
+      return;
+    }
+    if (returnTasks) {
+      return callback(value.tasks);
+    } else {
+      return callback(value);
+    }
   };
 
   LocalStorage.getSync = function(key) {
@@ -574,25 +585,28 @@ RemoteSync = (function() {
       ref = SST.storage.remote_ref;
       child = ref.child(key);
       mergeTasks = function() {
-        var equalTasks;
+        var local, remote, tasks;
         if (localTasks && remoteTasks) {
-          equalTasks = _.isEqual(remoteTasks, localTasks);
-          console.log('Tasks are equal: ' + equalTasks);
-          if (equalTasks) {
-
+          local = localTasks.timestamp;
+          remote = remoteTasks.timestamp;
+          if (local > remote) {
+            tasks = localTasks.tasks;
           } else {
-            return SST.storage.setTasks(remoteTasks);
+            tasks = remoteTasks.tasks;
           }
+          SST.storage.setTasks(tasks);
+          ListView.showTasks(tasks);
+          return RemoteSync.set();
         }
       };
-      SST.storage.getTasks(function(value) {
+      SST.storage.get(key, function(value) {
         localTasks = value;
         console.log('Local tasks: ');
         console.log(localTasks);
         return mergeTasks();
       });
       return child.once('value', function(value) {
-        remoteTasks = value.val();
+        remoteTasks = value.val() || [];
         console.log('Remote tasks: ');
         console.log(remoteTasks);
         return mergeTasks();
@@ -604,11 +618,11 @@ RemoteSync = (function() {
     var key;
     if (SST.storage.syncEnabled) {
       key = SST.storage.dbKey;
-      return SST.storage.getTasks(function(localTasks) {
+      return SST.storage.get(key, function(value) {
         var child, ref;
         ref = SST.storage.remote_ref;
         child = ref.child(key);
-        return child.set(localTasks, function() {});
+        return child.set(value, function() {});
       });
     }
   };
@@ -660,10 +674,14 @@ Storage = (function() {
   };
 
   Storage.prototype.getTasks = function(callback) {
-    return this.get(this.dbKey, callback);
+    return this.storageType.get(this.dbKey, callback, true);
   };
 
   Storage.prototype.setTasks = function(value, callback) {
+    value = {
+      'tasks': value,
+      'timestamp': Date.now()
+    };
     return this.set(this.dbKey, value, callback);
   };
 
@@ -892,8 +910,7 @@ Task = (function() {
       allTasks.unshift(newTask);
       SST.storage.setTasks(allTasks);
       ListView.showTasks(allTasks);
-      Analytics.sendTaskCount(allTasks);
-      return RemoteSync.set();
+      return Analytics.sendTaskCount(allTasks);
     });
   };
 
@@ -1572,10 +1589,19 @@ $(document).on('click', '#export-tasks', function(e) {
   return Task.exportTasks();
 });
 
+$(document).on('click', '#sync-get', function(e) {
+  e.preventDefault();
+  return RemoteSync.get(function() {});
+});
+
+$(document).on('click', '#sync-set', function(e) {
+  e.preventDefault();
+  return RemoteSync.set();
+});
+
 $(document).ready(function() {
   Extension.setPopupClass();
   SST.storage = new Storage();
-  RemoteSync.get(function() {});
   standardLog();
   window.tourRunning = false;
   document.onkeyup = keyboardShortcuts;
