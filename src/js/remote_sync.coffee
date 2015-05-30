@@ -15,11 +15,9 @@ class RemoteSync
       mergeTasks = () ->
 
         if local and remote
+          localTimestamp = local.timestamp
+          remoteTimestamp = remote.timestamp
 
-          localTimestamp = localTasks.timestamp
-          remoteTimestamp = remoteTasks.timestamp
-
-          # Overwrite local with remote since it's newer
           if localTimestamp > remoteTimestamp
             data = local
           else
@@ -27,7 +25,9 @@ class RemoteSync
 
           SST.storage.set 'everything', data, (data) ->
           ListView.showTasks(data.tasks)
-          RemoteSync.set()
+
+        else
+          return
 
 
       SST.storage.get 'everything', (value) ->
@@ -40,7 +40,7 @@ class RemoteSync
 
 
       child.once 'value', (value) ->
-        remote = value.val() || {}
+        remote = value.val() || 'new'
 
         console.log 'Remote stuff: '
         console.log remote
@@ -59,3 +59,4 @@ class RemoteSync
         ref = SST.storage.remote_ref
         child = ref.child(key)
         child.set data, () ->
+

@@ -483,7 +483,7 @@ Utils = (function() {
 
 })();
 
-var ChromeStorage, LocalStorage, Storage;
+var LocalStorage, Storage;
 
 LocalStorage = (function() {
   function LocalStorage() {}
@@ -522,64 +522,9 @@ LocalStorage = (function() {
 
 })();
 
-ChromeStorage = (function() {
-  function ChromeStorage() {}
-
-  ChromeStorage.get = function(key, property, callback) {
-    return chrome.storage.sync.get(key, function(value) {
-      value = value[key] || null;
-      if (value === null) {
-        callback(value);
-        return;
-      }
-      return callback(value[property]);
-    });
-  };
-
-  ChromeStorage.set = function(key, property, value, callback) {
-    return chrome.storage.sync.get(key, function(data) {
-      if (data === null) {
-        data = {};
-      }
-      data[property] = value;
-      return chrome.storage.sync.set(data, function() {
-        if (callback) {
-          return callback();
-        }
-      });
-    });
-  };
-
-  if (!!window.chrome && chrome.storage) {
-    chrome.storage.onChanged.addListener(function(changes, namespace) {
-      var key, results, storageChange;
-      results = [];
-      for (key in changes) {
-        if (key === SST.storage.dbKey) {
-          storageChange = changes[key];
-          results.push(ListView.showTasks(storageChange.newValue));
-        } else {
-          results.push(void 0);
-        }
-      }
-      return results;
-    });
-  }
-
-  return ChromeStorage;
-
-})();
-
 Storage = (function() {
   function Storage() {
     var shareCode;
-    if (!!window.chrome && chrome.storage) {
-      this.storageType = ChromeStorage;
-      console.log('Using chrome.storage.sync to save');
-    } else {
-      this.storageType = LocalStorage;
-      console.log('Using localStorage to save');
-    }
     this.syncKey = localStorage.getItem('sync_key');
     if (this.syncKey === null) {
       this.syncEnabled = false;
@@ -597,15 +542,15 @@ Storage = (function() {
   }
 
   Storage.prototype.get = function(property, callback) {
-    return this.storageType.get(this.dbKey, property, callback);
+    return LocalStorage.get(this.dbKey, property, callback);
   };
 
   Storage.prototype.set = function(property, value, callback) {
-    return this.storageType.set(this.dbKey, property, value, callback);
+    return LocalStorage.set(this.dbKey, property, value, callback);
   };
 
   Storage.prototype.getTasks = function(callback) {
-    return this.storageType.get(this.dbKey, 'tasks', callback);
+    return LocalStorage.get(this.dbKey, 'tasks', callback);
   };
 
   Storage.prototype.setTasks = function(value, callback) {
@@ -629,17 +574,13 @@ Storage = (function() {
   };
 
   Storage.prototype.migrateKey = function(new_key) {
-    return this.get('everything', function(everything) {
-      this.dbKey = new_key;
-      SST.storage.set(everything, function() {});
-      return this.dbKey;
-    });
-  };
-
-  Storage.prototype.reSaveTasks = function() {
-    return this.getTasks(function(allTasks) {
-      return this.setTasks(function(allTasks) {});
-    });
+    return this.get('everything', (function(_this) {
+      return function(everything) {
+        _this.dbKey = new_key;
+        SST.storage.set('everything', everything, function() {});
+        return _this.dbKey;
+      };
+    })(this));
   };
 
   Storage.prototype.setSyncKey = function() {
@@ -651,12 +592,11 @@ Storage = (function() {
         new_key = Utils.generateID();
         this.dbKey = this.migrateKey(new_key);
         localStorage.setItem('sync_key', this.dbKey);
-        console.log('Your sync key has been set to: ' + this.dbKey);
+        return console.log('Your sync key has been set to: ' + this.dbKey);
       }
     } else {
-      this.dbKey = 'todo';
+      return this.dbKey = 'todo';
     }
-    return console.log('Your sync code is: ' + this.dbKey);
   };
 
   Storage.prototype.disconnectDevices = function() {
@@ -684,16 +624,17 @@ RemoteSync = (function() {
       mergeTasks = function() {
         var data, localTimestamp, remoteTimestamp;
         if (local && remote) {
-          localTimestamp = localTasks.timestamp;
-          remoteTimestamp = remoteTasks.timestamp;
+          localTimestamp = local.timestamp;
+          remoteTimestamp = remote.timestamp;
           if (localTimestamp > remoteTimestamp) {
             data = local;
           } else {
             data = remote;
           }
           SST.storage.set('everything', data, function(data) {});
-          ListView.showTasks(data.tasks);
-          return RemoteSync.set();
+          return ListView.showTasks(data.tasks);
+        } else {
+
         }
       };
       SST.storage.get('everything', function(value) {
@@ -703,7 +644,7 @@ RemoteSync = (function() {
         return mergeTasks();
       });
       return child.once('value', function(value) {
-        remote = value.val() || {};
+        remote = value.val() || 'new';
         console.log('Remote stuff: ');
         console.log(remote);
         return mergeTasks();

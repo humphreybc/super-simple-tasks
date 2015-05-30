@@ -31,54 +31,9 @@ class LocalStorage
       callback()
 
 
-class ChromeStorage
-
-  @get: (key, property, callback) ->
-    chrome.storage.sync.get key, (value) ->
-
-      value = value[key] || null
-
-      if value == null
-        callback(value)
-        return
-
-      callback(value[property])
- 
-
-  @set: (key, property, value, callback) ->
-    chrome.storage.sync.get key, (data) ->
-      
-      if data == null
-        data = {}
-
-      data[property] = value
-
-      chrome.storage.sync.set data, () ->
-
-        if callback
-          callback()
-
-
-  # Listen for changes and run ListView.showTasks when a change happens
-  
-  if !!window.chrome and chrome.storage
-    chrome.storage.onChanged.addListener (changes, namespace) ->
-      for key of changes
-        if key == SST.storage.dbKey
-          storageChange = changes[key]
-          ListView.showTasks(storageChange.newValue)
-
-
 class Storage
 
   constructor: () ->
-    if !!window.chrome and chrome.storage
-      @storageType = ChromeStorage
-      console.log 'Using chrome.storage.sync to save'
-    else
-      @storageType = LocalStorage
-      console.log 'Using localStorage to save'
-
     @syncKey = localStorage.getItem('sync_key')
 
     if @syncKey == null
@@ -98,19 +53,18 @@ class Storage
 
 
   get: (property, callback) ->
-    @storageType.get(@dbKey, property, callback)
+    LocalStorage.get(@dbKey, property, callback)
 
 
   set: (property, value, callback) ->
-    @storageType.set(@dbKey, property, value, callback)
+    LocalStorage.set(@dbKey, property, value, callback)
 
 
   getTasks: (callback) ->
-    @storageType.get(@dbKey, 'tasks', callback)
+    LocalStorage.get(@dbKey, 'tasks', callback)
 
 
   setTasks: (value, callback) ->
-
     @set('tasks', value, callback)
     @set('timestamp', Date.now(), callback)
 
@@ -120,7 +74,6 @@ class Storage
       @syncEnabled = true
       @createFirebase()
       @setSyncKey()
-      # @reSaveTasks()
 
     Views.toggleModalDialog()
 
@@ -131,16 +84,11 @@ class Storage
 
 
   migrateKey: (new_key) ->
-    @get 'everything', (everything) ->
+    @get 'everything', (everything) =>
       @dbKey = new_key
-      SST.storage.set everything, () ->
+      SST.storage.set 'everything', everything, () =>
 
       @dbKey
-
-
-  reSaveTasks: ->
-    @getTasks (allTasks) ->
-      @setTasks (allTasks) ->
 
 
   setSyncKey: ->
@@ -160,9 +108,6 @@ class Storage
 
     else
       @dbKey = 'todo'
-
-
-    console.log 'Your sync code is: ' + @dbKey
 
 
   disconnectDevices: ->
