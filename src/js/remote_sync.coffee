@@ -15,6 +15,12 @@ class RemoteSync
       mergeTasks = () ->
 
         if local and remote
+
+          if local.default == true
+            SST.storage.set 'everything', remote, (remote) ->
+            ListView.showTasks(remote.tasks)
+            return
+
           localTimestamp = local.timestamp
           remoteTimestamp = remote.timestamp
 
@@ -40,7 +46,7 @@ class RemoteSync
 
 
       child.once 'value', (value) ->
-        remote = value.val() || 'new'
+        remote = value.val()
 
         console.log 'Remote stuff: '
         console.log remote

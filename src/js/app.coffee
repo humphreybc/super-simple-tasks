@@ -7,9 +7,9 @@ SST = SST || {}
 # All the goodness
 initialize = ->
 
-  SST.storage.getTasks (allTasks) ->
+  SST.storage.get 'everything', (everything) ->
 
-    allTasks = Task.handleNoTasks(allTasks)
+    allTasks = Task.handleNoData(everything)
 
     Migrations.run(allTasks)
 

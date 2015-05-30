@@ -624,6 +624,11 @@ RemoteSync = (function() {
       mergeTasks = function() {
         var data, localTimestamp, remoteTimestamp;
         if (local && remote) {
+          if (local["default"] === true) {
+            SST.storage.set('everything', remote, function(remote) {});
+            ListView.showTasks(remote.tasks);
+            return;
+          }
           localTimestamp = local.timestamp;
           remoteTimestamp = remote.timestamp;
           if (localTimestamp > remoteTimestamp) {
@@ -644,7 +649,7 @@ RemoteSync = (function() {
         return mergeTasks();
       });
       return child.once('value', function(value) {
-        remote = value.val() || 'new';
+        remote = value.val();
         console.log('Remote stuff: ');
         console.log(remote);
         return mergeTasks();
@@ -773,39 +778,46 @@ Arrays = (function() {
 
   Arrays.tags = ['gray', 'green', 'red', 'yellow', 'pink', 'purple', 'blue'];
 
-  Arrays.default_data = [
-    {
-      'id': Utils.generateID(),
-      'isDone': false,
-      'name': 'Add a new task above',
-      'tag': 'red',
-      'link': ''
-    }, {
-      'id': Utils.generateID(),
-      'isDone': false,
-      'name': 'Perhaps give it a tag or reorder it',
-      'tag': 'green',
-      'link': ''
-    }, {
-      'id': Utils.generateID(),
-      'isDone': false,
-      'name': 'Refresh to see that your task is still here',
-      'tag': 'pink',
-      'link': ''
-    }, {
-      'id': Utils.generateID(),
-      'isDone': false,
-      'name': 'Reference things by attaching a URL to tasks',
-      'tag': 'blue',
-      'link': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-    }, {
-      'id': Utils.generateID(),
-      'isDone': false,
-      'name': 'Follow @humphreybc on Twitter',
-      'tag': 'yellow',
-      'link': 'http://twitter.com/humphreybc'
-    }
-  ];
+  Arrays.default_data = {
+    'name': '',
+    'timestamp': null,
+    'tour': null,
+    'version': null,
+    'default': true,
+    'tasks': [
+      {
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Add a new task above',
+        'tag': 'red',
+        'link': ''
+      }, {
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Perhaps give it a tag or reorder it',
+        'tag': 'green',
+        'link': ''
+      }, {
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Refresh to see that your task is still here',
+        'tag': 'pink',
+        'link': ''
+      }, {
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Reference things by attaching a URL to tasks',
+        'tag': 'blue',
+        'link': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      }, {
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Follow @humphreybc on Twitter',
+        'tag': 'yellow',
+        'link': 'http://twitter.com/humphreybc'
+      }
+    ]
+  };
 
   return Arrays;
 
@@ -837,6 +849,7 @@ Task = (function() {
       allTasks.unshift(newTask);
       SST.storage.setTasks(allTasks);
       ListView.showTasks(allTasks);
+      SST.storage.set('default', false, function() {});
       return Analytics.sendTaskCount(allTasks);
     });
   };
@@ -914,12 +927,14 @@ Task = (function() {
     });
   };
 
-  Task.handleNoTasks = function(allTasks) {
-    if (allTasks === null) {
-      allTasks = Arrays.default_data;
-      SST.storage.setTasks(allTasks);
+  Task.handleNoData = function(data) {
+    if (data === null) {
+      data = Arrays.default_data;
+      SST.storage.set('everything', data);
+      return data.tasks;
+    } else {
+      return data.tasks;
     }
-    return allTasks;
   };
 
   Task.exportTasks = function() {
@@ -1013,7 +1028,7 @@ Views = (function() {
 
   Views.checkOnboarding = function(allTasks, tour) {
     return SST.storage.get('tour', function(t) {
-      if ((t === void 0) && (!mobile) && (allTasks.length > 0)) {
+      if ((t === null) && (!mobile) && (allTasks.length > 0)) {
         return tour.trigger('depart.tourbus');
       }
     });
@@ -1021,7 +1036,7 @@ Views = (function() {
 
   Views.checkWhatsNew = function() {
     return SST.storage.get('version', function(version) {
-      if ((version < '2.2.0' || version === void 0) && (window.tourRunning === false)) {
+      if ((version < '2.2.0' || version === null) && (window.tourRunning === false)) {
         return $('.whats-new').show();
       }
     });
@@ -1031,7 +1046,8 @@ Views = (function() {
     window.tourRunning = false;
     $('.tourbus-leg').hide();
     history.pushState('', document.title, window.location.pathname);
-    return SST.storage.set('tour', 1, function() {});
+    SST.storage.set('tour', 1, function() {});
+    return SST.storage.set('default', false, function() {});
   };
 
   Views.closeWhatsNew = function() {
@@ -1383,8 +1399,9 @@ mobile = null;
 SST = SST || {};
 
 initialize = function() {
-  SST.storage.getTasks(function(allTasks) {
-    allTasks = Task.handleNoTasks(allTasks);
+  SST.storage.get('everything', function(everything) {
+    var allTasks;
+    allTasks = Task.handleNoData(everything);
     Migrations.run(allTasks);
     ListView.showTasks(allTasks);
     Views.checkOnboarding(allTasks, tour);

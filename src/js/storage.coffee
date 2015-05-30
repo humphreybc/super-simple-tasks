@@ -86,7 +86,7 @@ class Storage
   migrateKey: (new_key) ->
     @get 'everything', (everything) =>
       @dbKey = new_key
-      SST.storage.set 'everything', everything, () =>
+      SST.storage.set 'everything', everything, () ->
 
       @dbKey
 

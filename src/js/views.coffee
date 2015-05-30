@@ -69,13 +69,13 @@ class Views
 
   @checkOnboarding: (allTasks, tour) ->
     SST.storage.get 'tour', (t) ->
-      if (t == undefined) and (!mobile) and (allTasks.length > 0)
+      if (t == null) and (!mobile) and (allTasks.length > 0)
         tour.trigger 'depart.tourbus'
 
 
   @checkWhatsNew: ->
     SST.storage.get 'version', (version) ->
-      if (version < '2.2.0' || version == undefined) and (window.tourRunning == false)
+      if (version < '2.2.0' || version == null) and (window.tourRunning == false)
         $('.whats-new').show()
 
 
@@ -87,6 +87,7 @@ class Views
     history.pushState('', document.title, window.location.pathname)
     
     SST.storage.set 'tour', 1, () ->
+    SST.storage.set 'default', false, () ->
 
 
   @closeWhatsNew: ->

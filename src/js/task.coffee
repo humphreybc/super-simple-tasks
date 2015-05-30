@@ -6,42 +6,51 @@ class Arrays
   @tags = ['gray', 'green', 'red', 'yellow', 'pink', 'purple', 'blue']
 
   # Default task data for new users
-  @default_data = [{
-                    'id':Utils.generateID(),
-                    'isDone':false,
-                    'name':'Add a new task above',
-                    'tag':'red',
-                    'link':''
-                  },
-                  {
-                    'id':Utils.generateID(),
-                    'isDone':false,
-                    'name':'Perhaps give it a tag or reorder it',
-                    'tag':'green',
-                    'link':''
-                  },
-                  {
-                    'id':Utils.generateID(),
-                    'isDone':false,
-                    'name':'Refresh to see that your task is still here',
-                    'tag':'pink',
-                    'link':''
-                  },
-                  {
-                    'id':Utils.generateID(),
-                    'isDone':false,
-                    'name':'Reference things by attaching a URL to tasks',
-                    'tag':'blue',
-                    'link':'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-                  },
-                  {
-                    'id':Utils.generateID(),
-                    'isDone':false,
-                    'name':'Follow @humphreybc on Twitter',
-                    'tag':'yellow',
-                    'link':'http://twitter.com/humphreybc'
-                  }
-                ]
+  @default_data =
+  {
+    'name': '',
+    'timestamp': null,
+    'tour': null,
+    'version': null,
+    'default': true,
+    'tasks': [
+      {
+      'id':Utils.generateID(),
+      'isDone':false,
+      'name':'Add a new task above',
+      'tag':'red',
+      'link':''
+      },
+      {
+      'id':Utils.generateID(),
+      'isDone':false,
+      'name':'Perhaps give it a tag or reorder it',
+      'tag':'green',
+      'link':''
+      },
+      {
+      'id':Utils.generateID(),
+      'isDone':false,
+      'name':'Refresh to see that your task is still here',
+      'tag':'pink',
+      'link':''
+      },
+      {
+      'id':Utils.generateID(),
+      'isDone':false,
+      'name':'Reference things by attaching a URL to tasks',
+      'tag':'blue',
+      'link':'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      },
+      {
+      'id':Utils.generateID(),
+      'isDone':false,
+      'name':'Follow @humphreybc on Twitter',
+      'tag':'yellow',
+      'link':'http://twitter.com/humphreybc'
+      }
+    ]
+  }
 
 
 class Task
@@ -72,6 +81,8 @@ class Task
       allTasks.unshift newTask
       SST.storage.setTasks(allTasks)
       ListView.showTasks(allTasks)
+
+      SST.storage.set 'default', false, () ->
 
       Analytics.sendTaskCount(allTasks)
 
@@ -164,12 +175,14 @@ class Task
       ListView.showTasks(allTasks)
 
 
-  @handleNoTasks: (allTasks) ->
-    if allTasks == null
-      allTasks = Arrays.default_data
-      SST.storage.setTasks(allTasks)
+  @handleNoData: (data) ->
+    if data == null
+      data = Arrays.default_data
+      SST.storage.set('everything', data)
+      return data.tasks
 
-    return allTasks
+    else
+      return data.tasks
 
 
   @exportTasks: ->
