@@ -8,7 +8,7 @@ class Views
 
   @storeListName: ->
     list_name = $('#list-name').val()
-    SST.storage.set('name', list_name)
+    SST.storage.set 'name', list_name, () ->
 
 
   @animateContent: ->
@@ -68,14 +68,14 @@ class Views
 
 
   @checkOnboarding: (allTasks, tour) ->
-    SST.storage.get 'sst-tour', (sstTour) ->
-      if (sstTour == null) and (!mobile) and (allTasks.length > 0)
+    SST.storage.get 'tour', (t) ->
+      if (t == undefined) and (!mobile) and (allTasks.length > 0)
         tour.trigger 'depart.tourbus'
 
 
   @checkWhatsNew: ->
-    SST.storage.get 'whats-new-2-2-0', (whatsNew) ->
-      if (whatsNew == null) and (window.tourRunning == false)
+    SST.storage.get 'version', (version) ->
+      if (version < '2.2.0' || version == undefined) and (window.tourRunning == false)
         $('.whats-new').show()
 
 
@@ -86,9 +86,9 @@ class Views
     # Get rid of the # at the end of the URL
     history.pushState('', document.title, window.location.pathname)
     
-    SST.storage.set('sst-tour', 1)
+    SST.storage.set 'tour', 1, () ->
 
 
   @closeWhatsNew: ->
-    SST.storage.set('whats-new-2-2-0', 1)
+    SST.storage.set 'version', '2.2.0', () ->
 

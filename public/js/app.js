@@ -483,45 +483,39 @@ Utils = (function() {
 
 })();
 
-var ChromeStorage, LocalStorage, RemoteSync, Storage;
+var ChromeStorage, LocalStorage, Storage;
 
 LocalStorage = (function() {
   function LocalStorage() {}
 
-  LocalStorage.get = function(key, callback, returnTasks) {
+  LocalStorage.get = function(key, property, callback) {
     var value;
-    if (returnTasks == null) {
-      returnTasks = false;
-    }
     value = localStorage.getItem(key);
-    value = JSON.parse(value);
     if (value === null) {
       callback(value);
       return;
     }
-    if (returnTasks) {
-      return callback(value.tasks);
-    } else {
+    value = JSON.parse(value);
+    if (property === 'everything') {
       return callback(value);
+    } else {
+      return callback(value[property]);
     }
   };
 
-  LocalStorage.getSync = function(key) {
-    var value;
-    value = localStorage.getItem(key);
-    return JSON.parse(value);
-  };
-
-  LocalStorage.set = function(key, value, callback) {
-    value = JSON.stringify(value);
-    localStorage.setItem(key, value);
+  LocalStorage.set = function(key, property, value, callback) {
+    var data;
+    data = JSON.parse(localStorage.getItem(key)) || {};
+    if (property === 'everything') {
+      data = value;
+    } else {
+      data[property] = value;
+    }
+    data = JSON.stringify(data);
+    localStorage.setItem(key, data);
     if (callback) {
       return callback();
     }
-  };
-
-  LocalStorage.remove = function(key) {
-    return localStorage.removeItem(key);
   };
 
   return LocalStorage;
@@ -531,26 +525,29 @@ LocalStorage = (function() {
 ChromeStorage = (function() {
   function ChromeStorage() {}
 
-  ChromeStorage.get = function(key, callback) {
+  ChromeStorage.get = function(key, property, callback) {
     return chrome.storage.sync.get(key, function(value) {
-      value = value[key] || null || LocalStorage.getSync(key);
-      return callback(value);
-    });
-  };
-
-  ChromeStorage.set = function(key, value, callback) {
-    var params;
-    params = {};
-    params[key] = value;
-    return chrome.storage.sync.set(params, function() {
-      if (callback) {
-        return callback();
+      value = value[key] || null;
+      if (value === null) {
+        callback(value);
+        return;
       }
+      return callback(value[property]);
     });
   };
 
-  ChromeStorage.remove = function(key) {
-    return chrome.storage.sync.remove(key, function() {});
+  ChromeStorage.set = function(key, property, value, callback) {
+    return chrome.storage.sync.get(key, function(data) {
+      if (data === null) {
+        data = {};
+      }
+      data[property] = value;
+      return chrome.storage.sync.set(data, function() {
+        if (callback) {
+          return callback();
+        }
+      });
+    });
   };
 
   if (!!window.chrome && chrome.storage) {
@@ -570,64 +567,6 @@ ChromeStorage = (function() {
   }
 
   return ChromeStorage;
-
-})();
-
-RemoteSync = (function() {
-  function RemoteSync() {}
-
-  RemoteSync.get = function() {
-    var child, key, localTasks, mergeTasks, ref, remoteTasks;
-    if (SST.storage.syncEnabled) {
-      localTasks = null;
-      remoteTasks = null;
-      key = SST.storage.dbKey;
-      ref = SST.storage.remote_ref;
-      child = ref.child(key);
-      mergeTasks = function() {
-        var local, remote, tasks;
-        if (localTasks && remoteTasks) {
-          local = localTasks.timestamp;
-          remote = remoteTasks.timestamp;
-          if (local > remote) {
-            tasks = localTasks.tasks;
-          } else {
-            tasks = remoteTasks.tasks;
-          }
-          SST.storage.setTasks(tasks);
-          ListView.showTasks(tasks);
-          return RemoteSync.set();
-        }
-      };
-      SST.storage.get(key, function(value) {
-        localTasks = value;
-        console.log('Local tasks: ');
-        console.log(localTasks);
-        return mergeTasks();
-      });
-      return child.once('value', function(value) {
-        remoteTasks = value.val() || [];
-        console.log('Remote tasks: ');
-        console.log(remoteTasks);
-        return mergeTasks();
-      });
-    }
-  };
-
-  RemoteSync.set = function() {
-    var key;
-    if (SST.storage.syncEnabled) {
-      key = SST.storage.dbKey;
-      return SST.storage.get(key, function(value) {
-        var child, ref;
-        ref = SST.storage.remote_ref;
-        child = ref.child(key);
-        return child.set(value, function() {});
-      });
-    }
-  };
-
-  return RemoteSync;
 
 })();
 
@@ -657,32 +596,21 @@ Storage = (function() {
     this.setSyncKey();
   }
 
-  Storage.prototype.get = function(key, callback) {
-    return this.storageType.get(key, callback);
+  Storage.prototype.get = function(property, callback) {
+    return this.storageType.get(this.dbKey, property, callback);
   };
 
-  Storage.prototype.getSync = function(key) {
-    return this.storageType.getSync(key);
-  };
-
-  Storage.prototype.set = function(key, value, callback) {
-    return this.storageType.set(key, value, callback);
-  };
-
-  Storage.prototype.remove = function(key) {
-    return this.storageType.remove(key);
+  Storage.prototype.set = function(property, value, callback) {
+    return this.storageType.set(this.dbKey, property, value, callback);
   };
 
   Storage.prototype.getTasks = function(callback) {
-    return this.storageType.get(this.dbKey, callback, true);
+    return this.storageType.get(this.dbKey, 'tasks', callback);
   };
 
   Storage.prototype.setTasks = function(value, callback) {
-    value = {
-      'tasks': value,
-      'timestamp': Date.now()
-    };
-    return this.set(this.dbKey, value, callback);
+    this.set('tasks', value, callback);
+    return this.set('timestamp', Date.now(), callback);
   };
 
   Storage.prototype.linkDevices = function() {
@@ -690,28 +618,27 @@ Storage = (function() {
       this.syncEnabled = true;
       this.createFirebase();
       this.setSyncKey();
-      this.reSaveTasks();
     }
     return Views.toggleModalDialog();
   };
 
   Storage.prototype.createFirebase = function() {
     if (this.syncEnabled) {
-      return this.remote_ref = new Firebase('https://supersimpletasks.firebaseio.com/data');
+      return this.remote_ref = new Firebase('https://supersimpletasks.firebaseio.com/data/');
     }
   };
 
   Storage.prototype.migrateKey = function(new_key) {
-    return SST.storage.get(this.dbKey, function(allTasks) {
+    return this.get('everything', function(everything) {
       this.dbKey = new_key;
-      SST.storage.set(this.dbKey, allTasks);
+      SST.storage.set(everything, function() {});
       return this.dbKey;
     });
   };
 
   Storage.prototype.reSaveTasks = function() {
-    return SST.storage.get(this.dbKey, function(allTasks) {
-      return SST.storage.set(this.dbKey, allTasks);
+    return this.getTasks(function(allTasks) {
+      return this.setTasks(function(allTasks) {});
     });
   };
 
@@ -739,6 +666,65 @@ Storage = (function() {
   };
 
   return Storage;
+
+})();
+
+var RemoteSync;
+
+RemoteSync = (function() {
+  function RemoteSync() {}
+
+  RemoteSync.get = function() {
+    var child, local, mergeTasks, ref, remote;
+    if (SST.storage.syncEnabled) {
+      local = null;
+      remote = null;
+      ref = SST.storage.remote_ref;
+      child = ref.child(SST.storage.dbKey);
+      mergeTasks = function() {
+        var data, localTimestamp, remoteTimestamp;
+        if (local && remote) {
+          localTimestamp = localTasks.timestamp;
+          remoteTimestamp = remoteTasks.timestamp;
+          if (localTimestamp > remoteTimestamp) {
+            data = local;
+          } else {
+            data = remote;
+          }
+          SST.storage.set('everything', data, function(data) {});
+          ListView.showTasks(data.tasks);
+          return RemoteSync.set();
+        }
+      };
+      SST.storage.get('everything', function(value) {
+        local = value;
+        console.log('Local stuff: ');
+        console.log(local);
+        return mergeTasks();
+      });
+      return child.once('value', function(value) {
+        remote = value.val() || {};
+        console.log('Remote stuff: ');
+        console.log(remote);
+        return mergeTasks();
+      });
+    }
+  };
+
+  RemoteSync.set = function() {
+    var key;
+    if (SST.storage.syncEnabled) {
+      key = SST.storage.dbKey;
+      return SST.storage.get('everything', function(data) {
+        var child, ref;
+        ref = SST.storage.remote_ref;
+        child = ref.child(key);
+        return child.set(data, function() {});
+      });
+    }
+  };
+
+  return RemoteSync;
 
 })();
 
@@ -1023,7 +1009,7 @@ Views = (function() {
   Views.storeListName = function() {
     var list_name;
     list_name = $('#list-name').val();
-    return SST.storage.set('name', list_name);
+    return SST.storage.set('name', list_name, function() {});
   };
 
   Views.animateContent = function() {
@@ -1085,16 +1071,16 @@ Views = (function() {
   };
 
   Views.checkOnboarding = function(allTasks, tour) {
-    return SST.storage.get('sst-tour', function(sstTour) {
-      if ((sstTour === null) && (!mobile) && (allTasks.length > 0)) {
+    return SST.storage.get('tour', function(t) {
+      if ((t === void 0) && (!mobile) && (allTasks.length > 0)) {
         return tour.trigger('depart.tourbus');
       }
     });
   };
 
   Views.checkWhatsNew = function() {
-    return SST.storage.get('whats-new-2-2-0', function(whatsNew) {
-      if ((whatsNew === null) && (window.tourRunning === false)) {
+    return SST.storage.get('version', function(version) {
+      if ((version < '2.2.0' || version === void 0) && (window.tourRunning === false)) {
         return $('.whats-new').show();
       }
     });
@@ -1104,11 +1090,11 @@ Views = (function() {
     window.tourRunning = false;
     $('.tourbus-leg').hide();
     history.pushState('', document.title, window.location.pathname);
-    return SST.storage.set('sst-tour', 1);
+    return SST.storage.set('tour', 1, function() {});
   };
 
   Views.closeWhatsNew = function() {
-    return SST.storage.set('whats-new-2-2-0', 1);
+    return SST.storage.set('version', '2.2.0', function() {});
   };
 
   return Views;

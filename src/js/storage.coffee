@@ -1,61 +1,62 @@
 class LocalStorage
 
-  @get: (key, callback, returnTasks = false) ->
-
+  @get: (key, property, callback) ->
     value = localStorage.getItem(key)
-
-    value = JSON.parse(value)
 
     if value == null
       callback(value)
       return
 
-    if returnTasks
-      callback(value.tasks)
-    else
+    value = JSON.parse(value)
+
+    if property == 'everything'
       callback(value)
+    else
+      callback(value[property])
 
 
-  @getSync: (key) ->
-    value = localStorage.getItem(key)
-    JSON.parse(value)
+  @set: (key, property, value, callback) ->
 
+    data = JSON.parse(localStorage.getItem(key)) || {}
 
-  @set: (key, value, callback) ->
+    if property == 'everything'
+      data = value
+    else
+      data[property] = value
 
-    value = JSON.stringify(value)
-    localStorage.setItem(key, value)
+    data = JSON.stringify(data)
+    localStorage.setItem(key, data)
 
     if callback
       callback()
 
 
-  @remove: (key) ->
-    localStorage.removeItem(key)
-
-
 class ChromeStorage
 
-  @get: (key, callback) ->
+  @get: (key, property, callback) ->
     chrome.storage.sync.get key, (value) ->
-      value = value[key] || null || LocalStorage.getSync(key)
 
-      callback(value)
+      value = value[key] || null
+
+      if value == null
+        callback(value)
+        return
+
+      callback(value[property])
  
 
-  @set: (key, value, callback) ->
+  @set: (key, property, value, callback) ->
+    chrome.storage.sync.get key, (data) ->
+      
+      if data == null
+        data = {}
 
-    params = {}
-    params[key] = value
+      data[property] = value
 
-    chrome.storage.sync.set params, () ->
+      chrome.storage.sync.set data, () ->
 
-      if callback
-        callback()
-
-
-  @remove: (key) ->
-    chrome.storage.sync.remove key, () ->
+        if callback
+          callback()
 
 
   # Listen for changes and run ListView.showTasks when a change happens
@@ -66,72 +67,6 @@ class ChromeStorage
         if key == SST.storage.dbKey
           storageChange = changes[key]
           ListView.showTasks(storageChange.newValue)
-
-
-class RemoteSync
-
-  @get: () ->
-
-    # Only do this stuff if sync is enabled (needs refactor)
-    if SST.storage.syncEnabled
-
-      # Create these outside the scope so everyone has access
-      localTasks = null
-      remoteTasks = null
-
-      key = SST.storage.dbKey
-      ref = SST.storage.remote_ref
-      child = ref.child(key)
-
-      # Runs when both the get methods return with local and remote tasks
-      # Checks timestamp and preferences most recent set of tasks
-      mergeTasks = () ->
-
-        if localTasks and remoteTasks
-
-          local = localTasks.timestamp
-          remote = remoteTasks.timestamp
-
-          # Overwrite local with remote since it's newer
-          if local > remote
-            tasks = localTasks.tasks
-          else
-            tasks = remoteTasks.tasks
-
-          SST.storage.setTasks(tasks)
-          ListView.showTasks(tasks)
-          RemoteSync.set()
-
-
-      SST.storage.get key, (value) ->
-        localTasks = value
-
-        console.log 'Local tasks: '
-        console.log localTasks
-
-        mergeTasks()
-
-
-      child.once 'value', (value) ->
-        remoteTasks = value.val() || []
-
-        console.log 'Remote tasks: '
-        console.log remoteTasks
-
-        mergeTasks()
-
-
-  @set: () ->
-
-    if SST.storage.syncEnabled
-
-      key = SST.storage.dbKey
-
-      SST.storage.get key, (value) ->
-
-        ref = SST.storage.remote_ref
-        child = ref.child(key)
-        child.set value, () ->
 
 
 class Storage
@@ -162,38 +97,22 @@ class Storage
     @setSyncKey()
 
 
-  # Primary storage stuff
-
-  get: (key, callback) ->
-    @storageType.get(key, callback)
-
-  
-  getSync: (key) ->
-    @storageType.getSync(key)
+  get: (property, callback) ->
+    @storageType.get(@dbKey, property, callback)
 
 
-  set: (key, value, callback) ->
-    @storageType.set(key, value, callback)
+  set: (property, value, callback) ->
+    @storageType.set(@dbKey, property, value, callback)
 
-
-  remove: (key) ->
-    @storageType.remove(key)
-
-
-  # Fetching tasks
 
   getTasks: (callback) ->
-    @storageType.get(@dbKey, callback, true)
+    @storageType.get(@dbKey, 'tasks', callback)
 
 
   setTasks: (value, callback) ->
 
-    value = {
-      'tasks': value
-      'timestamp': Date.now()
-    }
-
-    @set(@dbKey, value, callback)
+    @set('tasks', value, callback)
+    @set('timestamp', Date.now(), callback)
 
 
   linkDevices: ->
@@ -201,27 +120,27 @@ class Storage
       @syncEnabled = true
       @createFirebase()
       @setSyncKey()
-      @reSaveTasks()
+      # @reSaveTasks()
 
     Views.toggleModalDialog()
 
   
   createFirebase: ->
     if @syncEnabled
-      @remote_ref = new Firebase('https://supersimpletasks.firebaseio.com/data')
+      @remote_ref = new Firebase('https://supersimpletasks.firebaseio.com/data/')
 
 
   migrateKey: (new_key) ->
-    SST.storage.get @dbKey, (allTasks) ->
+    @get 'everything', (everything) ->
       @dbKey = new_key
-      SST.storage.set(@dbKey, allTasks)
+      SST.storage.set everything, () ->
 
       @dbKey
 
 
   reSaveTasks: ->
-    SST.storage.get @dbKey, (allTasks) ->
-      SST.storage.set(@dbKey, allTasks)
+    @getTasks (allTasks) ->
+      @setTasks (allTasks) ->
 
 
   setSyncKey: ->
