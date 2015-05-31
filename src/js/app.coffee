@@ -176,6 +176,8 @@ $(document).ready ->
 
   SST.storage = new Storage()
 
+  RemoteSync.get () ->
+
   standardLog()
 
   window.tourRunning = false

@@ -59,6 +59,8 @@ class Storage
   set: (property, value, callback) ->
     LocalStorage.set(@dbKey, property, value, callback)
 
+    RemoteSync.set()
+
 
   getTasks: (callback) ->
     LocalStorage.get(@dbKey, 'tasks', callback)
@@ -67,6 +69,8 @@ class Storage
   setTasks: (value, callback) ->
     @set('tasks', value, callback)
     @set('timestamp', Date.now(), callback)
+
+    RemoteSync.set()
 
 
   linkDevices: ->

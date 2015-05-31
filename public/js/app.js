@@ -546,7 +546,8 @@ Storage = (function() {
   };
 
   Storage.prototype.set = function(property, value, callback) {
-    return LocalStorage.set(this.dbKey, property, value, callback);
+    LocalStorage.set(this.dbKey, property, value, callback);
+    return RemoteSync.set();
   };
 
   Storage.prototype.getTasks = function(callback) {
@@ -555,7 +556,8 @@ Storage = (function() {
 
   Storage.prototype.setTasks = function(value, callback) {
     this.set('tasks', value, callback);
-    return this.set('timestamp', Date.now(), callback);
+    this.set('timestamp', Date.now(), callback);
+    return RemoteSync.set();
   };
 
   Storage.prototype.linkDevices = function() {
@@ -1546,6 +1548,7 @@ $(document).on('click', '#sync-set', function(e) {
 $(document).ready(function() {
   Extension.setPopupClass();
   SST.storage = new Storage();
+  RemoteSync.get(function() {});
   standardLog();
   window.tourRunning = false;
   document.onkeyup = keyboardShortcuts;
