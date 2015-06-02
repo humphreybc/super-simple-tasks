@@ -8,7 +8,7 @@ class Remote
 
   sync: (callback) ->
 
-    local = SST.remote.local || 1
+    local = SST.remote.local
     remote = SST.remote.remote
 
     if local and remote
@@ -42,7 +42,7 @@ class Remote
   get: (callback) ->
 
     SST.storage.get 'everything', (value) ->
-      SST.remote.local = value
+      SST.remote.local = value || 1
 
       console.log 'Local stuff: '
       console.log SST.remote.local
