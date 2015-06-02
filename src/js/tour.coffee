@@ -6,10 +6,10 @@ class Tour
     $('#tour').tourbus
       onStop: Views.finishTour
       onLegStart: (leg, bus) ->
-        window.tourRunning = bus.running
+        SST.tourRunning = bus.running
         leg.$el.addClass('animated fadeInDown')
 
 
   @nextTourBus: (tour) ->
-    if window.tourRunning
+    if SST.tourRunning
       tour.trigger('next.tourbus')

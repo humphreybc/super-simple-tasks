@@ -1,68 +1,72 @@
-class RemoteSync
+# Refactor
+class Remote
 
-  @get: () ->
-
-    if SST.storage.syncEnabled
-
-      local = null
-      remote = null
-
-      ref = SST.storage.remote_ref
-      child = ref.child(SST.storage.dbKey)
-
-      # Runs when both the get methods return with local and remote tasks
-      # Checks timestamp and preferences most recent set of tasks
-      mergeTasks = () ->
-
-        if local and remote
-
-          if local.default == true
-            SST.storage.set 'everything', remote, (remote) ->
-            ListView.showTasks(remote.tasks)
-            return
-
-          localTimestamp = local.timestamp
-          remoteTimestamp = remote.timestamp
-
-          if localTimestamp > remoteTimestamp
-            data = local
-          else
-            data = remote
-
-          SST.storage.set 'everything', data, (data) ->
-          ListView.showTasks(data.tasks)
-
-        else
-          return
+  constructor: () ->
+    @local = null
+    @remote = null
 
 
-      SST.storage.get 'everything', (value) ->
-        local = value
+  sync: (callback) ->
 
-        console.log 'Local stuff: '
-        console.log local
+    local = SST.remote.local || 1
+    remote = SST.remote.remote
 
-        mergeTasks()
+    if local and remote
+
+      localTimestamp = local.timestamp
+      remoteTimestamp = remote.timestamp
+
+      if localTimestamp > remoteTimestamp
+        data = local
+        console.log 'Keeping local'
+      else
+        data = remote
+        console.log 'Overwriting local'
+
+      SST.storage.set 'everything', data, (data) ->
+
+      ListView.showTasks(data.tasks)
+
+      callback(data.tasks)
+
+    else
+      return
 
 
-      child.once 'value', (value) ->
-        remote = value.val()
+  get: (callback) ->
 
-        console.log 'Remote stuff: '
-        console.log remote
+    SST.storage.get 'everything', (value) ->
+      SST.remote.local = value
 
-        mergeTasks()
+      console.log 'Local stuff: '
+      console.log SST.remote.local
+
+      SST.remote.sync(callback)
+
+    SST.remoteFirebase.on 'value', ((value) ->
+      SST.remote.remote = value.val()
+
+      console.log 'Remote stuff: '
+      console.log SST.remote.remote
+
+      SST.remote.sync(callback)
+
+    ), (errorObject) ->
+      console.log 'The read failed: ' + errorObject.code
+      return
 
 
-  @set: () ->
+    # SST.remote.ref.once 'value', (value) ->
+    #   SST.remote.remote = value.val()
 
-    if SST.storage.syncEnabled
+    #   console.log 'Remote stuff: '
+    #   console.log SST.remote.remote
 
-      key = SST.storage.dbKey
+    #   SST.remote.sync(callback)
 
-      SST.storage.get 'everything', (data) ->
 
-        ref = SST.storage.remote_ref
-        child = ref.child(key)
-        child.set data, () ->
+  set: () ->
+
+    SST.storage.get 'everything', (data) ->
+      SST.remoteFirebase.set data, () ->
 

@@ -31,6 +31,7 @@ class LocalStorage
       callback()
 
 
+# Refactor
 class Storage
 
   constructor: () ->
@@ -48,8 +49,10 @@ class Storage
       localStorage.setItem('sync_key', shareCode)
       @syncEnabled = true
 
-    @createFirebase()
+      history.pushState('', document.title, window.location.pathname)
+
     @setSyncKey()
+    @createFirebase()
 
 
   get: (property, callback) ->
@@ -59,7 +62,8 @@ class Storage
   set: (property, value, callback) ->
     LocalStorage.set(@dbKey, property, value, callback)
 
-    RemoteSync.set()
+    if SST.storage.syncEnabled
+      SST.remote.set()
 
 
   getTasks: (callback) ->
@@ -70,21 +74,16 @@ class Storage
     @set('tasks', value, callback)
     @set('timestamp', Date.now(), callback)
 
-    RemoteSync.set()
-
 
   linkDevices: ->
-    unless @syncEnabled
-      @syncEnabled = true
-      @createFirebase()
-      @setSyncKey()
-
-    Views.toggleModalDialog()
+    @syncEnabled = true
+    @setSyncKey()
+    @createFirebase()
+    SST.remote.set()
 
   
   createFirebase: ->
-    if @syncEnabled
-      @remote_ref = new Firebase('https://supersimpletasks.firebaseio.com/data/')
+    SST.remoteFirebase = new Firebase('https://supersimpletasks.firebaseio.com/data/' + @dbKey)
 
 
   migrateKey: (new_key) ->
@@ -103,7 +102,6 @@ class Storage
         @dbKey = 'todo'
 
         new_key = Utils.generateID()
-
         @dbKey = @migrateKey(new_key)
 
         localStorage.setItem('sync_key', @dbKey)

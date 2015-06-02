@@ -59,35 +59,34 @@ class Views
 
     if shouldOpenDrawer
       $body.addClass(linkActiveClass)
-      unless mobile
+      unless SST.mobile
         $link_input.focus()
     else
       $body.removeClass(linkActiveClass)
-      unless mobile
+      unless SST.mobile
         $new_task_input.focus()
 
 
   @checkOnboarding: (allTasks, tour) ->
     SST.storage.get 'tour', (t) ->
-      if (t == null) and (!mobile) and (allTasks.length > 0)
-        tour.trigger 'depart.tourbus'
+      if (t == null) and (!SST.mobile) and (allTasks.length > 0)
+        SST.tour.trigger 'depart.tourbus'
 
 
   @checkWhatsNew: ->
     SST.storage.get 'version', (version) ->
-      if (version < '2.2.0' || version == null) and (window.tourRunning == false)
+      if (version < '2.2.0' || version == null) and (SST.tourRunning == false)
         $('.whats-new').show()
 
 
   @finishTour: ->
-    window.tourRunning = false
+    SST.tourRunning = false
     $('.tourbus-leg').hide()
 
     # Get rid of the # at the end of the URL
     history.pushState('', document.title, window.location.pathname)
     
     SST.storage.set 'tour', 1, () ->
-    SST.storage.set 'default', false, () ->
 
 
   @closeWhatsNew: ->

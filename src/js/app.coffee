@@ -1,30 +1,54 @@
-online = null
-tour = null
-mobile = null
-
 SST = SST || {}
 
 # All the goodness
 initialize = ->
+  standardLog()
+  Extension.setPopupClass()
 
-  SST.storage.get 'everything', (everything) ->
+  SST.storage = new Storage()
+  SST.remote = new Remote()
 
-    allTasks = Task.handleNoData(everything)
+  SST.tourRunning = false
+  SST.tour = Tour.createTour()
 
-    Migrations.run(allTasks)
+  document.onkeyup = keyboardShortcuts
 
-    ListView.showTasks(allTasks)
+  getTasks()
 
-    Views.checkOnboarding(allTasks, tour)
+  SST.mobile = ($(window).width() < 499)
 
-    Views.checkWhatsNew()
-
-  Views.animateContent()
-
-  Views.setListName()
-
-  unless mobile
+  unless SST.mobile
     $('#new-task').focus()
+
+  setTimeout (->
+    SST.online = Utils.checkOnline()
+    ListView.changeEmptyStateImage(SST.online)
+  ), 100
+
+
+getTasks = ->
+  # Refactor
+  # If possible shouldn't have a delay when sync is enabled
+  if SST.storage.syncEnabled
+    SST.remote.get (allTasks) ->
+      displayTasks(allTasks)
+  else
+    SST.storage.get 'everything', (everything) ->
+      if (everything == null)
+        allTasks = Task.seedDefaultTasks()
+      else
+        allTasks = everything.tasks
+      
+      displayTasks(allTasks)
+
+
+displayTasks = (allTasks) ->
+  Migrations.run(allTasks)
+  ListView.showTasks(allTasks)
+  Views.checkOnboarding(allTasks, SST.tour)
+  Views.checkWhatsNew()
+  Views.animateContent()
+  Views.setListName()
 
 
 standardLog = ->
@@ -85,10 +109,9 @@ $(document).on 'mousedown', '.task > label', ->
 
       li = $(this).closest('li')
       TaskView.completeTask(li)
-      Tour.nextTourBus(tour)
+      Tour.nextTourBus(SST.tour)
 
 
-# Click on edit
 $(document).on 'click', '.edit', (e) ->
 
   li = $(this).closest('li')
@@ -96,7 +119,6 @@ $(document).on 'click', '.edit', (e) ->
   TaskView.editTask(TaskView.getId(li))
 
 
-# Click on tag color
 $(document).on 'click', '.tag', (e) ->
   e.preventDefault()
 
@@ -108,7 +130,7 @@ $(document).on 'click', '.tag', (e) ->
   
   Task.cycleAttr(li, type_attr, value)
 
-  Tour.nextTourBus(tour)
+  Tour.nextTourBus(SST.tour)
 
 
 # When hovering over the drag handle, unfocus the new task input field
@@ -142,6 +164,7 @@ $(document).on 'click', '#clear-completed', (e) ->
 $(document).on 'click', '#link-devices', (e) ->
   e.preventDefault()
   SST.storage.linkDevices()
+  Views.toggleModalDialog()
 
 
 $(document).on 'click', '#disconnect-devices', (e) ->
@@ -162,41 +185,16 @@ $(document).on 'click', '#export-tasks', (e) ->
 
 $(document).on 'click', '#sync-get', (e) ->
   e.preventDefault()
-  RemoteSync.get () ->
+  if SST.storage.syncEnabled
+    SST.remote.get () ->
 
 
 $(document).on 'click', '#sync-set', (e) ->
   e.preventDefault()
-  RemoteSync.set()
+  if SST.storage.syncEnabled
+    SST.remote.set()
 
 
 $(document).ready ->
 
-  Extension.setPopupClass()
-
-  SST.storage = new Storage()
-
-  RemoteSync.get () ->
-
-  standardLog()
-
-  window.tourRunning = false
-
-  document.onkeyup = keyboardShortcuts
-
-  tour = Tour.createTour()
-
-  mobile = ($(window).width() < 499)
-
-  document.addEventListener 'touchstart', (->
-  ), true
-
   initialize()
-
-  setTimeout (->
-
-    online = Utils.checkOnline()
-
-    ListView.changeEmptyStateImage(online)
-
-  ), 100

@@ -82,8 +82,6 @@ class Task
       SST.storage.setTasks(allTasks)
       ListView.showTasks(allTasks)
 
-      SST.storage.set 'default', false, () ->
-
       Analytics.sendTaskCount(allTasks)
 
 
@@ -175,14 +173,10 @@ class Task
       ListView.showTasks(allTasks)
 
 
-  @handleNoData: (data) ->
-    if data == null
-      data = Arrays.default_data
-      SST.storage.set('everything', data)
-      return data.tasks
-
-    else
-      return data.tasks
+  @seedDefaultTasks: ->
+    data = Arrays.default_data
+    SST.storage.set('everything', data)
+    return data.tasks
 
 
   @exportTasks: ->
