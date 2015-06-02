@@ -16,14 +16,20 @@ class Remote
       localTimestamp = local.timestamp
       remoteTimestamp = remote.timestamp
 
-      if localTimestamp > remoteTimestamp
+      if localTimestamp == remoteTimestamp
         data = local
         console.log 'Keeping local'
+      if localTimestamp > remoteTimestamp
+        data = local
+        pushToRemote = true
+        console.log 'Pushing local to remote'
       else
         data = remote
-        console.log 'Overwriting local'
+        console.log 'Pull remote and overwriting local'
 
       SST.storage.set 'everything', data, (data) ->
+        if pushToRemote == true
+          SST.remote.set()
 
       ListView.showTasks(data.tasks)
 
