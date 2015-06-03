@@ -62,9 +62,6 @@ class Storage
   set: (property, value, callback) ->
     LocalStorage.set(@dbKey, property, value, callback)
 
-    if SST.storage.syncEnabled
-      SST.remote.set()
-
 
   getTasks: (callback) ->
     LocalStorage.get(@dbKey, 'tasks', callback)
@@ -84,6 +81,14 @@ class Storage
   
   createFirebase: ->
     SST.remoteFirebase = new Firebase('https://supersimpletasks.firebaseio.com/data/' + @dbKey)
+
+
+  goOnline: ->
+    Firebase.goOnline()
+
+
+  goOffline: ->
+    Firebase.goOffline()
 
 
   migrateKey: (new_key) ->

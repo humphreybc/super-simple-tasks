@@ -84,6 +84,8 @@ class Task
 
       Analytics.sendTaskCount(allTasks)
 
+      SST.storage.set 'default', false, () ->
+
 
   @updateTask: (name, link, id) ->
 

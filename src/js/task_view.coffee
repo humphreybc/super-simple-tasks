@@ -89,3 +89,6 @@ class TaskView
 
     # Manually toggle the value of the checkbox
     checkbox.prop 'checked', is_done
+
+    SST.storage.set 'default', false, () ->
+    

@@ -37,6 +37,6 @@ class ListView
       $('#all-done').removeClass('show-empty-state')
 
 
-  @changeEmptyStateImage: (online) ->
-    if online
+  @changeEmptyStateImage: ->
+    if SST.online
       $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")')

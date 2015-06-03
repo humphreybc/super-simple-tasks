@@ -1,4 +1,3 @@
-# Refactor
 class Remote
 
   constructor: () ->
@@ -8,71 +7,56 @@ class Remote
 
   sync: (callback) ->
 
-    local = SST.remote.local
-    remote = SST.remote.remote
+    if @local and @remote
 
-    if local and remote
+      if @local.default == true || @remote.default == true
+        console.log 'handling default data'
+        data = @getOnce()
+        console.log data
+        SST.storage.set 'everything', data, () ->
+        callback(data.tasks)
+        return
 
-      localTimestamp = local.timestamp
-      remoteTimestamp = remote.timestamp
+      else if @local.timestamp > @remote.timestamp
+        data = @local
 
-      if localTimestamp == remoteTimestamp
-        data = local
-        console.log 'Keeping local'
-      if localTimestamp > remoteTimestamp
-        data = local
-        pushToRemote = true
-        console.log 'Pushing local to remote'
       else
-        data = remote
-        console.log 'Pull remote and overwriting local'
-
-      SST.storage.set 'everything', data, (data) ->
-        if pushToRemote == true
-          SST.remote.set()
-
-      ListView.showTasks(data.tasks)
+        data = @remote
 
       callback(data.tasks)
-
-    else
-      return
 
 
   get: (callback) ->
 
-    SST.storage.get 'everything', (value) ->
-      SST.remote.local = value || 1
+    SST.storage.get 'everything', (value) =>
+      console.log 'getting from local'
+      @local = value || 1
 
-      console.log 'Local stuff: '
-      console.log SST.remote.local
+      @sync(callback)
 
-      SST.remote.sync(callback)
+    SST.remoteFirebase.on 'value', ((value) =>
+      console.log 'getting using on'
+      @remote = value.val()
 
-    SST.remoteFirebase.on 'value', ((value) ->
-      SST.remote.remote = value.val()
-
-      console.log 'Remote stuff: '
-      console.log SST.remote.remote
-
-      SST.remote.sync(callback)
+      @sync(callback)
 
     ), (errorObject) ->
       console.log 'The read failed: ' + errorObject.code
       return
 
 
-    # SST.remote.ref.once 'value', (value) ->
-    #   SST.remote.remote = value.val()
+  getOnce: () ->
+    console.log 'getting once'
+    data = null
 
-    #   console.log 'Remote stuff: '
-    #   console.log SST.remote.remote
+    SST.remoteFirebase.once 'value', (value) ->
+      data = value.val()
 
-    #   SST.remote.sync(callback)
+    data
 
 
   set: () ->
-
     SST.storage.get 'everything', (data) ->
+      console.log 'setting'
       SST.remoteFirebase.set data, () ->
 

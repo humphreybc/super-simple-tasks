@@ -4,9 +4,11 @@ class Migrations
 
   # List of migrations to run
   @run: (allTasks) ->
-    @addLinkProperty(allTasks)
-    @changePrioritiesToColor(allTasks)
-    @addTaskID(allTasks)
+    if allTasks
+      if allTasks.length > 0
+        @addLinkProperty(allTasks)
+        @changePrioritiesToColor(allTasks)
+        @addTaskID(allTasks)
 
 
   # Add empty 'link' property to each task when migrating to 2.0.1
@@ -25,30 +27,28 @@ class Migrations
   # Go from priority to color tag when migrating to 2.2
   @changePrioritiesToColor: (allTasks) ->
 
-    if allTasks.length > 0
-      unless allTasks[0].hasOwnProperty('tag')
+    unless allTasks[0].hasOwnProperty('tag')
 
-        for task, i in allTasks
-          task['tag'] = switch task.priority
-            when 'none' then 'gray'
-            when 'minor' then 'green'
-            when 'major' then 'yellow'
-            when 'blocker' then 'red'
+      for task, i in allTasks
+        task['tag'] = switch task.priority
+          when 'none' then 'gray'
+          when 'minor' then 'green'
+          when 'major' then 'yellow'
+          when 'blocker' then 'red'
 
-          delete task.priority
+        delete task.priority
 
-        SST.storage.setTasks(allTasks)
+      SST.storage.setTasks(allTasks)
 
 
   @addTaskID: (allTasks) ->
 
-    if allTasks.length > 0
-      unless allTasks[0].hasOwnProperty('id')
+    unless allTasks[0].hasOwnProperty('id')
 
-        for task, i in allTasks
-          task.id = Utils.generateID()
+      for task, i in allTasks
+        task.id = Utils.generateID()
 
-        SST.storage.setTasks(allTasks)
+      SST.storage.setTasks(allTasks)
 
 
 

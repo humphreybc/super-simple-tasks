@@ -36,9 +36,9 @@ class Views
         $blanket.hide()
     ), 500
 
-    host = Utils.getUrlAttribute('host')
+    host = 'localhost:9001'
 
-    $device_link_code.val('http://' + host + '?share=' + SST.storage.dbKey)
+    $device_link_code.val('http://' + host + '/?share=' + SST.storage.dbKey)
 
 
   @toggleAddLinkInput: (forceOpen = null) ->
@@ -71,6 +71,8 @@ class Views
     SST.storage.get 'tour', (t) ->
       if (t == null) and (!SST.mobile) and (allTasks.length > 0)
         SST.tour.trigger 'depart.tourbus'
+      else
+        SST.tour.trigger 'stop.tourbus'
 
 
   @checkWhatsNew: ->

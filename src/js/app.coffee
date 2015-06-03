@@ -5,6 +5,8 @@ initialize = ->
   standardLog()
   Extension.setPopupClass()
 
+  SST.online = Utils.checkOnline()
+
   SST.storage = new Storage()
   SST.remote = new Remote()
 
@@ -13,6 +15,10 @@ initialize = ->
 
   document.onkeyup = keyboardShortcuts
 
+  SST.windowFocus = true
+  window.onfocus = onFocus
+  window.onblur = onBlur
+
   getTasks()
 
   SST.mobile = ($(window).width() < 499)
@@ -20,31 +26,39 @@ initialize = ->
   unless SST.mobile
     $('#new-task').focus()
 
-  setTimeout (->
-    SST.online = Utils.checkOnline()
-    ListView.changeEmptyStateImage(SST.online)
-  ), 100
+  ListView.changeEmptyStateImage()
+
+
+onFocus = ->
+  SST.windowFocus = true
+  SST.storage.goOnline()
+
+
+onBlur = ->
+  SST.windowFocus = false
+  SST.storage.goOffline()
 
 
 getTasks = ->
-  # Refactor
-  # If possible shouldn't have a delay when sync is enabled
-  if SST.storage.syncEnabled
-    SST.remote.get (allTasks) ->
-      displayTasks(allTasks)
-  else
-    SST.storage.get 'everything', (everything) ->
-      if (everything == null)
-        allTasks = Task.seedDefaultTasks()
-      else
-        allTasks = everything.tasks
-      
-      displayTasks(allTasks)
+  SST.storage.get 'everything', (everything) ->
+    if (everything == null)
+      allTasks = Task.seedDefaultTasks()
+    else
+      allTasks = everything.tasks
+    
+    ListView.showTasks(allTasks)
+    displayApp(allTasks)
+
+  setTimeout (->
+    if SST.storage.syncEnabled and SST.online
+      SST.remote.get (allTasks) ->
+        ListView.showTasks(allTasks)
+        displayApp(allTasks)
+    ), 500
 
 
-displayTasks = (allTasks) ->
+displayApp = (allTasks) ->
   Migrations.run(allTasks)
-  ListView.showTasks(allTasks)
   Views.checkOnboarding(allTasks, SST.tour)
   Views.checkWhatsNew()
   Views.animateContent()
@@ -181,18 +195,6 @@ $(document).on 'click', '#modal-close', (e) ->
 $(document).on 'click', '#export-tasks', (e) ->
   e.preventDefault()
   Task.exportTasks()
-
-
-$(document).on 'click', '#sync-get', (e) ->
-  e.preventDefault()
-  if SST.storage.syncEnabled
-    SST.remote.get () ->
-
-
-$(document).on 'click', '#sync-set', (e) ->
-  e.preventDefault()
-  if SST.storage.syncEnabled
-    SST.remote.set()
 
 
 $(document).ready ->
