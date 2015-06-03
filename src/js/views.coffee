@@ -47,7 +47,7 @@ class Views
         $blanket.hide()
     ), 500
 
-    host = 'localhost:9001'
+    host = 'dev.supersimpletasks.com'
 
     $device_link_code.val('http://' + host + '/?share=' + SST.storage.dbKey)
 
