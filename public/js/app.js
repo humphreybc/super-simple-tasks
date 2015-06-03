@@ -538,6 +538,7 @@ Storage = (function() {
       localStorage.setItem('sync_key', shareCode);
       this.syncEnabled = true;
       history.pushState('', document.title, window.location.pathname);
+      Views.showSyncBlanket();
     }
     this.setSyncKey();
     this.createFirebase();
@@ -630,9 +631,7 @@ Remote = (function() {
     var data;
     if (this.local && this.remote) {
       if (this.local["default"] === true || this.remote["default"] === true) {
-        console.log('handling default data');
         data = this.getOnce();
-        console.log(data);
         SST.storage.set('everything', data, function() {});
         callback(data.tasks);
         return;
@@ -649,14 +648,12 @@ Remote = (function() {
   Remote.prototype.get = function(callback) {
     SST.storage.get('everything', (function(_this) {
       return function(data) {
-        console.log('getting from local');
         _this.local = data || 1;
         return _this.sync(callback);
       };
     })(this));
     return SST.remoteFirebase.on('value', ((function(_this) {
       return function(data) {
-        console.log('getting using on');
         _this.remote = data.val();
         return _this.sync(callback);
       };
@@ -667,7 +664,6 @@ Remote = (function() {
 
   Remote.prototype.getOnce = function() {
     var data;
-    console.log('getting once');
     data = null;
     SST.remoteFirebase.once('value', function(value) {
       return data = value.val();
@@ -677,7 +673,6 @@ Remote = (function() {
 
   Remote.prototype.set = function(callback) {
     return SST.storage.get('everything', function(data, callback) {
-      console.log('setting');
       return SST.remoteFirebase.set(data, function(callback) {});
     });
   };
@@ -964,6 +959,15 @@ Views = (function() {
   function Views() {}
 
   timeout = 0;
+
+  Views.showSyncBlanket = function() {
+    $('.modal-blanket').show();
+    $('.modal-blanket').addClass('fade');
+    return setTimeout((function() {
+      $('.modal-blanket').removeClass('fade');
+      return $('.modal-blanket').hide();
+    }), 4000);
+  };
 
   Views.setListName = function() {
     return SST.storage.get('name', function(list_name) {
@@ -1387,6 +1391,9 @@ Tour = (function() {
       onLegStart: function(leg, bus) {
         SST.tourRunning = bus.running;
         return leg.$el.addClass('animated fadeInDown');
+      },
+      leg: {
+        zindex: 300
       }
     });
   };
@@ -1456,7 +1463,7 @@ getTasks = function() {
         return displayApp(allTasks);
       });
     }
-  }), 500);
+  }), 250);
 };
 
 displayApp = function(allTasks) {

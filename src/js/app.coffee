@@ -56,7 +56,7 @@ getTasks = ->
       SST.remote.get (allTasks) ->
         ListView.showTasks(allTasks)
         displayApp(allTasks)
-    ), 500
+    ), 250
 
 
 displayApp = (allTasks) ->

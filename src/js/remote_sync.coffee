@@ -10,9 +10,7 @@ class Remote
     if @local and @remote
 
       if @local.default == true || @remote.default == true
-        console.log 'handling default data'
         data = @getOnce()
-        console.log data
         SST.storage.set 'everything', data, () ->
         callback(data.tasks)
         return
@@ -30,14 +28,11 @@ class Remote
   get: (callback) ->
 
     SST.storage.get 'everything', (data) =>
-      console.log 'getting from local'
-
       @local = data || 1
 
       @sync(callback)
 
     SST.remoteFirebase.on 'value', ((data) =>
-      console.log 'getting using on'
       @remote = data.val()
 
       @sync(callback)
@@ -48,7 +43,6 @@ class Remote
 
 
   getOnce: () ->
-    console.log 'getting once'
     data = null
 
     SST.remoteFirebase.once 'value', (value) ->
@@ -59,6 +53,5 @@ class Remote
 
   set: (callback) ->
     SST.storage.get 'everything', (data, callback) ->
-      console.log 'setting'
       SST.remoteFirebase.set data, (callback) ->
 

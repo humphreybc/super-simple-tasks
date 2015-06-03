@@ -1,6 +1,17 @@
 class Views
   timeout = 0
 
+
+  @showSyncBlanket: ->
+    $('.modal-blanket').show()
+    $('.modal-blanket').addClass('fade')
+
+    setTimeout (->
+      $('.modal-blanket').removeClass('fade')
+      $('.modal-blanket').hide()
+    ), 4000
+
+
   @setListName: ->
     SST.storage.get 'name', (list_name) ->
       $('#list-name').val(list_name)

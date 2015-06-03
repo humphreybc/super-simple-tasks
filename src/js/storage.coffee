@@ -33,7 +33,6 @@ class LocalStorage
       callback()
 
 
-# Refactor
 class Storage
 
   constructor: () ->
@@ -52,6 +51,8 @@ class Storage
       @syncEnabled = true
 
       history.pushState('', document.title, window.location.pathname)
+
+      Views.showSyncBlanket()
 
     @setSyncKey()
     @createFirebase()
