@@ -29,15 +29,16 @@ class Remote
 
   get: (callback) ->
 
-    SST.storage.get 'everything', (value) =>
+    SST.storage.get 'everything', (data) =>
       console.log 'getting from local'
-      @local = value || 1
+
+      @local = data || 1
 
       @sync(callback)
 
-    SST.remoteFirebase.on 'value', ((value) =>
+    SST.remoteFirebase.on 'value', ((data) =>
       console.log 'getting using on'
-      @remote = value.val()
+      @remote = data.val()
 
       @sync(callback)
 

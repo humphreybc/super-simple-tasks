@@ -11,6 +11,8 @@ class LocalStorage
 
     if property == 'everything'
       callback(value)
+    else if (property == 'tasks') and (value.property == undefined)
+      callback(value[property] || [])
     else
       callback(value[property])
 
@@ -65,7 +67,7 @@ class Storage
 
 
   getTasks: (callback) ->
-    LocalStorage.get(@dbKey, 'tasks', callback)
+    @get('tasks', callback)
 
 
   setTasks: (value, callback) ->

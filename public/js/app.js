@@ -497,6 +497,8 @@ LocalStorage = (function() {
     value = JSON.parse(value);
     if (property === 'everything') {
       return callback(value);
+    } else if ((property === 'tasks') && (value.property === void 0)) {
+      return callback(value[property] || []);
     } else {
       return callback(value[property]);
     }
@@ -551,7 +553,7 @@ Storage = (function() {
   };
 
   Storage.prototype.getTasks = function(callback) {
-    return LocalStorage.get(this.dbKey, 'tasks', callback);
+    return this.get('tasks', callback);
   };
 
   Storage.prototype.setTasks = function(value, callback) {
@@ -646,16 +648,16 @@ Remote = (function() {
 
   Remote.prototype.get = function(callback) {
     SST.storage.get('everything', (function(_this) {
-      return function(value) {
+      return function(data) {
         console.log('getting from local');
-        _this.local = value || 1;
+        _this.local = data || 1;
         return _this.sync(callback);
       };
     })(this));
     return SST.remoteFirebase.on('value', ((function(_this) {
-      return function(value) {
+      return function(data) {
         console.log('getting using on');
-        _this.remote = value.val();
+        _this.remote = data.val();
         return _this.sync(callback);
       };
     })(this)), function(errorObject) {
