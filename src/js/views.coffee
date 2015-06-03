@@ -79,6 +79,8 @@ class Views
     SST.storage.get 'version', (version) ->
       if (version < '2.2.0' || version == null) and (SST.tourRunning == false)
         $('.whats-new').show()
+      else
+        $('.whats-new').hide()
 
 
   @finishTour: ->

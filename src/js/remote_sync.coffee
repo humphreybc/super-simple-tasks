@@ -22,6 +22,7 @@ class Remote
 
       else
         data = @remote
+        SST.storage.set 'everything', data, () ->
 
       callback(data.tasks)
 
@@ -55,8 +56,8 @@ class Remote
     data
 
 
-  set: () ->
-    SST.storage.get 'everything', (data) ->
+  set: (callback) ->
+    SST.storage.get 'everything', (data, callback) ->
       console.log 'setting'
-      SST.remoteFirebase.set data, () ->
+      SST.remoteFirebase.set data, (callback) ->
 

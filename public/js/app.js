@@ -546,7 +546,8 @@ Storage = (function() {
   };
 
   Storage.prototype.set = function(property, value, callback) {
-    return LocalStorage.set(this.dbKey, property, value, callback);
+    LocalStorage.set(this.dbKey, property, value, callback);
+    return LocalStorage.set(this.dbKey, 'timestamp', Date.now(), callback);
   };
 
   Storage.prototype.getTasks = function(callback) {
@@ -555,7 +556,9 @@ Storage = (function() {
 
   Storage.prototype.setTasks = function(value, callback) {
     this.set('tasks', value, callback);
-    return this.set('timestamp', Date.now(), callback);
+    if (SST.storage.syncEnabled) {
+      return SST.remote.set(function() {});
+    }
   };
 
   Storage.prototype.linkDevices = function() {
@@ -635,6 +638,7 @@ Remote = (function() {
         data = this.local;
       } else {
         data = this.remote;
+        SST.storage.set('everything', data, function() {});
       }
       return callback(data.tasks);
     }
@@ -669,10 +673,10 @@ Remote = (function() {
     return data;
   };
 
-  Remote.prototype.set = function() {
-    return SST.storage.get('everything', function(data) {
+  Remote.prototype.set = function(callback) {
+    return SST.storage.get('everything', function(data, callback) {
       console.log('setting');
-      return SST.remoteFirebase.set(data, function() {});
+      return SST.remoteFirebase.set(data, function(callback) {});
     });
   };
 
@@ -1043,6 +1047,8 @@ Views = (function() {
     return SST.storage.get('version', function(version) {
       if ((version < '2.2.0' || version === null) && (SST.tourRunning === false)) {
         return $('.whats-new').show();
+      } else {
+        return $('.whats-new').hide();
       }
     });
   };
@@ -1409,12 +1415,13 @@ initialize = function() {
   SST.windowFocus = true;
   window.onfocus = onFocus;
   window.onblur = onBlur;
-  getTasks();
+  window.onbeforeunload = onBlur;
   SST.mobile = $(window).width() < 499;
+  ListView.changeEmptyStateImage();
+  getTasks();
   if (!SST.mobile) {
-    $('#new-task').focus();
+    return $('#new-task').focus();
   }
-  return ListView.changeEmptyStateImage();
 };
 
 onFocus = function() {
@@ -1424,7 +1431,9 @@ onFocus = function() {
 
 onBlur = function() {
   SST.windowFocus = false;
-  return SST.storage.goOffline();
+  return SST.remote.set(function() {
+    return SST.storage.goOffline();
+  });
 };
 
 getTasks = function() {

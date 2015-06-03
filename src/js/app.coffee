@@ -18,15 +18,16 @@ initialize = ->
   SST.windowFocus = true
   window.onfocus = onFocus
   window.onblur = onBlur
-
-  getTasks()
+  window.onbeforeunload = onBlur
 
   SST.mobile = ($(window).width() < 499)
 
+  ListView.changeEmptyStateImage()
+
+  getTasks()
+
   unless SST.mobile
     $('#new-task').focus()
-
-  ListView.changeEmptyStateImage()
 
 
 onFocus = ->
@@ -36,7 +37,8 @@ onFocus = ->
 
 onBlur = ->
   SST.windowFocus = false
-  SST.storage.goOffline()
+  SST.remote.set () ->
+    SST.storage.goOffline()
 
 
 getTasks = ->

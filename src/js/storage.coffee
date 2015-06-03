@@ -61,6 +61,7 @@ class Storage
 
   set: (property, value, callback) ->
     LocalStorage.set(@dbKey, property, value, callback)
+    LocalStorage.set(@dbKey, 'timestamp', Date.now(), callback)
 
 
   getTasks: (callback) ->
@@ -69,7 +70,9 @@ class Storage
 
   setTasks: (value, callback) ->
     @set('tasks', value, callback)
-    @set('timestamp', Date.now(), callback)
+
+    if SST.storage.syncEnabled
+      SST.remote.set () ->
 
 
   linkDevices: ->
