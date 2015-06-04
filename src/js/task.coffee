@@ -12,42 +12,41 @@ class Arrays
     'timestamp': null,
     'tour': null,
     'version': null,
-    'default': true,
     'tasks': [
       {
-      'id':Utils.generateID(),
-      'isDone':false,
-      'name':'Add a new task above',
-      'tag':'red',
-      'link':''
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Add a new task above',
+        'tag': 'red',
+        'link': ''
       },
       {
-      'id':Utils.generateID(),
-      'isDone':false,
-      'name':'Perhaps give it a tag or reorder it',
-      'tag':'green',
-      'link':''
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Perhaps give it a tag or reorder it',
+        'tag': 'green',
+        'link': ''
       },
       {
-      'id':Utils.generateID(),
-      'isDone':false,
-      'name':'Refresh to see that your task is still here',
-      'tag':'pink',
-      'link':''
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Refresh to see that your task is still here',
+        'tag': 'pink',
+        'link': ''
       },
       {
-      'id':Utils.generateID(),
-      'isDone':false,
-      'name':'Reference things by attaching a URL to tasks',
-      'tag':'blue',
-      'link':'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Reference things by attaching a URL to tasks',
+        'tag': 'blue',
+        'link': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
       },
       {
-      'id':Utils.generateID(),
-      'isDone':false,
-      'name':'Follow @humphreybc on Twitter',
-      'tag':'yellow',
-      'link':'http://twitter.com/humphreybc'
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Follow @humphreybc on Twitter',
+        'tag': 'yellow',
+        'link': 'http://twitter.com/humphreybc'
       }
     ]
   }
@@ -122,7 +121,7 @@ class Task
       if newLocation < oldLocation
         oldLocation += 1
       allTasks.splice(oldLocation, 1)
-      
+
       SST.storage.setTasks(allTasks)
       ListView.showTasks(allTasks)
 
@@ -184,8 +183,3 @@ class Task
   @exportTasks: ->
     SST.storage.getTasks (allTasks) ->
       Exporter(allTasks, 'super simple tasks backup')
-
-
-
-
-    
