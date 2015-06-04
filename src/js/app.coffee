@@ -31,11 +31,18 @@ initialize = ->
 
 onFocus = ->
   SST.storage.goOnline()
+  SST.remote.sync (allTasks) ->
+    reload(allTasks)
 
 
 onBlur = ->
   SST.remote.set () ->
     SST.storage.goOffline()
+
+
+reload = (allTasks) ->
+  ListView.showTasks(allTasks)
+  displayApp(allTasks)
 
 
 getTasks = ->
@@ -45,14 +52,12 @@ getTasks = ->
     else
       allTasks = everything.tasks
     
-    ListView.showTasks(allTasks)
-    displayApp(allTasks)
+    reload(allTasks)
 
   setTimeout (->
     if SST.storage.syncEnabled and SST.online
       SST.remote.sync (allTasks) ->
-        ListView.showTasks(allTasks)
-        displayApp(allTasks)
+        reload(allTasks)
     ), 250
 
 
