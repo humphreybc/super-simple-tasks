@@ -46,19 +46,17 @@ reload = (allTasks) ->
 
 
 getTasks = ->
-  SST.storage.get 'everything', (everything) ->
-    if (everything == null)
-      allTasks = Task.seedDefaultTasks()
-    else
-      allTasks = everything.tasks
-    
-    reload(allTasks)
+  if SST.storage.syncEnabled and SST.online
+    SST.remote.sync (allTasks) ->
+      reload(allTasks)
+  else
+    SST.storage.get 'everything', (everything) ->
+      if (everything == null)
+        allTasks = Task.seedDefaultTasks()
+      else
+        allTasks = everything.tasks
 
-  setTimeout (->
-    if SST.storage.syncEnabled and SST.online
-      SST.remote.sync (allTasks) ->
-        reload(allTasks)
-    ), 250
+      reload(allTasks)
 
 
 displayApp = (allTasks) ->

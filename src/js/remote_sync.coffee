@@ -11,11 +11,7 @@ class Remote
 
 
   merge: (local, remote, callback) ->
-
-    if local.default == true
-      data = remote
-    else
-      data = if local.timestamp > remote.timestamp then local else remote
+    data = if local.timestamp > remote.timestamp then local else remote
 
     SST.storage.set 'everything', data, () ->
     callback(data.tasks)

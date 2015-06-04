@@ -75,14 +75,14 @@ class Storage
     @set('tasks', value, callback)
 
     if SST.storage.syncEnabled
-      SST.remote.set () ->
+      SST.remote.sync () ->
 
 
   linkDevices: ->
     @syncEnabled = true
     @setSyncKey()
     @createFirebase()
-    SST.remote.set()
+    SST.remote.sync () ->
 
   
   createFirebase: ->
