@@ -1,15 +1,5 @@
 class Remote
 
-  constructor: () ->
-#    SST.remoteFirebase.on 'value', ((data) =>
-#      data = data.val()
-#
-#      @sync () ->
-#
-#    ), (errorObject) ->
-#      console.log 'The read failed: ' + errorObject.code
-
-
   merge: (local, remote, callback) ->
     data = if local.timestamp > remote.timestamp then local else remote
 

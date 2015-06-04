@@ -23,6 +23,12 @@ initialize = ->
 
   getTasks()
 
+  SST.remoteFirebase.on 'value', ((data) =>
+    data = data.val()
+    reload(data.tasks)
+  ), (errorObject) ->
+    console.log 'The read failed: ' + errorObject.code
+
   unless SST.mobile
     $('#new-task').focus()
 
