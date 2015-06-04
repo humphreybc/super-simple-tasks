@@ -63,9 +63,17 @@ class Storage
 
 
   set: (property, value, callback) ->
-    LocalStorage.set(@dbKey, property, value, callback)
-    LocalStorage.set(@dbKey, 'timestamp', Date.now(), callback)
-
+    d1 = $.Deferred()
+    d2 = $.Deferred()
+    LocalStorage.set(@dbKey, property, value, ->
+      d1.resolve()
+    )
+    LocalStorage.set(@dbKey, 'timestamp', Date.now(), ->
+      d2.resolve()
+    )
+    $.when(d1, d2).done ->
+      if callback
+        callback(value)
 
   getTasks: (callback) ->
     @get('tasks', callback)
@@ -75,14 +83,14 @@ class Storage
     @set('tasks', value, callback)
 
     if SST.storage.syncEnabled
-      SST.remote.set () ->
+      SST.remote.sync () ->
 
 
   linkDevices: ->
     @syncEnabled = true
     @setSyncKey()
     @createFirebase()
-    SST.remote.set()
+    SST.remote.sync () ->
 
   
   createFirebase: ->

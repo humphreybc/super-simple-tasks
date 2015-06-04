@@ -15,10 +15,8 @@ initialize = ->
 
   document.onkeyup = keyboardShortcuts
 
-  SST.windowFocus = true
   window.onfocus = onFocus
   window.onblur = onBlur
-  window.onbeforeunload = onBlur
 
   SST.mobile = ($(window).width() < 499)
 
@@ -31,13 +29,12 @@ initialize = ->
 
 
 onFocus = ->
-  SST.windowFocus = true
   SST.storage.goOnline()
+  SST.remote.sync () ->
 
 
 onBlur = ->
-  SST.windowFocus = false
-  SST.remote.set () ->
+  SST.remote.sync () ->
     SST.storage.goOffline()
 
 
@@ -53,9 +50,9 @@ getTasks = ->
 
   setTimeout (->
     if SST.storage.syncEnabled and SST.online
-      SST.remote.get (allTasks) ->
-        ListView.showTasks(allTasks)
-        displayApp(allTasks)
+      SST.remote.sync (data) ->
+        ListView.showTasks(data.tasks)
+        displayApp(data.tasks)
     ), 250
 
 
