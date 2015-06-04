@@ -6,22 +6,14 @@ class Remote
 
 
   merge: (callback) ->
-
     if @local and @remote
 
       if @local.default == true || @remote.default == true
         data = @getOnce()
-        SST.storage.set 'everything', data, () ->
-        callback(data.tasks)
-        return
-
-      else if @local.timestamp > @remote.timestamp
-        data = @local
-
       else
-        data = @remote
-        SST.storage.set 'everything', data, () ->
+        data = if @local.timestamp > @remote.timestamp then @local else @remote
 
+      SST.storage.set 'everything', data, () ->
       callback(data.tasks)
 
 
