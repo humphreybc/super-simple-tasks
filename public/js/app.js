@@ -549,20 +549,8 @@ Storage = (function() {
   };
 
   Storage.prototype.set = function(property, value, callback) {
-    var d1, d2;
-    d1 = $.Deferred();
-    d2 = $.Deferred();
-    LocalStorage.set(this.dbKey, property, value, function() {
-      return d1.resolve();
-    });
-    LocalStorage.set(this.dbKey, 'timestamp', Date.now(), function() {
-      return d2.resolve();
-    });
-    return $.when(d1, d2).done(function() {
-      if (callback) {
-        return callback(value);
-      }
-    });
+    LocalStorage.set(this.dbKey, property, value, callback);
+    return LocalStorage.set(this.dbKey, 'timestamp', Date.now(), callback);
   };
 
   Storage.prototype.getTasks = function(callback) {
@@ -572,7 +560,7 @@ Storage = (function() {
   Storage.prototype.setTasks = function(value, callback) {
     this.set('tasks', value, callback);
     if (SST.storage.syncEnabled) {
-      return SST.remote.sync(function() {});
+      return SST.remote.set(function() {});
     }
   };
 
@@ -580,7 +568,7 @@ Storage = (function() {
     this.syncEnabled = true;
     this.setSyncKey();
     this.createFirebase();
-    return SST.remote.sync(function() {});
+    return SST.remote.set();
   };
 
   Storage.prototype.createFirebase = function() {
@@ -634,61 +622,59 @@ Storage = (function() {
 var Remote;
 
 Remote = (function() {
-  function Remote() {}
-
-  Remote.prototype.merge = function(local, remote) {
-    var data;
-    if (local["default"] === true || remote["default"] === true) {
-      data = this.getTasks();
-      data["default"] = false;
-    } else {
-      data = local.timestamp > remote.timestamp ? local : remote;
-      console.log("Local " + local.timestamp);
-      console.log("Remot " + remote.timestamp);
-    }
-    SST.storage.set('everything', data, function() {
-      data.timestamp = Date.now();
-      return SST.remoteFirebase.set(data, function() {});
-    });
-    return data;
-  };
+  function Remote() {
+    this.local = null;
+    this.remote = null;
+  }
 
   Remote.prototype.sync = function(callback) {
-    var d1, d2, local, remote;
-    d1 = $.Deferred();
-    d2 = $.Deferred();
-    local = null;
-    remote = null;
+    var data;
+    if (this.local && this.remote) {
+      if (this.local["default"] === true || this.remote["default"] === true) {
+        data = this.getOnce();
+        SST.storage.set('everything', data, function() {});
+        callback(data.tasks);
+        return;
+      } else if (this.local.timestamp > this.remote.timestamp) {
+        data = this.local;
+      } else {
+        data = this.remote;
+        SST.storage.set('everything', data, function() {});
+      }
+      return callback(data.tasks);
+    }
+  };
+
+  Remote.prototype.get = function(callback) {
     SST.storage.get('everything', (function(_this) {
       return function(data) {
-        local = data || 1;
-        return d1.resolve();
+        _this.local = data || 1;
+        return _this.sync(callback);
       };
     })(this));
-    SST.remoteFirebase.on('value', ((function(_this) {
+    return SST.remoteFirebase.on('value', ((function(_this) {
       return function(data) {
-        remote = data.val();
-        return d2.resolve();
+        _this.remote = data.val();
+        return _this.sync(callback);
       };
     })(this)), function(errorObject) {
       console.log('The read failed: ' + errorObject.code);
     });
-    return $.when(d1, d2).done((function(_this) {
-      return function() {
-        var data;
-        data = _this.merge(local, remote);
-        return callback(data);
-      };
-    })(this));
   };
 
-  Remote.prototype.getTasks = function() {
+  Remote.prototype.getOnce = function() {
     var data;
     data = null;
     SST.remoteFirebase.once('value', function(value) {
       return data = value.val();
     });
     return data;
+  };
+
+  Remote.prototype.set = function(callback) {
+    return SST.storage.get('everything', function(data, callback) {
+      return SST.remoteFirebase.set(data, function(callback) {});
+    });
   };
 
   return Remote;
@@ -1018,7 +1004,7 @@ Views = (function() {
         return $blanket.hide();
       }
     }), 500);
-    host = 'localhost:9001';
+    host = 'dev.supersimpletasks.com';
     return $device_link_code.val('http://' + host + '/?share=' + SST.storage.dbKey);
   };
 
@@ -1435,8 +1421,10 @@ initialize = function() {
   SST.tourRunning = false;
   SST.tour = Tour.createTour();
   document.onkeyup = keyboardShortcuts;
+  SST.windowFocus = true;
   window.onfocus = onFocus;
   window.onblur = onBlur;
+  window.onbeforeunload = onBlur;
   SST.mobile = $(window).width() < 499;
   ListView.changeEmptyStateImage();
   getTasks();
@@ -1446,12 +1434,13 @@ initialize = function() {
 };
 
 onFocus = function() {
-  SST.storage.goOnline();
-  return SST.remote.sync(function() {});
+  SST.windowFocus = true;
+  return SST.storage.goOnline();
 };
 
 onBlur = function() {
-  return SST.remote.sync(function() {
+  SST.windowFocus = false;
+  return SST.remote.set(function() {
     return SST.storage.goOffline();
   });
 };
@@ -1469,9 +1458,9 @@ getTasks = function() {
   });
   return setTimeout((function() {
     if (SST.storage.syncEnabled && SST.online) {
-      return SST.remote.sync(function(data) {
-        ListView.showTasks(data.tasks);
-        return displayApp(data.tasks);
+      return SST.remote.get(function(allTasks) {
+        ListView.showTasks(allTasks);
+        return displayApp(allTasks);
       });
     }
   }), 250);

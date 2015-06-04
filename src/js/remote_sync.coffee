@@ -1,46 +1,57 @@
 class Remote
 
-  merge: (local, remote) ->
-    if local.default == true || remote.default == true
-      data = @getTasks()
-      data.default = false
-    else
-      data = if local.timestamp > remote.timestamp then local else remote
-      console.log("Local " + local.timestamp)
-      console.log("Remot " + remote.timestamp)
-
-    SST.storage.set 'everything', data, ->
-      data.timestamp = Date.now()
-      SST.remoteFirebase.set data, () ->
-    data
+  constructor: () ->
+    @local = null
+    @remote = null
 
 
   sync: (callback) ->
-    d1 = $.Deferred()
-    d2 = $.Deferred()
-    local = null
-    remote = null
+
+    if @local and @remote
+
+      if @local.default == true || @remote.default == true
+        data = @getOnce()
+        SST.storage.set 'everything', data, () ->
+        callback(data.tasks)
+        return
+
+      else if @local.timestamp > @remote.timestamp
+        data = @local
+
+      else
+        data = @remote
+        SST.storage.set 'everything', data, () ->
+
+      callback(data.tasks)
+
+
+  get: (callback) ->
 
     SST.storage.get 'everything', (data) =>
-      local = data || 1
-      d1.resolve()
+      @local = data || 1
+
+      @sync(callback)
 
     SST.remoteFirebase.on 'value', ((data) =>
-      remote = data.val()
-      d2.resolve()
+      @remote = data.val()
+
+      @sync(callback)
+
     ), (errorObject) ->
       console.log 'The read failed: ' + errorObject.code
       return
 
-    $.when(d1, d2).done =>
-      data = @merge(local, remote)
-      callback(data)
 
-
-  getTasks: () ->
+  getOnce: () ->
     data = null
 
     SST.remoteFirebase.once 'value', (value) ->
       data = value.val()
 
     data
+
+
+  set: (callback) ->
+    SST.storage.get 'everything', (data, callback) ->
+      SST.remoteFirebase.set data, (callback) ->
+
