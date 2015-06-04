@@ -15,7 +15,6 @@ initialize = ->
 
   document.onkeyup = keyboardShortcuts
 
-  SST.windowFocus = true
   window.onfocus = onFocus
   window.onblur = onBlur
   window.onbeforeunload = onBlur
@@ -31,12 +30,10 @@ initialize = ->
 
 
 onFocus = ->
-  SST.windowFocus = true
   SST.storage.goOnline()
 
 
 onBlur = ->
-  SST.windowFocus = false
   SST.remote.set () ->
     SST.storage.goOffline()
 

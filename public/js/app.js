@@ -1004,7 +1004,7 @@ Views = (function() {
         return $blanket.hide();
       }
     }), 500);
-    host = 'dev.supersimpletasks.com';
+    host = 'localhost:9001';
     return $device_link_code.val('http://' + host + '/?share=' + SST.storage.dbKey);
   };
 
@@ -1421,7 +1421,6 @@ initialize = function() {
   SST.tourRunning = false;
   SST.tour = Tour.createTour();
   document.onkeyup = keyboardShortcuts;
-  SST.windowFocus = true;
   window.onfocus = onFocus;
   window.onblur = onBlur;
   window.onbeforeunload = onBlur;
@@ -1434,12 +1433,10 @@ initialize = function() {
 };
 
 onFocus = function() {
-  SST.windowFocus = true;
   return SST.storage.goOnline();
 };
 
 onBlur = function() {
-  SST.windowFocus = false;
   return SST.remote.set(function() {
     return SST.storage.goOffline();
   });

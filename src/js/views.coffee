@@ -47,7 +47,7 @@ class Views
         $blanket.hide()
     ), 500
 
-    host = 'dev.supersimpletasks.com'
+    host = 'localhost:9001'
 
     $device_link_code.val('http://' + host + '/?share=' + SST.storage.dbKey)
 
@@ -100,10 +100,9 @@ class Views
 
     # Get rid of the # at the end of the URL
     history.pushState('', document.title, window.location.pathname)
-    
+
     SST.storage.set 'tour', 1, () ->
 
 
   @closeWhatsNew: ->
     SST.storage.set 'version', '2.2.0', () ->
-
