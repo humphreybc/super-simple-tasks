@@ -627,7 +627,7 @@ Remote = (function() {
     this.remote = null;
   }
 
-  Remote.prototype.sync = function(callback) {
+  Remote.prototype.merge = function(callback) {
     var data;
     if (this.local && this.remote) {
       if (this.local["default"] === true || this.remote["default"] === true) {
@@ -645,20 +645,20 @@ Remote = (function() {
     }
   };
 
-  Remote.prototype.get = function(callback) {
+  Remote.prototype.sync = function(callback) {
     SST.storage.get('everything', (function(_this) {
       return function(data) {
         _this.local = data || 1;
-        return _this.sync(callback);
+        return _this.merge(callback);
       };
     })(this));
     return SST.remoteFirebase.on('value', ((function(_this) {
       return function(data) {
         _this.remote = data.val();
-        return _this.sync(callback);
+        return _this.merge(callback);
       };
     })(this)), function(errorObject) {
-      console.log('The read failed: ' + errorObject.code);
+      return console.log('The read failed: ' + errorObject.code);
     });
   };
 
@@ -1455,7 +1455,7 @@ getTasks = function() {
   });
   return setTimeout((function() {
     if (SST.storage.syncEnabled && SST.online) {
-      return SST.remote.get(function(allTasks) {
+      return SST.remote.sync(function(allTasks) {
         ListView.showTasks(allTasks);
         return displayApp(allTasks);
       });

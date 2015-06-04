@@ -50,7 +50,7 @@ getTasks = ->
 
   setTimeout (->
     if SST.storage.syncEnabled and SST.online
-      SST.remote.get (allTasks) ->
+      SST.remote.sync (allTasks) ->
         ListView.showTasks(allTasks)
         displayApp(allTasks)
     ), 250

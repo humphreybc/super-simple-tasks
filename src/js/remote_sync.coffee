@@ -5,7 +5,7 @@ class Remote
     @remote = null
 
 
-  sync: (callback) ->
+  merge: (callback) ->
 
     if @local and @remote
 
@@ -25,21 +25,20 @@ class Remote
       callback(data.tasks)
 
 
-  get: (callback) ->
+  sync: (callback) ->
 
     SST.storage.get 'everything', (data) =>
       @local = data || 1
 
-      @sync(callback)
+      @merge(callback)
 
     SST.remoteFirebase.on 'value', ((data) =>
       @remote = data.val()
 
-      @sync(callback)
+      @merge(callback)
 
     ), (errorObject) ->
       console.log 'The read failed: ' + errorObject.code
-      return
 
 
   getOnce: () ->
