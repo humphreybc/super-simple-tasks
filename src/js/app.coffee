@@ -16,8 +16,6 @@ initialize = ->
   document.onkeyup = keyboardShortcuts
 
   window.onfocus = onFocus
-  window.onblur = onBlur
-  window.onbeforeunload = onBlur
 
   SST.mobile = ($(window).width() < 499)
 
@@ -33,11 +31,6 @@ onFocus = ->
   SST.storage.goOnline()
   SST.remote.sync (allTasks) ->
     reload(allTasks)
-
-
-onBlur = ->
-  SST.remote.set () ->
-    SST.storage.goOffline()
 
 
 reload = (allTasks) ->

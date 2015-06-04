@@ -14,6 +14,8 @@ class Remote
     data = if local.timestamp > remote.timestamp then local else remote
 
     SST.storage.set 'everything', data, () ->
+      SST.storage.get 'everything', (data, callback) ->
+        SST.remoteFirebase.set data, (callback) ->
     callback(data.tasks)
 
 
@@ -31,8 +33,3 @@ class Remote
 
     $.when(d1, d2).done (local, remote) =>
       @merge(local, remote, callback)
-
-
-  set: (callback) ->
-    SST.storage.get 'everything', (data, callback) ->
-      SST.remoteFirebase.set data, (callback) ->
