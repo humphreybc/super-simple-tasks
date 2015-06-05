@@ -25,7 +25,8 @@ initialize = ->
 
   SST.remoteFirebase.on 'value', ((data) =>
     data = data.val()
-    reload(data.tasks)
+    if data
+      reload(data.tasks)
   ), (errorObject) ->
     console.log 'The read failed: ' + errorObject.code
 
@@ -199,5 +200,4 @@ $(document).on 'click', '#export-tasks', (e) ->
 
 
 $(document).ready ->
-
   initialize()

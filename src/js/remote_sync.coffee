@@ -14,11 +14,11 @@ class Remote
     d2 = $.Deferred()
 
     SST.storage.get 'everything', (data) =>
-      local = data || 1
+      local = data || {}
       d1.resolve(local)
 
     SST.remoteFirebase.once 'value', (value) ->
-      remote = value.val()
+      remote = value.val() || {timestamp: 0}
       d2.resolve(remote)
 
     $.when(d1, d2).done (local, remote) =>
