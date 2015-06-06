@@ -16,6 +16,7 @@ initialize = ->
   document.onkeyup = keyboardShortcuts
 
   window.onfocus = onFocus
+  window.onblur = onBlur
 
   SST.mobile = ($(window).width() < 499)
 
@@ -38,8 +39,17 @@ initialize = ->
 onFocus = ->
   if SST.storage.syncEnabled and SST.online
     SST.storage.goOnline()
+    console.log 'Sync connected'
     SST.remote.sync (allTasks) ->
       reload(allTasks)
+
+
+onBlur = ->
+  if SST.storage.syncEnabled
+    setTimeout (->
+      SST.storage.goOffline()
+      console.log 'Sync disconnected'
+    ), 500
 
 
 getTasks = ->
