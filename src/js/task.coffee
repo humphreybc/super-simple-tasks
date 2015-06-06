@@ -175,7 +175,7 @@ class Task
   @seedDefaultTasks: ->
     data = Arrays.default_data
     SST.storage.set('everything', data)
-    return data.tasks
+    data.tasks
 
 
   @exportTasks: ->

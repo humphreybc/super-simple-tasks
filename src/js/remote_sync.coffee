@@ -23,3 +23,12 @@ class Remote
 
     $.when(d1, d2).done (local, remote) =>
       @merge(local, remote, callback)
+
+
+  setLiveFirebase: ->
+    SST.remoteFirebase.on 'value', ((data) ->
+      data = data.val()
+      if data
+        Views.reload(data.tasks)
+    ), (errorObject) ->
+      console.log 'The read failed: ' + errorObject.code

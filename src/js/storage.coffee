@@ -27,6 +27,7 @@ class LocalStorage
       data[property] = value
 
     data = JSON.stringify(data)
+
     localStorage.setItem(key, data)
 
     if callback

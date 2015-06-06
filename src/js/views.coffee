@@ -1,6 +1,94 @@
 class Views
   timeout = 0
 
+  @getInitialTasks: =>
+    if SST.storage.syncEnabled and SST.online
+      SST.remote.sync (allTasks) =>
+        @reload(allTasks)
+    else
+      SST.storage.get 'everything', (everything) =>
+        # Chrome extension
+        if everything == null and chrome.storage
+          chrome.storage.sync.get 'todo', (everything) ->
+            allTasks = Migrations.updateToLocalStorage(everything)
+            @reload(allTasks)
+        else
+          # New user with no tasks
+          if everything == null
+            allTasks = Task.seedDefaultTasks()
+          # Upgrading to 3.0.0
+          else if everything.version == undefined
+            allTasks = Migrations.updateToObject(everything)
+          # User on 3.0.0 and has tasks in the new storage model
+          else
+            allTasks = everything.tasks
+
+          @reload(allTasks)
+
+
+  @keyboardShortcuts: (e) ->
+    evtobj = if window.event then event else e
+
+    enter_key = 13
+    l_key = 76
+    esc_key = 27
+    shift_key = 16
+
+    if evtobj.keyCode == enter_key
+      if $('#list-name').is(':focus')
+        Views.storeListName()
+        $('#list-name').blur()
+      else
+        TaskView.addTaskTriggered()
+        ga 'send', 'event', 'Add task shortcut', 'shortcut'
+      
+    if evtobj.keyCode == esc_key
+      $('#edit-task-overlay').removeClass('fade')
+      ListView.clearNewTaskInputs()
+      Views.toggleAddLinkInput(false)
+
+    if (evtobj.keyCode == esc_key)
+      Views.toggleModalDialog()
+      ga 'send', 'event', 'Modal dialog close shortcut', 'shortcut'
+    
+    if evtobj.altKey && evtobj.keyCode == l_key
+      Views.toggleAddLinkInput()
+      ga 'send', 'event', 'Add link shortcut', 'shortcut'
+
+
+  @standardLog: ->
+    console.log 'Super Simple Tasks v3.0.0'
+    console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
+                better at https://github.com/humphreybc/super-simple-tasks'
+
+
+  @reload: (allTasks) ->
+    ListView.showTasks(allTasks)
+    @displayApp(allTasks)
+
+
+  @onFocus: =>
+    if SST.storage.syncEnabled and SST.online
+      SST.storage.goOnline()
+      console.log 'Sync connected'
+      SST.remote.sync (allTasks) =>
+        @reload(allTasks)
+
+
+  @onBlur: ->
+    if SST.storage.syncEnabled
+      setTimeout (->
+        SST.storage.goOffline()
+        console.log 'Sync disconnected'
+      ), 500
+
+
+  @displayApp: (allTasks) ->
+    @checkOnboarding(allTasks, SST.tour)
+    @checkWhatsNew()
+    @animateContent()
+    @setListName()
+
 
   @setListName: ->
     SST.storage.get 'name', (list_name) ->

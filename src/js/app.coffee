@@ -2,7 +2,7 @@ SST = SST || {}
 
 # All the goodness
 initialize = ->
-  standardLog()
+  Views.standardLog()
   Extension.setPopupClass()
 
   SST.online = Utils.checkOnline()
@@ -13,107 +13,22 @@ initialize = ->
   SST.tourRunning = false
   SST.tour = Tour.createTour()
 
-  document.onkeyup = keyboardShortcuts
+  document.onkeyup = Views.keyboardShortcuts
 
-  window.onfocus = onFocus
-  window.onblur = onBlur
+  window.onfocus = Views.onFocus
+  window.onblur = Views.onBlur
 
   SST.mobile = ($(window).width() < 499)
 
   ListView.changeEmptyStateImage()
 
-  getTasks()
+  Views.getInitialTasks()
 
   if SST.storage.syncEnabled and SST.online
-    SST.remoteFirebase.on 'value', ((data) ->
-      data = data.val()
-      if data
-        reload(data.tasks)
-    ), (errorObject) ->
-      console.log 'The read failed: ' + errorObject.code
+    SST.remote.setLiveFirebase()
 
   unless SST.mobile
     $('#new-task').focus()
-
-
-onFocus = ->
-  if SST.storage.syncEnabled and SST.online
-    SST.storage.goOnline()
-    console.log 'Sync connected'
-    SST.remote.sync (allTasks) ->
-      reload(allTasks)
-
-
-onBlur = ->
-  if SST.storage.syncEnabled
-    setTimeout (->
-      SST.storage.goOffline()
-      console.log 'Sync disconnected'
-    ), 500
-
-
-getTasks = ->
-  if SST.storage.syncEnabled and SST.online
-    SST.remote.sync (allTasks) ->
-      reload(allTasks)
-  else
-    SST.storage.get 'everything', (everything) ->
-      if everything.version == undefined
-        allTasks = Migrations.run(everything)
-      else if (everything == null)
-        allTasks = Task.seedDefaultTasks()
-      else
-        allTasks = everything.tasks
-
-      reload(allTasks)
-
-
-reload = (allTasks) ->
-  ListView.showTasks(allTasks)
-  displayApp(allTasks)
-
-
-displayApp = (allTasks) ->
-  Views.checkOnboarding(allTasks, SST.tour)
-  Views.checkWhatsNew()
-  Views.animateContent()
-  Views.setListName()
-
-
-standardLog = ->
-  console.log 'Super Simple Tasks v3.0.0'
-  console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
-              better at https://github.com/humphreybc/super-simple-tasks'
-
-
-keyboardShortcuts = (e) ->
-  evtobj = if window.event then event else e
-
-  enter_key = 13
-  l_key = 76
-  esc_key = 27
-  shift_key = 16
-
-  if evtobj.keyCode == enter_key
-    if $('#list-name').is(':focus')
-      Views.storeListName()
-      $('#list-name').blur()
-    else
-      TaskView.addTaskTriggered()
-      ga 'send', 'event', 'Add task shortcut', 'shortcut'
-    
-  if evtobj.keyCode == esc_key
-    $('#edit-task-overlay').removeClass('fade')
-    ListView.clearNewTaskInputs()
-    Views.toggleAddLinkInput(false)
-
-  if (evtobj.keyCode == esc_key)
-    Views.toggleModalDialog()
-    ga 'send', 'event', 'Modal dialog close shortcut', 'shortcut'
-  
-  if evtobj.altKey && evtobj.keyCode == l_key
-    Views.toggleAddLinkInput()
-    ga 'send', 'event', 'Add link shortcut', 'shortcut'
 
 
 # We'll manage checking the checkbox thank you very much
