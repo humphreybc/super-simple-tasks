@@ -1,10 +1,10 @@
 .modal-blanket
   background-color rgba(0, 0, 0, 0.75)
   bottom 0
-  display none
   height 100%
   left 0
   opacity 0
+  pointer-events none
   position fixed
   right 0
   top 0
@@ -23,33 +23,47 @@
   position absolute
   pointer-events none
   padding 20px
-  transform translate(-50%, -50%) scale(0.95, 0.95)
+  transform translate(-50%, -50%) scale(0.9, 0.9)
   transition transform transition-speed-fast cubic-bezier(0.65, 0.05, 0.36, 1), opacity transition-speed-fast ease-in-out
   width 600px
   z-index z-index-modal
+  
+  input[type=text]
+    text-overflow ellipsis
+    padding-right 36px
   
   .modal-header
     overflow hidden
     
     img
       margin-top 5px
-      
-    #modal-close:hover
-      cursor pointer
-      opacity 0.6
   
   .modal-section
     margin-top 40px
+    position relative
     
   .modal-footer p
     font-size font-xsmall - 0.1
     color light-gray
+    
+  #copy
+    bottom 8px
+    cursor pointer
+    position absolute
+    right 8px
   
 .modal-show
-  opacity 1
-  pointer-events all
-  transform translate(-50%, -50%) scale(1, 1)
   
-.fade
-  opacity 1
+  .modal-blanket
+    pointer-events all
+    opacity 1
+
+  .modal
+    opacity 1
+    pointer-events all
+    transform translate(-50%, -50%) scale(1, 1)
+    
+.close:hover
+  cursor pointer
+  opacity 0.6
   

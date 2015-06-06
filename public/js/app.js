@@ -647,13 +647,11 @@ Remote = (function() {
     var d1, d2;
     d1 = $.Deferred();
     d2 = $.Deferred();
-    SST.storage.get('everything', (function(_this) {
-      return function(data) {
-        var local;
-        local = data || {};
-        return d1.resolve(local);
-      };
-    })(this));
+    SST.storage.get('everything', function(data) {
+      var local;
+      local = data || {};
+      return d1.resolve(local);
+    });
     SST.remoteFirebase.once('value', function(value) {
       var remote;
       remote = value.val() || {
@@ -967,22 +965,10 @@ Views = (function() {
   };
 
   Views.toggleModalDialog = function() {
-    var $blanket, $modal;
-    $blanket = $('.modal-blanket');
-    $modal = $('#link-devices-modal');
-    $blanket.show();
-    setTimeout((function() {
-      $blanket.toggleClass('fade');
-      return $modal.toggleClass('modal-show');
-    }), 250);
-    setTimeout((function() {
-      if ($modal.hasClass('modal-show')) {
-        return $device_link_code.select();
-      } else {
-        return $blanket.hide();
-      }
-    }), 500);
-    return this.populateLinkCode();
+    $('body').toggleClass('modal-show');
+    if ($('body').hasClass('modal-show')) {
+      return this.populateLinkCode();
+    }
   };
 
   Views.populateLinkCode = function() {
@@ -1403,16 +1389,16 @@ initialize = function() {
   SST.mobile = $(window).width() < 499;
   ListView.changeEmptyStateImage();
   getTasks();
-  SST.remoteFirebase.on('value', ((function(_this) {
-    return function(data) {
+  if (SST.storage.syncEnabled && SST.online) {
+    SST.remoteFirebase.on('value', (function(data) {
       data = data.val();
       if (data) {
         return reload(data.tasks);
       }
-    };
-  })(this)), function(errorObject) {
-    return console.log('The read failed: ' + errorObject.code);
-  });
+    }), function(errorObject) {
+      return console.log('The read failed: ' + errorObject.code);
+    });
+  }
   if (!SST.mobile) {
     return $('#new-task').focus();
   }
@@ -1484,7 +1470,7 @@ keyboardShortcuts = function(e) {
     ListView.clearNewTaskInputs();
     Views.toggleAddLinkInput(false);
   }
-  if ((evtobj.keyCode === esc_key) && ($('#link-devices-modal').hasClass('modal-show'))) {
+  if (evtobj.keyCode === esc_key) {
     Views.toggleModalDialog();
     ga('send', 'event', 'Modal dialog close shortcut', 'shortcut');
   }
@@ -1573,9 +1559,19 @@ $(document).on('click', '#modal-close', function(e) {
   return Views.toggleModalDialog();
 });
 
+$(document).on('click', '.modal-blanket', function(e) {
+  e.preventDefault();
+  return Views.toggleModalDialog();
+});
+
 $(document).on('click', '#export-tasks', function(e) {
   e.preventDefault();
   return Task.exportTasks();
+});
+
+$(document).on('click', '#copy', function(e) {
+  $('#device-link-code').select();
+  return document.execCommand('copy');
 });
 
 $(document).ready(function() {

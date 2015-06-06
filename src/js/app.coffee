@@ -23,12 +23,13 @@ initialize = ->
 
   getTasks()
 
-  SST.remoteFirebase.on 'value', ((data) =>
-    data = data.val()
-    if data
-      reload(data.tasks)
-  ), (errorObject) ->
-    console.log 'The read failed: ' + errorObject.code
+  if SST.storage.syncEnabled and SST.online
+    SST.remoteFirebase.on 'value', ((data) ->
+      data = data.val()
+      if data
+        reload(data.tasks)
+    ), (errorObject) ->
+      console.log 'The read failed: ' + errorObject.code
 
   unless SST.mobile
     $('#new-task').focus()
@@ -95,7 +96,7 @@ keyboardShortcuts = (e) ->
     ListView.clearNewTaskInputs()
     Views.toggleAddLinkInput(false)
 
-  if (evtobj.keyCode == esc_key) and ($('#link-devices-modal').hasClass('modal-show'))
+  if (evtobj.keyCode == esc_key)
     Views.toggleModalDialog()
     ga 'send', 'event', 'Modal dialog close shortcut', 'shortcut'
   
@@ -195,9 +196,19 @@ $(document).on 'click', '#modal-close', (e) ->
   Views.toggleModalDialog()
 
 
+$(document).on 'click', '.modal-blanket', (e) ->
+  e.preventDefault()
+  Views.toggleModalDialog()
+
+
 $(document).on 'click', '#export-tasks', (e) ->
   e.preventDefault()
   Task.exportTasks()
+
+
+$(document).on 'click', '#copy', (e) ->
+  $('#device-link-code').select()
+  document.execCommand('copy')
 
 
 $(document).ready ->

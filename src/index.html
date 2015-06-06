@@ -41,28 +41,30 @@
   <div class="modal" id="link-devices-modal">
     <div class="modal-inner">
       <div class="modal-header">
-        <img src="img/close.svg" width="16" height="16" class="right" id="modal-close" alt="Close" />
+        <img src="img/close.svg" width="16" height="16" class="right close" id="modal-close" alt="Close" />
         <img src="img/link-devices.svg" width="20" height="20" class="left" style="margin-right:10px;" alt="Link devices" />
         <h1 class="left">Link devices</h1>
       </div>
       <div class="modal-section">
         <p>Send this link to yourself and open it on another device.</p>
         <input id="device-link-code" type="text" placeholder="URL">
+        <a id="copy"><img src="img/copy.svg" width="20" height="20"></a>
       </div>
       <div class="modal-section modal-footer">
-        <p>When you enable multiple devices, tasks are stored both locally and with <a href="https://www.firebase.com/" target="_blank">Firebase</a>. Pro tip: you can also use this feature to invite friends to collaborate on a shared task list!</p>
+        <p>Pro tip: you can also use this feature to invite friends to collaborate on a shared task list!</p>
         <p><a href="#" id="disconnect-devices" style="color:#FF4444;">Disconnect from shared list</a></p>
       </div>
     </div>
   </div>
-  <div class="modal-blanket" style="display:none;"></div>
+  <div class="modal-blanket"></div>
 
   <div class="content" id="main-content">
 
     <div class="whats-new">
-      <div id="whats-new-close"></div>
-      <h2>What’s new in 2.2.0</h2>
-      <p>You can now edit a task! Hover over the task on your computer and click <b>Edit</b> to change its details. Also new: a wider range of colored dots to categorize your tasks.</p>
+      <img src="img/close.svg" width="16" height="16" class="right close" id="whats-new-close" alt="Close" />
+      <h2>What’s new in 3.0</h2>
+      <p>Sync your tasks across multiple devices and collaborate with your friends &amp; family! Click the <b>Link devices</b> icon in the top right to get started.</p>
+      <p>Many, many thanks to <a href="https://twitter.com/johnjiang101">John Jiang</a> and <a href="https://twitter.com/lucykbain">Lucy Bain</a> who helped me get this working.</p>
     </div>
 
     <div id="create-task">

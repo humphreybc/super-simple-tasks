@@ -13,7 +13,7 @@ class Remote
     d1 = $.Deferred()
     d2 = $.Deferred()
 
-    SST.storage.get 'everything', (data) =>
+    SST.storage.get 'everything', (data) ->
       local = data || {}
       d1.resolve(local)
 

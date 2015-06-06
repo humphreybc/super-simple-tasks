@@ -18,24 +18,10 @@ class Views
 
 
   @toggleModalDialog: ->
-    $blanket = $('.modal-blanket')
-    $modal = $('#link-devices-modal')
+    $('body').toggleClass('modal-show')
 
-    $blanket.show()
-
-    setTimeout (->
-      $blanket.toggleClass('fade')
-      $modal.toggleClass('modal-show')
-    ), 250
-
-    setTimeout (->
-      if $modal.hasClass('modal-show')
-        $device_link_code.select()
-      else
-        $blanket.hide()
-    ), 500
-
-    @populateLinkCode()
+    if $('body').hasClass('modal-show')
+      @populateLinkCode()
 
 
   @populateLinkCode: ->
