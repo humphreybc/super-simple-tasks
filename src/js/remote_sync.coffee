@@ -1,7 +1,12 @@
 class Remote
 
   merge: (local, remote, callback) ->
-    data = if local.timestamp > remote.timestamp then local else remote
+    if local.timestamp > remote.timestamp
+      data = local
+    else if local.timestamp == remote.timestamp
+      data = local
+    else
+      data = remote
 
     SST.storage.set 'everything', data, () ->
       SST.storage.get 'everything', (data, callback) ->
@@ -13,9 +18,11 @@ class Remote
     d1 = $.Deferred()
     d2 = $.Deferred()
 
-    SST.storage.get 'everything', (data) ->
-      local = data || {}
-      d1.resolve(local)
+    setTimeout (->
+      SST.storage.get 'everything', (data) ->
+        local = data || {}
+        d1.resolve(local)
+    ), 250
 
     SST.remoteFirebase.once 'value', (value) ->
       remote = value.val() || {timestamp: 0}
@@ -23,12 +30,3 @@ class Remote
 
     $.when(d1, d2).done (local, remote) =>
       @merge(local, remote, callback)
-
-
-  setLiveFirebase: ->
-    SST.remoteFirebase.on 'value', ((data) ->
-      data = data.val()
-      if data
-        Views.reload(data.tasks)
-    ), (errorObject) ->
-      console.log 'The read failed: ' + errorObject.code

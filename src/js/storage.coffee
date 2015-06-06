@@ -82,9 +82,6 @@ class Storage
   setListName: (value, callback) ->
     @set('name', value, callback)
 
-    if SST.storage.syncEnabled
-      SST.remote.sync () ->
-
 
   linkDevices: ->
     @syncEnabled = true

@@ -67,22 +67,6 @@ class Views
     @displayApp(allTasks)
 
 
-  @onFocus: =>
-    if SST.storage.syncEnabled and SST.online
-      SST.storage.goOnline()
-      console.log 'Sync connected'
-      SST.remote.sync (allTasks) =>
-        @reload(allTasks)
-
-
-  @onBlur: ->
-    if SST.storage.syncEnabled
-      setTimeout (->
-        SST.storage.goOffline()
-        console.log 'Sync disconnected'
-      ), 500
-
-
   @displayApp: (allTasks) ->
     @checkOnboarding(allTasks, SST.tour)
     @checkWhatsNew()

@@ -15,8 +15,8 @@ initialize = ->
 
   document.onkeyup = Views.keyboardShortcuts
 
-  window.onfocus = Views.onFocus
-  window.onblur = Views.onBlur
+  window.onfocus = onFocus
+  window.onblur = onBlur
 
   SST.mobile = ($(window).width() < 499)
 
@@ -24,11 +24,24 @@ initialize = ->
 
   Views.getInitialTasks()
 
-  if SST.storage.syncEnabled and SST.online
-    SST.remote.setLiveFirebase()
-
   unless SST.mobile
     $('#new-task').focus()
+
+
+onFocus = ->
+  if SST.storage.syncEnabled and SST.online
+    SST.storage.goOnline()
+    console.log 'Sync connected'
+    SST.remote.sync (allTasks) ->
+      Views.reload(allTasks)
+
+
+onBlur = ->
+  if SST.storage.syncEnabled
+    setTimeout (->
+      SST.storage.goOffline()
+      console.log 'Sync disconnected'
+    ), 250
 
 
 # We'll manage checking the checkbox thank you very much
