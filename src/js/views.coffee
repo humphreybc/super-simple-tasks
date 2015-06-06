@@ -57,13 +57,13 @@ class Views
 
   @checkOnboarding: (allTasks, tour) ->
     SST.storage.get 'tour', (t) ->
-      if (t == null) and (!SST.mobile) and (allTasks.length > 0)
+      if (t < 1) and (!SST.mobile) and (allTasks.length > 0)
         SST.tour.trigger 'depart.tourbus'
 
 
   @checkWhatsNew: ->
     SST.storage.get 'version', (version) ->
-      if (version < '3.3.0' || version == null) and (SST.tourRunning == false)
+      if (version < 300 || version == null) and (SST.tourRunning == false)
         $('.whats-new').show()
 
 
@@ -78,4 +78,4 @@ class Views
 
 
   @closeWhatsNew: ->
-    SST.storage.set 'version', '3.3.0', () ->
+    SST.storage.set 'version', 300, () ->

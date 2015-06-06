@@ -52,7 +52,6 @@ getTasks = ->
         allTasks = Task.seedDefaultTasks()
       else if everything.version == undefined
         allTasks = Migrations.updateStorageModel(everything)
-        debugger
       else
         allTasks = everything.tasks
 
