@@ -64,7 +64,6 @@ So I don't forget :)
 1. Manifest.json for Chrome Web Store has an updated version number
 1. app.coffee has an updated version number
 1. package.json has updated version number
-1. Make sure analytics.js is using tracking_code instead of dev_tracking_code
 1. Delete public/ and run 'grunt build'
 1. Create a .zip of /public for the Chrome Web Store
 1. Test .zip in Chrome Apps & Extensions Developer Tool

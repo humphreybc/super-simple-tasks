@@ -1018,7 +1018,7 @@ Views = (function() {
 
   Views.checkWhatsNew = function() {
     return SST.storage.get('version', function(version) {
-      if ((version < '2.2.0' || version === null) && (SST.tourRunning === false)) {
+      if ((version < '3.3.0' || version === null) && (SST.tourRunning === false)) {
         return $('.whats-new').show();
       }
     });
@@ -1032,7 +1032,7 @@ Views = (function() {
   };
 
   Views.closeWhatsNew = function() {
-    return SST.storage.set('version', '2.2.0', function() {});
+    return SST.storage.set('version', '3.3.0', function() {});
   };
 
   return Views;
@@ -1281,63 +1281,18 @@ var Migrations;
 Migrations = (function() {
   function Migrations() {}
 
-  Migrations.run = function(allTasks) {
-    if (allTasks) {
-      if (allTasks.length > 0) {
-        this.addLinkProperty(allTasks);
-        this.changePrioritiesToColor(allTasks);
-        return this.addTaskID(allTasks);
-      }
-    }
-  };
-
-  Migrations.addLinkProperty = function(allTasks) {
-    return SST.storage.get('whats-new-2-0-1', function(whatsNew) {
-      var i, j, len, task;
-      if (whatsNew === null) {
-        for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
-          task = allTasks[i];
-          if (!task.hasOwnProperty('link')) {
-            task.link = '';
-          }
-        }
-        return SST.storage.setTasks(allTasks);
-      }
+  Migrations.updateStorageModel = function(oldTasks) {
+    var data;
+    data = {
+      'name': '',
+      'timestamp': null,
+      'tour': 1,
+      'version': '3.0.0',
+      'tasks': oldTasks
+    };
+    return SST.storage.set('everything', data, function() {
+      return data.tasks;
     });
-  };
-
-  Migrations.changePrioritiesToColor = function(allTasks) {
-    var i, j, len, task;
-    if (!allTasks[0].hasOwnProperty('tag')) {
-      for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
-        task = allTasks[i];
-        task['tag'] = (function() {
-          switch (task.priority) {
-            case 'none':
-              return 'gray';
-            case 'minor':
-              return 'green';
-            case 'major':
-              return 'yellow';
-            case 'blocker':
-              return 'red';
-          }
-        })();
-        delete task.priority;
-      }
-      return SST.storage.setTasks(allTasks);
-    }
-  };
-
-  Migrations.addTaskID = function(allTasks) {
-    var i, j, len, task;
-    if (!allTasks[0].hasOwnProperty('id')) {
-      for (i = j = 0, len = allTasks.length; j < len; i = ++j) {
-        task = allTasks[i];
-        task.id = Utils.generateID();
-      }
-      return SST.storage.setTasks(allTasks);
-    }
   };
 
   return Migrations;
@@ -1423,6 +1378,9 @@ getTasks = function() {
       var allTasks;
       if (everything === null) {
         allTasks = Task.seedDefaultTasks();
+      } else if (everything.version === void 0) {
+        allTasks = Migrations.updateStorageModel(everything);
+        debugger;
       } else {
         allTasks = everything.tasks;
       }
@@ -1437,7 +1395,6 @@ reload = function(allTasks) {
 };
 
 displayApp = function(allTasks) {
-  Migrations.run(allTasks);
   Views.checkOnboarding(allTasks, SST.tour);
   Views.checkWhatsNew();
   Views.animateContent();
@@ -1445,7 +1402,7 @@ displayApp = function(allTasks) {
 };
 
 standardLog = function() {
-  console.log('Super Simple Tasks v2.2.2');
+  console.log('Super Simple Tasks v3.0.0');
   return console.log('Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks');
 };
 

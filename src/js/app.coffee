@@ -50,6 +50,9 @@ getTasks = ->
     SST.storage.get 'everything', (everything) ->
       if (everything == null)
         allTasks = Task.seedDefaultTasks()
+      else if everything.version == undefined
+        allTasks = Migrations.updateStorageModel(everything)
+        debugger
       else
         allTasks = everything.tasks
 
@@ -62,7 +65,6 @@ reload = (allTasks) ->
 
 
 displayApp = (allTasks) ->
-  Migrations.run(allTasks)
   Views.checkOnboarding(allTasks, SST.tour)
   Views.checkWhatsNew()
   Views.animateContent()
@@ -70,7 +72,7 @@ displayApp = (allTasks) ->
 
 
 standardLog = ->
-  console.log 'Super Simple Tasks v2.2.2'
+  console.log 'Super Simple Tasks v3.0.0'
   console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
               better at https://github.com/humphreybc/super-simple-tasks'
 

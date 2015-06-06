@@ -63,7 +63,7 @@ class Views
 
   @checkWhatsNew: ->
     SST.storage.get 'version', (version) ->
-      if (version < '2.2.0' || version == null) and (SST.tourRunning == false)
+      if (version < '3.3.0' || version == null) and (SST.tourRunning == false)
         $('.whats-new').show()
 
 
@@ -78,4 +78,4 @@ class Views
 
 
   @closeWhatsNew: ->
-    SST.storage.set 'version', '2.2.0', () ->
+    SST.storage.set 'version', '3.3.0', () ->
