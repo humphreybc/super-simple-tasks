@@ -59,6 +59,8 @@ class Views
     SST.storage.get 'tour', (t) ->
       if (t < 1) and (!SST.mobile) and (allTasks.length > 0)
         SST.tour.trigger 'depart.tourbus'
+      else
+        SST.tour.trigger 'stop.tourbus'
 
 
   @checkWhatsNew: ->
