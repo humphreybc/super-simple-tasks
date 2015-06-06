@@ -47,7 +47,7 @@ class Views
       ListView.clearNewTaskInputs()
       Views.toggleAddLinkInput(false)
 
-    if (evtobj.keyCode == esc_key)
+    if (evtobj.keyCode == esc_key) and $('body').hasClass('modal-show')
       Views.toggleModalDialog()
       ga 'send', 'event', 'Modal dialog close shortcut', 'shortcut'
     
