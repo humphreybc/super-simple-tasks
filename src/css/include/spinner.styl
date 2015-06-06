@@ -1,0 +1,93 @@
+#spinner
+  margin 100px auto
+  width 24px
+
+.la-line-scale-party
+  position relative
+  height 32px
+  
+  & > div
+    position relative
+    box-sizing content-box
+    color #fff
+    background #fff
+    border-color #fff
+    border-style solid
+    border-width 0
+    display inline-block
+    width 4px
+    height 32px
+    margin 2px
+    margin-top 0
+    margin-bottom 0
+    float left
+    border-radius 0
+    animation-name line-scale-party
+    animation-delay 0
+    animation-iteration-count infinite
+    
+    &:nth-child(1)
+      animation-duration .5s
+      animation-delay -.22s
+      
+    &:nth-child(2)
+      animation-duration .88s
+      animation-delay -.3s
+      
+    &:nth-child(3)
+      animation-duration .86s
+      animation-delay -.31s
+      
+    &:nth-child(4)
+      animation-duration .64s
+      animation-delay -.26s
+      
+    &:nth-child(5)
+      animation-duration .72s
+      animation-delay -.64s
+      
+  &:after
+    display table
+    line-height 0
+    clear both
+    content ""
+    
+  &.la-dark
+    
+    & > div
+      color green
+      background green
+      border-color green
+      
+  &.la-sm
+    height 16px
+    
+    & > div
+      width 2px
+      height 16px
+      margin 1px
+      
+  &.la-lg
+    height 48px
+    
+    & > div
+      width 6px
+      height 48px
+      margin 3px
+      
+  &.la-2x
+    height 64px
+    
+    & > div
+      width 8px
+      height 64px
+      margin 4px
+
+@keyframes line-scale-party
+  0%
+    transform scaleY(1)
+  50%
+    transform scaleY(.3)
+  100%
+    transform scaleY(1)
+

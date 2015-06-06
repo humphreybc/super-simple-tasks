@@ -14,12 +14,12 @@ class Views
 
   @animateContent: ->
     $('#task-list').addClass('list-show')
+    $('#spinner').hide()
 
 
   @toggleModalDialog: ->
     $blanket = $('.modal-blanket')
     $modal = $('#link-devices-modal')
-    $device_link_code = $('#device-link-code')
 
     $blanket.show()
 
@@ -35,9 +35,12 @@ class Views
         $blanket.hide()
     ), 500
 
-    host = 'localhost:9001'
+    @populateLinkCode()
 
-    $device_link_code.val('http://' + host + '/?share=' + SST.storage.dbKey)
+
+  @populateLinkCode: ->
+    host = 'supersimpletasks.com'
+    $('#device-link-code').val('http://' + host + '/?share=' + SST.storage.dbKey)
 
 
   @toggleAddLinkInput: (forceOpen = null) ->

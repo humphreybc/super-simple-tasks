@@ -962,14 +962,14 @@ Views = (function() {
   };
 
   Views.animateContent = function() {
-    return $('#task-list').addClass('list-show');
+    $('#task-list').addClass('list-show');
+    return $('#spinner').hide();
   };
 
   Views.toggleModalDialog = function() {
-    var $blanket, $device_link_code, $modal, host;
+    var $blanket, $modal;
     $blanket = $('.modal-blanket');
     $modal = $('#link-devices-modal');
-    $device_link_code = $('#device-link-code');
     $blanket.show();
     setTimeout((function() {
       $blanket.toggleClass('fade');
@@ -982,8 +982,13 @@ Views = (function() {
         return $blanket.hide();
       }
     }), 500);
-    host = 'localhost:9001';
-    return $device_link_code.val('http://' + host + '/?share=' + SST.storage.dbKey);
+    return this.populateLinkCode();
+  };
+
+  Views.populateLinkCode = function() {
+    var host;
+    host = 'supersimpletasks.com';
+    return $('#device-link-code').val('http://' + host + '/?share=' + SST.storage.dbKey);
   };
 
   Views.toggleAddLinkInput = function(forceOpen) {
