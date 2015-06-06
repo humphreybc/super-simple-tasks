@@ -538,10 +538,11 @@ Storage = (function() {
       localStorage.setItem('sync_key', shareCode);
       this.syncEnabled = true;
       history.pushState('', document.title, window.location.pathname);
-      Views.showSyncBlanket();
     }
     this.setSyncKey();
-    this.createFirebase();
+    if (this.syncEnabled) {
+      this.createFirebase();
+    }
   }
 
   Storage.prototype.get = function(property, callback) {
@@ -560,7 +561,14 @@ Storage = (function() {
   Storage.prototype.setTasks = function(value, callback) {
     this.set('tasks', value, callback);
     if (SST.storage.syncEnabled) {
-      return SST.remote.set(function() {});
+      return SST.remote.sync(function() {});
+    }
+  };
+
+  Storage.prototype.setListName = function(value, callback) {
+    this.set('name', value, callback);
+    if (SST.storage.syncEnabled) {
+      return SST.remote.sync(function() {});
     }
   };
 
@@ -568,7 +576,7 @@ Storage = (function() {
     this.syncEnabled = true;
     this.setSyncKey();
     this.createFirebase();
-    return SST.remote.set();
+    return SST.remote.sync(function() {});
   };
 
   Storage.prototype.createFirebase = function() {
@@ -622,59 +630,42 @@ Storage = (function() {
 var Remote;
 
 Remote = (function() {
-  function Remote() {
-    this.local = null;
-    this.remote = null;
-  }
+  function Remote() {}
 
-  Remote.prototype.merge = function(callback) {
+  Remote.prototype.merge = function(local, remote, callback) {
     var data;
-    if (this.local && this.remote) {
-      if (this.local["default"] === true || this.remote["default"] === true) {
-        data = this.getOnce();
-        SST.storage.set('everything', data, function() {});
-        callback(data.tasks);
-        return;
-      } else if (this.local.timestamp > this.remote.timestamp) {
-        data = this.local;
-      } else {
-        data = this.remote;
-        SST.storage.set('everything', data, function() {});
-      }
-      return callback(data.tasks);
-    }
+    data = local.timestamp > remote.timestamp ? local : remote;
+    SST.storage.set('everything', data, function() {
+      return SST.storage.get('everything', function(data, callback) {
+        return SST.remoteFirebase.set(data, function(callback) {});
+      });
+    });
+    return callback(data.tasks);
   };
 
   Remote.prototype.sync = function(callback) {
+    var d1, d2;
+    d1 = $.Deferred();
+    d2 = $.Deferred();
     SST.storage.get('everything', (function(_this) {
       return function(data) {
-        _this.local = data || 1;
-        return _this.merge(callback);
+        var local;
+        local = data || {};
+        return d1.resolve(local);
       };
     })(this));
-    return SST.remoteFirebase.on('value', ((function(_this) {
-      return function(data) {
-        _this.remote = data.val();
-        return _this.merge(callback);
-      };
-    })(this)), function(errorObject) {
-      return console.log('The read failed: ' + errorObject.code);
-    });
-  };
-
-  Remote.prototype.getOnce = function() {
-    var data;
-    data = null;
     SST.remoteFirebase.once('value', function(value) {
-      return data = value.val();
+      var remote;
+      remote = value.val() || {
+        timestamp: 0
+      };
+      return d2.resolve(remote);
     });
-    return data;
-  };
-
-  Remote.prototype.set = function(callback) {
-    return SST.storage.get('everything', function(data, callback) {
-      return SST.remoteFirebase.set(data, function(callback) {});
-    });
+    return $.when(d1, d2).done((function(_this) {
+      return function(local, remote) {
+        return _this.merge(local, remote, callback);
+      };
+    })(this));
   };
 
   return Remote;
@@ -790,7 +781,6 @@ Arrays = (function() {
     'timestamp': null,
     'tour': null,
     'version': null,
-    'default': true,
     'tasks': [
       {
         'id': Utils.generateID(),
@@ -856,8 +846,7 @@ Task = (function() {
       allTasks.unshift(newTask);
       SST.storage.setTasks(allTasks);
       ListView.showTasks(allTasks);
-      Analytics.sendTaskCount(allTasks);
-      return SST.storage.set('default', false, function() {});
+      return Analytics.sendTaskCount(allTasks);
     });
   };
 
@@ -960,15 +949,6 @@ Views = (function() {
 
   timeout = 0;
 
-  Views.showSyncBlanket = function() {
-    $('.modal-blanket').show();
-    $('.modal-blanket').addClass('fade');
-    return setTimeout((function() {
-      $('.modal-blanket').removeClass('fade');
-      return $('.modal-blanket').hide();
-    }), 4000);
-  };
-
   Views.setListName = function() {
     return SST.storage.get('name', function(list_name) {
       return $('#list-name').val(list_name);
@@ -978,13 +958,11 @@ Views = (function() {
   Views.storeListName = function() {
     var list_name;
     list_name = $('#list-name').val();
-    return SST.storage.set('name', list_name, function() {});
+    return SST.storage.setListName(list_name, function() {});
   };
 
   Views.animateContent = function() {
-    return setTimeout((function() {
-      return $('#main-content').addClass('content-show');
-    }), 150);
+    return $('#task-list').addClass('list-show');
   };
 
   Views.toggleModalDialog = function() {
@@ -1043,8 +1021,6 @@ Views = (function() {
     return SST.storage.get('tour', function(t) {
       if ((t === null) && (!SST.mobile) && (allTasks.length > 0)) {
         return SST.tour.trigger('depart.tourbus');
-      } else {
-        return SST.tour.trigger('stop.tourbus');
       }
     });
   };
@@ -1053,8 +1029,6 @@ Views = (function() {
     return SST.storage.get('version', function(version) {
       if ((version < '2.2.0' || version === null) && (SST.tourRunning === false)) {
         return $('.whats-new').show();
-      } else {
-        return $('.whats-new').hide();
       }
     });
   };
@@ -1214,8 +1188,7 @@ TaskView = (function() {
     checkbox = li.find('input');
     is_done = !checkbox.prop('checked');
     Task.updateAttr(this.getId(li), 'isDone', is_done);
-    checkbox.prop('checked', is_done);
-    return SST.storage.set('default', false, function() {});
+    return checkbox.prop('checked', is_done);
   };
 
   return TaskView;
@@ -1408,7 +1381,7 @@ Tour = (function() {
 
 })();
 
-var SST, displayApp, getTasks, initialize, keyboardShortcuts, onBlur, onFocus, standardLog;
+var SST, displayApp, getTasks, initialize, keyboardShortcuts, onFocus, reload, standardLog;
 
 SST = SST || {};
 
@@ -1422,45 +1395,54 @@ initialize = function() {
   SST.tour = Tour.createTour();
   document.onkeyup = keyboardShortcuts;
   window.onfocus = onFocus;
-  window.onblur = onBlur;
-  window.onbeforeunload = onBlur;
   SST.mobile = $(window).width() < 499;
   ListView.changeEmptyStateImage();
   getTasks();
+  SST.remoteFirebase.on('value', ((function(_this) {
+    return function(data) {
+      data = data.val();
+      if (data) {
+        return reload(data.tasks);
+      }
+    };
+  })(this)), function(errorObject) {
+    return console.log('The read failed: ' + errorObject.code);
+  });
   if (!SST.mobile) {
     return $('#new-task').focus();
   }
 };
 
 onFocus = function() {
-  return SST.storage.goOnline();
-};
-
-onBlur = function() {
-  return SST.remote.set(function() {
-    return SST.storage.goOffline();
-  });
+  if (SST.storage.syncEnabled && SST.online) {
+    SST.storage.goOnline();
+    return SST.remote.sync(function(allTasks) {
+      return reload(allTasks);
+    });
+  }
 };
 
 getTasks = function() {
-  SST.storage.get('everything', function(everything) {
-    var allTasks;
-    if (everything === null) {
-      allTasks = Task.seedDefaultTasks();
-    } else {
-      allTasks = everything.tasks;
-    }
-    ListView.showTasks(allTasks);
-    return displayApp(allTasks);
-  });
-  return setTimeout((function() {
-    if (SST.storage.syncEnabled && SST.online) {
-      return SST.remote.sync(function(allTasks) {
-        ListView.showTasks(allTasks);
-        return displayApp(allTasks);
-      });
-    }
-  }), 250);
+  if (SST.storage.syncEnabled && SST.online) {
+    return SST.remote.sync(function(allTasks) {
+      return reload(allTasks);
+    });
+  } else {
+    return SST.storage.get('everything', function(everything) {
+      var allTasks;
+      if (everything === null) {
+        allTasks = Task.seedDefaultTasks();
+      } else {
+        allTasks = everything.tasks;
+      }
+      return reload(allTasks);
+    });
+  }
+};
+
+reload = function(allTasks) {
+  ListView.showTasks(allTasks);
+  return displayApp(allTasks);
 };
 
 displayApp = function(allTasks) {

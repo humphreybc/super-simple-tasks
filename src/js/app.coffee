@@ -35,14 +35,10 @@ initialize = ->
 
 
 onFocus = ->
-  SST.storage.goOnline()
-  SST.remote.sync (allTasks) ->
-    reload(allTasks)
-
-
-reload = (allTasks) ->
-  ListView.showTasks(allTasks)
-  displayApp(allTasks)
+  if SST.storage.syncEnabled and SST.online
+    SST.storage.goOnline()
+    SST.remote.sync (allTasks) ->
+      reload(allTasks)
 
 
 getTasks = ->
@@ -57,6 +53,11 @@ getTasks = ->
         allTasks = everything.tasks
 
       reload(allTasks)
+
+
+reload = (allTasks) ->
+  ListView.showTasks(allTasks)
+  displayApp(allTasks)
 
 
 displayApp = (allTasks) ->

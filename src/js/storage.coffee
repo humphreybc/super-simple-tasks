@@ -52,10 +52,10 @@ class Storage
 
       history.pushState('', document.title, window.location.pathname)
 
-      Views.showSyncBlanket()
-
     @setSyncKey()
-    @createFirebase()
+
+    if @syncEnabled
+      @createFirebase()
 
 
   get: (property, callback) ->
@@ -73,6 +73,13 @@ class Storage
 
   setTasks: (value, callback) ->
     @set('tasks', value, callback)
+
+    if SST.storage.syncEnabled
+      SST.remote.sync () ->
+
+
+  setListName: (value, callback) ->
+    @set('name', value, callback)
 
     if SST.storage.syncEnabled
       SST.remote.sync () ->

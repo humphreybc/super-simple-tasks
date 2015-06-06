@@ -3,7 +3,13 @@
   margin -40px 0 0
   padding 0
   position relative
-  transition margin transition-speed ease-in-out
+  opacity 0
+  transition margin transition-speed ease-in-out, opacity 250ms, transform 250ms
+  transform scale(0.95, 0.95)
+  
+ul#task-list.list-show
+  opacity 1
+  transform scale(1, 1)
 
 .slip-reordering
   z-index z-index-reorder

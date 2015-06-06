@@ -2,16 +2,6 @@ class Views
   timeout = 0
 
 
-  @showSyncBlanket: ->
-    $('.modal-blanket').show()
-    $('.modal-blanket').addClass('fade')
-
-    setTimeout (->
-      $('.modal-blanket').removeClass('fade')
-      $('.modal-blanket').hide()
-    ), 4000
-
-
   @setListName: ->
     SST.storage.get 'name', (list_name) ->
       $('#list-name').val(list_name)
@@ -19,13 +9,11 @@ class Views
 
   @storeListName: ->
     list_name = $('#list-name').val()
-    SST.storage.set 'name', list_name, () ->
+    SST.storage.setListName list_name, () ->
 
 
   @animateContent: ->
-    setTimeout (->
-      $('#main-content').addClass('content-show')
-    ), 150
+    $('#task-list').addClass('list-show')
 
 
   @toggleModalDialog: ->
@@ -82,16 +70,12 @@ class Views
     SST.storage.get 'tour', (t) ->
       if (t == null) and (!SST.mobile) and (allTasks.length > 0)
         SST.tour.trigger 'depart.tourbus'
-      else
-        SST.tour.trigger 'stop.tourbus'
 
 
   @checkWhatsNew: ->
     SST.storage.get 'version', (version) ->
       if (version < '2.2.0' || version == null) and (SST.tourRunning == false)
         $('.whats-new').show()
-      else
-        $('.whats-new').hide()
 
 
   @finishTour: ->
