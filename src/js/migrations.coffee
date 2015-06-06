@@ -2,6 +2,16 @@
 
 class Migrations
 
+  @run: (data) ->
+
+    data = @moveToLocalStorage(data)
+    data = @updateStorageModel(data)
+
+  data.tasks
+
+  @moveToLocalStorage: (oldData) ->
+    debugger
+
   # Migrate storage model to object
   @updateStorageModel: (oldTasks) ->
 

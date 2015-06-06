@@ -58,10 +58,10 @@ getTasks = ->
       reload(allTasks)
   else
     SST.storage.get 'everything', (everything) ->
-      if (everything == null)
+      if everything.version == undefined
+        allTasks = Migrations.run(everything)
+      else if (everything == null)
         allTasks = Task.seedDefaultTasks()
-      else if everything.version == undefined
-        allTasks = Migrations.updateStorageModel(everything)
       else
         allTasks = everything.tasks
 
