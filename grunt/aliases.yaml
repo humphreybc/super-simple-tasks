@@ -17,3 +17,4 @@ build:
     - 'concat'
     - 'copy'
     - 'cacheBust'
+    - 'manifest'
