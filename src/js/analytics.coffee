@@ -50,13 +50,21 @@ $(document).on 'click', '#task-submit', ->
 $(document).on 'click', '#clear-completed', ->
   ga 'send', 'event', 'Clear completed', 'click'
 
-# Click on link devices icon
+# Click on Share list icon
 $(document).on 'click', '#link-devices', (e) ->
-  ga 'send', 'event', 'Link devices', 'click'
+  ga 'send', 'event', 'Share list', 'click'
 
 # Click to open as a tab
 $(document).on 'click', '#expand', ->
   ga 'send', 'event', 'Open as tab', 'click'
+
+# Click on disconnect from shared list
+$(document).on 'click', '#copy', (e) ->
+  ga 'send', 'event', 'Copy share URL', 'click'
+
+# Click on disconnect from shared list
+$(document).on 'click', '#disconnect-devices', (e) ->
+  ga 'send', 'event', 'Disconnect shared list', 'click'
 
 # Click on Export tasks in footer
 $(document).on 'click', '#export-tasks', ->
