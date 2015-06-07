@@ -41,7 +41,7 @@ onBlur = ->
     setTimeout (->
       SST.storage.goOffline()
       console.log 'Sync disconnected'
-    ), 250
+    ), 500
 
 
 # We'll manage checking the checkbox thank you very much
