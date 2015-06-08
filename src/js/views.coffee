@@ -9,7 +9,7 @@ class Views
       SST.storage.get 'everything', (everything) =>
         # Chrome extension
         if everything == null and chrome.storage
-          chrome.storage.sync.get 'todo', (everything) ->
+          chrome.storage.sync.get 'todo', (everything) =>
             allTasks = Migrations.updateToLocalStorage(everything)
             @reload(allTasks)
         else
