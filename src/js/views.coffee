@@ -85,8 +85,10 @@ class Views
 
 
   @animateContent: ->
-    $('#task-list').addClass('list-show')
     $('#spinner').hide()
+    setTimeout (->
+      $('#task-list').addClass('list-show')
+    ), 150
 
 
   @toggleModalDialog: ->
