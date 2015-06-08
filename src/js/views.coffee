@@ -1,7 +1,7 @@
 class Views
   timeout = 0
 
-
+  
   @onFocus: =>
     if SST.storage.syncEnabled and SST.online
       SST.storage.goOnline()
