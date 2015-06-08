@@ -153,3 +153,6 @@ class Views
 
   @closeWhatsNew: ->
     SST.storage.set 'version', 300, () ->
+
+
+  
