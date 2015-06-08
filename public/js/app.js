@@ -1173,10 +1173,9 @@ ListView = (function() {
   };
 
   ListView.addHTML = function(allTasks) {
-    var task_list, tasks;
-    task_list = $('#task-list');
+    var tasks;
     tasks = this.compileTemplate(allTasks);
-    return task_list.html(tasks);
+    return $('#task-list').html(tasks);
   };
 
   ListView.compileTemplate = function(allTasks) {

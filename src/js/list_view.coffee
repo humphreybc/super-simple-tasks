@@ -7,9 +7,8 @@ class ListView
 
 
   @addHTML: (allTasks) ->
-    task_list = $('#task-list')
     tasks = @compileTemplate(allTasks)
-    task_list.html(tasks)
+    $('#task-list').html(tasks)
 
 
   @compileTemplate: (allTasks) ->
@@ -20,7 +19,6 @@ class ListView
 
 
   @showTasks: (allTasks) ->
-
     if allTasks == undefined
       allTasks = []
 
