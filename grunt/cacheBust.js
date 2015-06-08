@@ -9,7 +9,7 @@ module.exports = {
   assets: {
     files: [{
       baseDir: 'public/',
-      src: ['public/index.html']
+      src: ['public/index.html', 'public/help.html']
     }]
   }
 };
