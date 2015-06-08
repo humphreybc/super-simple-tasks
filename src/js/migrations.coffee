@@ -7,7 +7,7 @@ class Migrations
       'name': '',
       'timestamp': null,
       'tour': 1,
-      'version': 300,
+      'version': 222,
       'tasks': oldTasks
     }
 
