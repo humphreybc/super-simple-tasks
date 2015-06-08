@@ -8,7 +8,7 @@
   &:hover
     background-color background-gray
     
-    .edit
+    .task-actions span
       display initial
 
   .task-checkbox
@@ -35,12 +35,18 @@
       cursor -moz-grab
       opacity 0.5
       
-  .edit
+  .task-actions span
     color light-gray
     cursor pointer
     display none
     font-size font-xsmall
     margin 1px 10px 0 0
+    
+    &.delete
+      color red
+      
+      &:hover
+        color dark-red
     
     &:hover
       color gray

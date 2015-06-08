@@ -15,8 +15,8 @@ initialize = ->
 
   document.onkeyup = Views.keyboardShortcuts
 
-  window.onfocus = onFocus
-  window.onblur = onBlur
+  window.onfocus = Views.onFocus
+  window.onblur = Views.onBlur
 
   SST.mobile = ($(window).width() < 499)
 
@@ -26,22 +26,6 @@ initialize = ->
 
   unless SST.mobile
     $('#new-task').focus()
-
-
-onFocus = ->
-  if SST.storage.syncEnabled and SST.online
-    SST.storage.goOnline()
-    console.log 'Sync connected'
-    SST.remote.sync (allTasks) ->
-      Views.reload(allTasks)
-
-
-onBlur = ->
-  if SST.storage.syncEnabled
-    setTimeout (->
-      SST.storage.goOffline()
-      console.log 'Sync disconnected'
-    ), 500
 
 
 # We'll manage checking the checkbox thank you very much
@@ -70,10 +54,13 @@ $(document).on 'mousedown', '.task > label', ->
 
 
 $(document).on 'click', '.edit', (e) ->
-
   li = $(this).closest('li')
-
   TaskView.editTask(TaskView.getId(li))
+
+
+$(document).on 'click', '.delete', (e) ->
+  li = $(this).closest('li')
+  Task.deleteTask(li)
 
 
 $(document).on 'click', '.tag', (e) ->

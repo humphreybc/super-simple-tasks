@@ -1,6 +1,23 @@
 class Views
   timeout = 0
 
+
+  @onFocus: =>
+    if SST.storage.syncEnabled and SST.online
+      SST.storage.goOnline()
+      console.log 'Sync connected'
+      SST.remote.sync (allTasks) =>
+        @reload(allTasks)
+
+
+  @onBlur: ->
+    if SST.storage.syncEnabled
+      setTimeout (->
+        SST.storage.goOffline()
+        console.log 'Sync disconnected'
+      ), 500
+
+
   @getInitialTasks: =>
     if SST.storage.syncEnabled and SST.online
       SST.remote.sync (allTasks) =>

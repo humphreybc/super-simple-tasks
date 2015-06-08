@@ -63,23 +63,6 @@ class TaskView
     ListView.clearNewTaskInputs()
     Views.toggleAddLinkInput(false)
 
-    
-  @taskEditedAnimation: (id) ->
-    task = TaskView.getLi(id)
-
-    setTimeout (->
-      task.addClass('edited-transition')
-      task.addClass('edited')
-    ), 250
-
-    setTimeout (->
-      task.removeClass('edited')
-    ), 2000
-
-    setTimeout (->
-      task.removeClass('edited-transition')
-    ), 3000
-
 
   @completeTask: (li) ->
     checkbox = li.find('input')

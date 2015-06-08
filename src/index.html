@@ -147,7 +147,10 @@
         </label>
         <span class="drag-handle right"></span>
         <span class="tag right" type="tag" tag="{{this.tag}}"></span>
-        <span class="edit right">Edit</span>
+        <div class="task-actions right">
+          <span class="edit">Edit</span>
+          <span class="delete">Delete</span>
+        </div>
         {{#if this.link}}
           <div class="task-link">
             <a href="{{this.link}}" target="_blank">{{this.link}}</a>

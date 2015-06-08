@@ -14,7 +14,7 @@
 
   <meta name="description" content="The world’s simplest to-do list." />
 
-  <link rel="stylesheet" href="css/app.f4e03be139d1480c.css">
+  <link rel="stylesheet" href="css/app.css">
   <link rel="shortcut icon" href="favicon.png" />
 
 </head>
@@ -147,7 +147,10 @@
         </label>
         <span class="drag-handle right"></span>
         <span class="tag right" type="tag" tag="{{this.tag}}"></span>
-        <span class="edit right">Edit</span>
+        <div class="task-actions right">
+          <span class="edit">Edit</span>
+          <span class="delete">Delete</span>
+        </div>
         {{#if this.link}}
           <div class="task-link">
             <a href="{{this.link}}" target="_blank">{{this.link}}</a>
@@ -157,7 +160,7 @@
     {{/each}}
   </script>
 
-  <script src="js/app.e055c8c9738b4d4c.js"></script>
+  <script src="js/app.js"></script>
 
 </body>
 

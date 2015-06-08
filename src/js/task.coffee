@@ -93,7 +93,15 @@ class Task
 
       SST.storage.setTasks allTasks, () ->
         ListView.showTasks(allTasks)
-        TaskView.taskEditedAnimation(id)
+
+
+  @deleteTask: (li) ->
+    toDelete = TaskView.getId(li)
+    
+    SST.storage.getTasks (allTasks) ->
+      allTasks.splice(toDelete, 1)
+      SST.storage.setTasks allTasks, () ->
+        ListView.showTasks(allTasks)
 
 
   # Updates the order upon drag and drop
