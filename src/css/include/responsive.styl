@@ -1,37 +1,46 @@
-@media screen and (max-width: 480px)
-  #create-task
-    #new-task-wrapper td, #new-task-input
-      display list-item
-      margin-bottom 4px
-      width 100% !important
+// Extension popup
+@media screen and (min-width: 460px) and (max-width: 650px)
+  .modal
+    width 95%
     
-  #edit-task-overlay
-    display none
+  #main-content .task label
+    max-width 60%
 
-  .task
-    position relative
+// Mobile
+@media screen and (max-width: 460px)
+  #main-content
 
-    .tag
-      position absolute
-      right 10px
-      top 10px
-
-    .drag-handle
+    #create-task #new-task-wrapper td, #create-task #new-task-input
+        display list-item
+        margin-bottom 4px
+        width 100%
+      
+    #edit-task-overlay
       display none
+
+    .task
+      position relative
       
-    &:hover
-      background-color white !important
-      
-    &:hover .task-actions
-      display none !important
+      label
+        max-width 85%
+
+      .tag
+        position absolute
+        right 10px
+        top 10px
+
+      .drag-handle
+        display none
+        
+      &:hover
+        background-color white
+        
+      &:hover .task-actions
+        display none
 
   footer ul li
     margin-bottom 5px
     width 100%
-
-@media screen and (max-width: 665px)
+    
   .modal
     width 95%
-    
-  .task label
-    max-width 60% !important
