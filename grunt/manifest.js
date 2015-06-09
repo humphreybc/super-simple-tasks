@@ -13,7 +13,9 @@ module.exports = {
       'js/*.js',
       'css/*.css',
       'img/*.svg',
-      'img/*.png'
+      'img/*.png',
+      'fonts/*.svg',
+      'fonts/*.woff'
     ],
     dest: 'public/cache_manifest.appcache'
   }
