@@ -20,7 +20,13 @@
 </head>
 <body class="help">
 
-  <div class="content slideInLeft animated-slow">
+  <header>
+    <div class="header-left left">
+      <img src="img/logo_white.svg" width="32" height="32" class="left" alt="Super Simple Tasks" />
+    </div>
+  </header>
+
+  <div class="content">
 
   <div class="help-items">
 
@@ -30,84 +36,86 @@
       <ul>
         <li><a href="#clear">Clear all completed tasks</a></li>
         <li><a href="#edit">Edit a task</a></li>
-        <li><a href="#delete">Delete a task</a></li>
-        <li><a href="#export">Export tasks</a></li>
         <li><a href="#share">Share your list with someone</a></li>
         <li><a href="#sync">Sync tasks to your phone</a></li>
         <li><a href="#connect">Connect multiple Chrome extensions</a></li>
         <li><a href="#disconnect">Disconnect from a shared list</a></li>
+        <li><a href="#delete">Delete a task</a></li>
+        <li><a href="#export">Export tasks</a></li>
         <li><a href="#bug">Report a bug or send feedback</a></li>
         <li><a href="#about">About</a></li>
 
       </ul>
     </div>
 
-    <a id="clear"></a>
+    <a name="clear"></a>
     <h2>Clear all completed tasks</h2>
     <p>Click <span><img src="img/clear_completed_dark.svg" height="18" width="18"/></span> <b>Clear completed</b> to remove all completed tasks.</p>
 
-    <a id="edit"></a>
+    <a name="edit"></a>
     <h2>Edit a task</h2>
     <p>On your computer, hover over a task and click <b>Edit</b>. Support for editing on mobile coming soon.</p>
 
-    <a id="delete"></a>
-    <h2>Delete a task</h2>
-    <p>On your computer, hover over a task and click <b>Delete</b>. On your phone, swipe a task to the side to delete it..</p>
-
-    <a id="export"></a>
-    <h2>Export tasks</h2>
-    <p>Click <b>Export tasks</b> at the bottom of the page to download your tasks as a JSON object.</p>
-
-    <a id="share"></a>
+    <a name="share"></a>
     <h2>Share your list with someone</h2>
     <p>
       <ol>
-        <li>Click on the <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Share list icon</b> in the top right.</li>
+        <li>Click on <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Share list</b> in the top right.</li>
         <li>Copy the link to your clipboard and send it to someone.</li>
-        <li>When they click the link, their task list will be connected with yours.</li>
+        <li>When they open the link, your lists will be connected.</li>
       </ol>
     </p>
     <p>If you experience any problems with shared lists, please <a href="#bug">let me know.</a></p>
 
-    <a id="sync"></a>
+    <a name="sync"></a>
     <h2>Sync tasks to your phone</h2>
     <p>
       <ol>
-        <li>Click on the <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Share list icon</b> in the top right.</li>
-        <li>Copy the URL to your clipboard and send it to yourself and open it on your phone.</li>
-        <li>If you’re using Chrome on Android, tap the Menu icon and choose <b>Add to Home Screen</b> to save a shortcut to Super Simple Tasks.</li>
+        <li>Click on <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Share list</b> in the top right.</li>
+        <li>Copy the link to your clipboard, send it to yourself, and open it on your phone.</li>
+        <li>If you’re using Chrome on Android, tap <b>Menu</b> and choose <b>Add to Home Screen</b> to save a shortcut to Super Simple Tasks.</li>
       </ol>
     </p>
     <p>If you experience any problems with syncing, please <a href="#bug">let me know.</a></p>
 
-    <a id="connect"></a>
+    <a name="connect"></a>
     <h2>Connect multiple Chrome extensions</h2>
     <p>As of Super Simple Tasks 3, syncing now uses the built-in sync feature instead of the chrome.storage.sync API. This means you need to manually connect multiple Chrome extensions.</p>
     <p>Better support for easily connecting multiple Chrome extensions is coming, however for now you can connect them manually by following these steps:</p>
     <p>
       <ol>
-        <li>Click on the <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Share list icon</b> in the top right.</li>
-        <li>Copy the the last part of the URL that begins with <b>/?share=</b> and send that to yourself.</li>
-        <li>On your other device, open the extension in a new tab by clicking the <span><img src="img/open_new_dark.svg" height="18" width="18"/> Open in new tab icon</span>.</li>
-        <li>Paste the <b>/?share=</b> at the end of the URL.</li>
+        <li>Click on <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Share list</b> in the top right.</li>
+        <li>Copy the the last part of the link that begins with <b>/?share=</b> and send that to yourself.</li>
+        <li>On your other device, open the extension in a new tab by clicking <span><img src="img/open_new_dark.svg" height="18" width="18"/></span> <b>Open as a tab</b>.</li>
+        <li>Paste the contents of <b>/?share=</b> at the end of the URL in your address bar.</li>
         <li>Hit Enter, and your tasks should now sync.</li>
       </ol>
     </p>
-    <p>For example, if your copied share code is this:</p>
+    <p><b>Example</b></p>
+    <p>Note: Don’t simply copy and paste this example as it won’t work.</p>
+    <p>If your copied share code is this:</p>
     <p class="help-quote">/?share=67376ee000a58367a06f</p>
     <p>Then this is what you should have in the address bar of the second computer:</p>
     <p class="help-quote">chrome-extension://ddbbiebdajepgmddlllejnbpfhfpcdpn/?share=67376ee000a58367a06f</p>
-    <p>Do not simply copy and paste this example as it won’t work.</p>
+    <p>If you experience any problems with syncing, please <a href="#bug">let me know.</a></p>
 
-    <a id="disconnect"></a>
+    <a name="disconnect"></a>
     <h2>Disconnect from a shared list</h2>
-    <p>Click on the <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Share list icon</b> in the top right and click <b>Disconnect from shared list.</b></p>
+    <p>Click <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Share list</b> in the top right and choose <b>Disconnect from shared list.</b></p>
 
-    <a id="bug"></a>
+    <a name="delete"></a>
+    <h2>Delete a task</h2>
+    <p>On your computer, hover over a task and click <b>Delete</b>. On your phone, swipe a task to delete it.</p>
+
+    <a name="export"></a>
+    <h2>Export tasks</h2>
+    <p>Click <b>Export tasks</b> at the bottom of the page to download your tasks.</p>
+
+    <a name="bug"></a>
     <h2>Report a bug or send feedback</h2>
     <p>Email <a href="mailto:humphreybc@gmail.com" target="_blank">humphreybc@gmail.com</a> to report a bug or send feedback.</p>
 
-    <a id="about"></a>
+    <a name="about"></a>
     <h2>About</h2>
     <p>Super Simple Tasks is built by <a href="https://twitter.com/humphreybc" target="_blank">Benjamin Humphrey</a> with help from <a href="https://twitter.com/johnjiang101">John Jiang</a> and <a href="https://twitter.com/lucykbain">Lucy Bain</a>. It’s a part time open source project and will be free forever.</p>
 
@@ -118,6 +126,23 @@
     <p>Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a></p>
 
   </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+  <script type="text/javascript">
+
+    function scrollToAnchor(aid){
+      var aTag = $("a[name='"+ aid +"']");
+      $('html,body').animate({
+        scrollTop: aTag.offset().top},'slow');
+    }
+
+    $("#help-menu ul li a").click(function() {
+      var id = $(this).attr('href').split('#')
+      scrollToAnchor(id[1]);
+    });
+
+  </script>
 
 </body>
 
