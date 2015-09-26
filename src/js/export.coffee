@@ -1,19 +1,19 @@
 # Exports task list to a .json file
 
-Exporter = (allTasks, FileTitle) ->
+Exporter = (allTasks, title) ->
 
-  exportData = JSON.stringify(allTasks)
+  exportData = []
 
-  # Add a newline after comma
-  reg = /(\,)/g
-  exportData = exportData.replace(reg, '$1\n')
+  for task in allTasks
+    if task.link == ''
+      exportData.push task.name
+    else
+      exportData.push (task.name + ' (' + task.link + ')')
 
-  # Remove the blank spaces from the title and replace them with an underscore
-  fileName = ''
-  fileName += FileTitle.replace(RegExp(' ', 'g'), '_')
+  exportData = exportData.join('\n\n')
   
   # Initialize file format and add data
-  uri = 'data:text/json;charset=utf-8,' + escape(exportData)
+  uri = 'data:text/plain;charset=utf-8,' + escape(exportData)
   
   # This trick will generate a temp <a /> tag
   link = document.createElement('a')
@@ -21,10 +21,9 @@ Exporter = (allTasks, FileTitle) ->
   
   # Set the visibility hidden so it will not affect the DOM
   link.style = 'visibility:hidden'
-  link.download = fileName + '.json'
+  link.download = title + '.txt'
   
   # This will append the anchor tag and remove it after automatic click
   document.body.appendChild link
   link.click()
   document.body.removeChild link
-

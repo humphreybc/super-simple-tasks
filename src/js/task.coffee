@@ -188,4 +188,4 @@ class Task
 
   @exportTasks: ->
     SST.storage.getTasks (allTasks) ->
-      Exporter(allTasks, 'super simple tasks backup')
+      Exporter(allTasks, 'tasks')
