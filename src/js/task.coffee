@@ -184,8 +184,3 @@ class Task
     data = Arrays.default_data
     SST.storage.set('everything', data)
     data.tasks
-
-
-  @exportTasks: ->
-    SST.storage.getTasks (allTasks) ->
-      Exporter(allTasks, 'tasks')

@@ -25,7 +25,7 @@ class Views
     else
       SST.storage.get 'everything', (everything) =>
         # Chrome extension
-        if everything == null and chrome.storage
+        if everything == null and window.chrome and chrome.storage
           chrome.storage.sync.get 'todo', (everything) =>
             allTasks = Migrations.updateToLocalStorage(everything)
             @reload(allTasks)
@@ -74,7 +74,7 @@ class Views
 
 
   @standardLog: ->
-    console.log 'Super Simple Tasks v3.0.0'
+    console.log 'Super Simple Tasks v3.0.1'
     console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
                 better at https://github.com/humphreybc/super-simple-tasks'
 
@@ -85,7 +85,6 @@ class Views
 
 
   @displayApp: (allTasks) ->
-    @checkOnboarding(allTasks, SST.tour)
     @checkWhatsNew()
     @animateContent()
     @setListName()
@@ -146,28 +145,11 @@ class Views
         $new_task_input.focus()
 
 
-  @checkOnboarding: (allTasks, tour) ->
-    SST.storage.get 'tour', (t) ->
-      if (t < 1) and (!SST.mobile) and (allTasks.length > 0)
-        SST.tour.trigger 'depart.tourbus'
-      else
-        SST.tour.trigger 'stop.tourbus'
-
-
   @checkWhatsNew: ->
+    return
     SST.storage.get 'version', (version) ->
       if (version < 300 || version == null) and (SST.tourRunning == false)
         $('.whats-new').show()
-
-
-  @finishTour: ->
-    SST.tourRunning = false
-    $('.tourbus-leg').hide()
-
-    # Get rid of the # at the end of the URL
-    history.pushState('', document.title, window.location.pathname)
-
-    SST.storage.set 'tour', 1, () ->
 
 
   @closeWhatsNew: ->

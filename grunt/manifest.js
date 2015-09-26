@@ -3,19 +3,15 @@ module.exports = {
     options: {
       basePath: 'public/',
       timestamp: true,
-      hash: true,
-      process: function(path) {
-        return path.substring('build/'.length);
-      }
+      hash: true
     },
     src: [
       'index.html',
-      'js/*.js',
-      'css/*.css',
-      'img/*.svg',
-      'img/*.png',
-      'fonts/*.svg',
-      'fonts/*.woff'
+      'help.html',
+      'js/*',
+      'css/*',
+      'img/*',
+      'fonts/*'
     ],
     dest: 'public/cache_manifest.appcache'
   }

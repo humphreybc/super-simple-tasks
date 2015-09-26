@@ -10,9 +10,6 @@ initialize = ->
   SST.storage = new Storage()
   SST.remote = new Remote()
 
-  SST.tourRunning = false
-  SST.tour = Tour.createTour()
-
   document.onkeyup = Views.keyboardShortcuts
 
   window.onfocus = Views.onFocus
@@ -50,7 +47,6 @@ $(document).on 'mousedown', '.task > label', ->
 
       li = $(this).closest('li')
       TaskView.completeTask(li)
-      Tour.nextTourBus(SST.tour)
 
 
 $(document).on 'click', '.edit', (e) ->
@@ -73,8 +69,6 @@ $(document).on 'click', '.tag', (e) ->
   li = $(this).closest('li')
   
   Task.cycleAttr(li, type_attr, value)
-
-  Tour.nextTourBus(SST.tour)
 
 
 # When hovering over the drag handle, unfocus the new task input field
@@ -127,9 +121,9 @@ $(document).on 'click', '.modal-blanket', (e) ->
   Views.toggleModalDialog()
 
 
-$(document).on 'click', '#export-tasks', (e) ->
+$(document).on 'click', '#print-tasks', (e) ->
   e.preventDefault()
-  Task.exportTasks()
+  window.print()
 
 
 $(document).on 'click', '#copy', (e) ->
