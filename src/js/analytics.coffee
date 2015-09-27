@@ -19,6 +19,15 @@ class Analytics
         'eventAction': 'Task count'
         'eventValue': allTasks.length
 
+      haveLinks = _.filter(allTasks, 'link')
+      linkRatio = haveLinks.length / allTasks.length
+
+      ga 'send',
+        'hitType': 'event'
+        'eventCategory': 'Data'
+        'eventAction': 'Link ratio'
+        'eventValue': linkRatio
+
 
   @sendTagClickEvent: ->
     window.clearTimeout(window.timeout)
@@ -30,8 +39,7 @@ class Analytics
 
 # Because this code is set as background code for the extension, we
 # don't want the pageviews firing all the time. So instead we
-# only send the pageview when the new task input has focus.
-# The new task input is focused by default when the page loads.
+# only send the pageview when the window has focus.
 $(window).focus ->
   Analytics.sendPageView()
 
