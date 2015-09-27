@@ -128,6 +128,9 @@ class Task
         oldLocation += 1
       allTasks.splice(oldLocation, 1)
 
+      # Brilliantly hacky way to put the completed stuff at the bottom
+      allTasks = _.sortBy(allTasks, 'isDone')
+
       SST.storage.setTasks(allTasks)
       ListView.showTasks(allTasks)
 
@@ -155,6 +158,10 @@ class Task
     SST.storage.getTasks (allTasks) ->
       task = allTasks[id]
       task[attr] = value
+
+      # Brilliantly hacky way to put the completed stuff at the bottom
+      allTasks = _.sortBy(allTasks, 'isDone')
+
       SST.storage.setTasks(allTasks)
       ListView.showTasks(allTasks)
 
