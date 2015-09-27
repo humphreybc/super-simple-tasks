@@ -66,9 +66,9 @@ $(document).on 'click', '#copy', (e) ->
 $(document).on 'click', '#disconnect-devices', (e) ->
   ga 'send', 'event', 'Disconnect shared list', 'click'
 
-# Click on Export tasks in footer
-$(document).on 'click', '#export-tasks', ->
-  ga 'send', 'event', 'Export tasks', 'click'
+# Click on Print tasks in footer
+$(document).on 'click', '#print-tasks', ->
+  ga 'send', 'event', 'Print tasks', 'click'
 
 # Reorder a task
 document.querySelector('#task-list').addEventListener 'slip:reorder', (e) ->

@@ -20,7 +20,6 @@ class TaskView
         Task.setNewTask(name, link)
         ListView.clearNewTaskInputs()
         TaskView.taskAddedAnimation()
-        Tour.nextTourBus(SST.tour)
 
     $('#new-task').focus()
 
