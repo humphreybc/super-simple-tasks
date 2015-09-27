@@ -31,8 +31,10 @@ class ListView
   @showEmptyState: (allTasks) ->
     if allTasks.length == 0
       $('#all-done').addClass('show-empty-state')
+      $('#print-tasks').addClass('disabled-link')
     else
       $('#all-done').removeClass('show-empty-state')
+      $('#print-tasks').removeClass('disabled-link')
 
 
   @changeEmptyStateImage: ->
