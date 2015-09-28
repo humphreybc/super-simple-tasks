@@ -19,6 +19,7 @@
 
   label
     font-size font-small
+    line-height 1.4em
     max-width 80%
     padding-left 28px
     text-indent -28px
@@ -35,27 +36,30 @@
       cursor -moz-grab
       opacity 0.5
       
-  .task-actions span
-    color light-gray
-    cursor pointer
-    display none
-    font-size font-xsmall
-    margin 1px 10px 0 0
+  .task-actions
+    margin-top 4px
     
-    &.delete
-      color red
+    span
+      color light-gray
+      cursor pointer
+      display none
+      font-size font-xsmall
+      margin-right 10px
+      
+      &.delete
+        color red
+        
+        &:hover
+          color dark-red
       
       &:hover
-        color dark-red
-    
-    &:hover
-      color gray
+        color gray
 
   .tag
     border-radius 20px
     cursor pointer
     height 20px
-    margin-top 1px
+    margin-top 2px
     width 20px
 
   [tag='gray']
