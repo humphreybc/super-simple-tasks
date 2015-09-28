@@ -3,7 +3,7 @@ class Arrays
   # This class contains default arrays
 
   # Colors for the tags
-  @tags = ['gray', 'green', 'red', 'yellow', 'pink', 'purple', 'blue']
+  @tags = ['gray', 'green', 'yellow', 'red', 'blue', 'pink', 'purple']
 
   # Default task data for new users
   @default_data =
