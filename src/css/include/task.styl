@@ -108,7 +108,10 @@
 
 .task.task-completed
   
-  label, .tag, .task-link, .edit
+  &:hover .task-actions
+    display none
+  
+  label, .tag, .task-link
     opacity 0.25
     
   .drag-handle

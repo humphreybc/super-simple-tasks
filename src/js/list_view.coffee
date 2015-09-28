@@ -10,6 +10,9 @@ class ListView
     tasks = @compileTemplate(allTasks)
     $('#task-list').html(tasks)
 
+    # Hack city hack hack city hack
+    firstCompleted = ($('#task-list').find('.task-completed'))[0]
+    $(firstCompleted).before('<hr>')
 
   @compileTemplate: (allTasks) ->
     source = $('#task-template').html()
@@ -29,6 +32,7 @@ class ListView
 
 
   @showEmptyState: (allTasks) ->
+
     if allTasks.length == 0
       $('#all-done').addClass('show-empty-state')
       $('#print-tasks').addClass('disabled-link')
@@ -40,3 +44,4 @@ class ListView
   @changeEmptyStateImage: ->
     if SST.online
       $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")')
+

@@ -1,7 +1,7 @@
 class TaskView
 
   @getId: (li) ->
-    $(li).parent().children().index(li)
+    $(li).parent().find('li').index(li)
     
 
   @getLi: (id) ->

@@ -130,6 +130,7 @@ class Task
 
       # Brilliantly hacky way to put the completed stuff at the bottom
       allTasks = _.sortBy(allTasks, 'isDone')
+      allTasks = _.sortBy(allTasks, 'isDone')
 
       SST.storage.setTasks(allTasks)
       ListView.showTasks(allTasks)

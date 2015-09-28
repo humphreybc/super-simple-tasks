@@ -24,6 +24,11 @@ list.addEventListener 'slip:reorder', (e) ->
   oldLocation = e.detail.originalIndex
   newLocation = e.detail.spliceIndex
 
+  # Account for the <hr> to separate completed tasks
+  if $(e.target).hasClass('task-completed')
+    oldLocation = oldLocation - 1
+    newLocation = newLocation - 1
+
   # Pass those locations to Task.updateOrder() to save the list
   Task.updateOrder(oldLocation, newLocation)
 
