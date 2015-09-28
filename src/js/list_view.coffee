@@ -14,6 +14,7 @@ class ListView
     firstCompleted = ($('#task-list').find('.task-completed'))[0]
     $(firstCompleted).before('<hr>')
 
+
   @compileTemplate: (allTasks) ->
     source = $('#task-template').html()
     template = Handlebars.compile(source)
@@ -29,6 +30,9 @@ class ListView
     @addHTML(allTasks)
 
     Extension.setBrowserActionBadge(allTasks)
+
+    # smartquotesforsmartpeople.com
+    smartquotes()
 
 
   @showEmptyState: (allTasks) ->
