@@ -174,6 +174,12 @@ class Task
       if allTasks == null
         return
 
+      # Play a little sound when you clear all of them
+      reward = _.filter(allTasks, 'isDone')
+      if reward.length > 0
+        audio = new Audio('../img/ceres.ogg')
+        audio.play()
+
       # Start from the bottom
       index = allTasks.length - 1
 
