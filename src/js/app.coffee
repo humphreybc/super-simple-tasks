@@ -105,6 +105,10 @@ $(document).on 'click', '#clear-completed', (e) ->
 
   completed = $('.task-completed')
 
+  if completed.length > 0
+    audio = new Audio('../img/ceres.ogg')
+    audio.play()
+
   delayTime = 0
   count = 0
 
