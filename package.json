@@ -1,6 +1,6 @@
 {
   "name": "super-simple-tasks",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "devDependencies": {
     "coffee-script": "*",
     "grunt": "~0.4.5",
