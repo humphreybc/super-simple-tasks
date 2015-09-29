@@ -163,12 +163,17 @@ class Views
     $('body').removeClass()
     $('body').addClass(color)
 
+    favicon = 'favicon_' + (color.split('-'))[1] + '.png'
+    $('#favicon').attr('href', favicon)
+
     setTimeout (->
       unless $('header, #task-submit').hasClass('theme-transition')
         $('header, #task-submit').removeClass('theme-transition')
     ), 1000
 
     SST.storage.set 'theme', color, () ->
+      if SST.storage.syncEnabled
+        SST.remote.sync () ->
 
 
   @getTheme: ->
