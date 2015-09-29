@@ -56,7 +56,9 @@ $(document).on 'click', '.edit', (e) ->
 
 $(document).on 'click', '.delete', (e) ->
   li = $(this).closest('li')
-  Task.deleteTask(li)
+
+  $(li).slideUp 250, ->
+    Task.deleteTask(li)
 
 
 $(document).on 'click', '.tag', (e) ->
@@ -96,7 +98,9 @@ $(document).on 'click', '#add-link', (e) ->
 
 $(document).on 'click', '#clear-completed', (e) ->
   e.preventDefault()
-  Task.clearCompleted()
+
+  $('.task-completed, #task-list hr').fadeOut 250, ->
+    Task.clearCompleted()
 
 
 $(document).on 'click', '#link-devices', (e) ->
