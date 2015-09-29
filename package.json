@@ -8,6 +8,7 @@
     "grunt-cli": "*",
     "grunt-coffeelint": "*",
     "grunt-contrib-coffee": "*",
+    "grunt-contrib-compress": "^0.13.0",
     "grunt-contrib-concat": "*",
     "grunt-contrib-connect": "*",
     "grunt-contrib-copy": "*",

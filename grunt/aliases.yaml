@@ -18,3 +18,4 @@ build:
     - 'copy'
     - 'cacheBust'
     - 'manifest'
+    - 'compress'
