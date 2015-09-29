@@ -74,7 +74,7 @@ class Views
 
 
   @standardLog: ->
-    console.log 'Super Simple Tasks v3.0.7'
+    console.log 'Super Simple Tasks v3.0.8'
     console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
                 better at https://github.com/humphreybc/super-simple-tasks'
 
@@ -85,7 +85,7 @@ class Views
 
 
   @displayApp: (allTasks) ->
-    @checkWhatsNew()
+    @checkWhatsNew(allTasks)
     @animateContent()
     @setListName()
 
@@ -145,15 +145,16 @@ class Views
         $new_task_input.focus()
 
 
-  @checkWhatsNew: ->
-    return
+  @checkWhatsNew: (allTasks) ->
     SST.storage.get 'version', (version) ->
-      if (version < 300 || version == null) and (SST.tourRunning == false)
-        $('.whats-new').show()
+      taskCount = allTasks.length
+      if (version < 308 || version == null) and (taskCount > 6) # Are they actually using it?
+        if SST.storage.syncEnabled == false # Hack for version 308
+          $('.whats-new').show()
 
 
   @closeWhatsNew: ->
-    SST.storage.set 'version', 300, () ->
+    SST.storage.set 'version', 308, () ->
 
 
   

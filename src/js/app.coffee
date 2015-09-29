@@ -82,7 +82,7 @@ $(document).on 'blur', '#list-name', (e) ->
 
 
 $(document).on 'click', '#whats-new-close', (e) ->
-  $('.whats-new').hide()
+  $('.whats-new').slideUp()
   Views.closeWhatsNew()
 
 
