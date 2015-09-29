@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<widget xmlns   = "http://www.w3.org/ns/widgets"
+    xmlns:gap   = "http://phonegap.com/ns/1.0"
+    id          = "com.supersimple.tasks"
+    versionCode = "30" 
+    version     = "3.0.6" >
+
+    <name>Super Simple Tasks</name>
+
+    <description>
+        The world’s simplest tasks app with offline support, an elegant design, and no account required! 
+    </description>
+
+    <author href="http://humphreybc.com" email="humphreybc@gmail.com">
+        Benjamin Humphrey 
+    </author>
+
+    <gap:platform name="android" />
+
+    <preference name="permissions" value="none" />
+    <preference name="android-minSdkVersion" value="21" />
+
+    <icon src="android-icon.png" />
+
+    <access origin="*" />
+
+    <!-- Whitelist configuration. Refer to https://cordova.apache.org/docs/en/edge/guide_appdev_whitelist_index.md.html -->
+    <plugin name="cordova-plugin-whitelist" version="1" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+    </platform>
+
+</widget>
