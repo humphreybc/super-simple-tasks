@@ -168,11 +168,11 @@ class Views
         $('header, #task-submit').removeClass('theme-transition')
     ), 1000
 
+    SST.storage.set 'theme', color, () ->
+
 
   @getTheme: ->
     SST.storage.get 'theme', (color) =>
+      if color == undefined
+        color == 'theme-green'
       @setTheme(color)
-
-
-  @saveTheme: (color) ->
-    SST.storage.set 'theme', color, () ->

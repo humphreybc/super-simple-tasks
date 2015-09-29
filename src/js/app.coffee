@@ -147,7 +147,6 @@ $(document).on 'click', '.modal-blanket', (e) ->
 $(document).on 'click', '.theme', (e) ->
   color = this.id
   Views.setTheme(color)
-  Views.saveTheme(color)
 
 
 $(document).on 'click', '#copy', (e) ->
