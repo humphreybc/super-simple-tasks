@@ -12,6 +12,7 @@ class Arrays
     'timestamp': null,
     'tour': null,
     'version': null,
+    'theme': 'theme-green',
     'tasks': [
       {
         'id': Utils.generateID(),

@@ -14,7 +14,7 @@
 
   <meta name="description" content="The world’s simplest to-do list." />
 
-  <link rel="stylesheet" href="css/app.df202e3b881e1209.css">
+  <link rel="stylesheet" href="css/app.8e7f49afdab80ab7.css">
   <link rel="shortcut icon" href="favicon.png" />
 
 </head>
@@ -94,11 +94,6 @@
       </div>
     </div>
 
-    <div id="all-done">
-      <div id="empty-state-image"></div>
-      <p>Congratulations, you’re completely done!<br>Enjoy this lovely photograph.</p>
-    </div>
-
     <ul id="task-list"></ul>
 
     <div id="spinner">
@@ -111,11 +106,23 @@
       </div>
     </div>
 
+    <div id="all-done">
+      <div id="empty-state-image"></div>
+      <p>Congratulations, you’re completely done!<br>Enjoy this lovely photograph.</p>
+    </div>
+
   </div>
 
   <footer>
     <ul>
-      <li><a href="#" id="print-tasks">Print tasks </a></li>
+      <li id="theme-selector">
+        <div>
+          <div id="theme-green" class="theme"></div>
+          <div id="theme-blue" class="theme"></div>
+          <div id="theme-orange" class="theme"></div>
+          <div id="theme-purple" class="theme"></div>
+        </div>
+      </li>
       <li>On <a href="https://github.com/humphreybc/super-simple-tasks">GitHub</a> &amp; the <a href="https://chrome.google.com/webstore/detail/super-simple-tasks/bngpflcpbefndiblbdjokgpmbldcoplk">Chrome Web Store</a></li>
       <li><a href="help.html">Help / Feedback</a></li>
     </ul>
@@ -142,7 +149,7 @@
     {{/each}}
   </script>
 
-  <script src="js/app.78fdb13aa3e5bce8.js"></script>
+  <script src="js/app.7fa2547a7e69a752.js"></script>
 
 </body>
 

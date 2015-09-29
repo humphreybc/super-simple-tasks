@@ -1,0 +1,113 @@
+// Some transitions to make things nice
+
+.theme-transition
+  transition background-color 1000ms !important
+
+// Global theme styles
+
+body.theme-green
+  header, .button-primary
+    background-color green
+    
+  .button-primary:hover
+    background-color lighten(green, 5)
+    
+  a
+    color green
+    
+  #theme-selector #theme-green
+    opacity 1
+    
+  #new-task
+    &:hover, &:focus
+      border 1px solid green
+    
+body.theme-blue
+  header, .button-primary
+    background-color blue
+    
+  .button-primary:hover
+    background-color lighten(blue, 5)
+    
+  a
+    color blue
+    
+  #theme-selector #theme-blue
+    opacity 1
+  
+  #new-task
+    &:hover, &:focus
+      border 1px solid blue
+
+body.theme-orange
+  header, .button-primary
+    background-color orange
+    
+  .button-primary:hover
+    background-color lighten(orange, 5)
+    
+  a
+    color orange
+    
+  #theme-selector #theme-orange
+    opacity 1
+    
+  #new-task
+    &:hover, &:focus
+      border 1px solid orange
+    
+body.theme-purple
+  header, .button-primary
+    background-color purple
+    
+  .button-primary:hover
+    background-color lighten(purple, 5)
+    
+  a
+    color purple
+    
+  #theme-selector #theme-purple
+    opacity 1
+    
+  #new-task
+    &:hover, &:focus
+      border 1px solid purple
+    
+
+// Theme selector in footer
+
+#theme-selector
+  margin-top 2px
+  
+  div
+    width 75px
+    margin 0 auto
+
+    .theme
+      background-color red
+      border-radius radius
+      cursor pointer
+      height 15px
+      float left
+      margin-right 5px
+      opacity 0.25
+      width 15px
+    
+      &:last-child
+        margin-right 0
+        
+      &:hover
+        opacity 1
+        
+  #theme-green
+    background-color green
+  
+  #theme-blue
+    background-color blue
+  
+  #theme-red
+    background-color red
+    
+  #theme-purple
+    background-color purple
+    

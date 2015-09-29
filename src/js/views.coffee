@@ -85,6 +85,7 @@ class Views
 
 
   @displayApp: (allTasks) ->
+    @getTheme()
     @checkWhatsNew(allTasks)
     @animateContent()
     @setListName()
@@ -157,4 +158,21 @@ class Views
     SST.storage.set 'version', 308, () ->
 
 
-  
+  @setTheme: (color) ->
+    $('header, #task-submit').addClass('theme-transition')
+    $('body').removeClass()
+    $('body').addClass(color)
+
+    setTimeout (->
+      unless $('header, #task-submit').hasClass('theme-transition')
+        $('header, #task-submit').removeClass('theme-transition')
+    ), 1000
+
+
+  @getTheme: ->
+    SST.storage.get 'theme', (color) =>
+      @setTheme(color)
+
+
+  @saveTheme: (color) ->
+    SST.storage.set 'theme', color, () ->

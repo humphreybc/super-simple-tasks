@@ -144,9 +144,10 @@ $(document).on 'click', '.modal-blanket', (e) ->
   Views.toggleModalDialog()
 
 
-$(document).on 'click', '#print-tasks', (e) ->
-  e.preventDefault()
-  window.print()
+$(document).on 'click', '.theme', (e) ->
+  color = this.id
+  Views.setTheme(color)
+  Views.saveTheme(color)
 
 
 $(document).on 'click', '#copy', (e) ->
