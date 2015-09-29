@@ -1,7 +1,7 @@
 // Some transitions to make things nice
 
 .theme-transition
-  transition background-color 1000ms !important
+  transition background-color 500ms !important
 
 // Global theme styles
 
@@ -21,6 +21,9 @@ body.theme-green
   #new-task
     &:hover, &:focus
       border 1px solid green
+      
+  ul#task-list .task.slip-reordering
+    border 2px solid green
     
 body.theme-blue
   header, .button-primary
@@ -38,6 +41,9 @@ body.theme-blue
   #new-task
     &:hover, &:focus
       border 1px solid blue
+      
+  ul#task-list .task.slip-reordering
+    border 2px solid blue
 
 body.theme-orange
   header, .button-primary
@@ -55,6 +61,9 @@ body.theme-orange
   #new-task
     &:hover, &:focus
       border 1px solid orange
+      
+  ul#task-list .task.slip-reordering
+    border 2px solid orange
     
 body.theme-purple
   header, .button-primary
@@ -72,6 +81,9 @@ body.theme-purple
   #new-task
     &:hover, &:focus
       border 1px solid purple
+      
+  ul#task-list .task.slip-reordering
+    border 2px solid purple
     
 
 // Theme selector in footer
