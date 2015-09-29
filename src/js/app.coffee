@@ -48,8 +48,8 @@ $(document).on 'mousedown', '.task > label', ->
       li = $(this).closest('li')
 
       $(li).animate {
-        opacity: 0.25
-      }, 150, ->
+        'opacity': '0.25'
+      }, 250, ->
         TaskView.completeTask(li)
 
 
