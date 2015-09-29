@@ -8,6 +8,19 @@
 
 // Mobile
 @media screen and (max-width: 460px)
+
+  #edit-task-overlay, .drag-handle, .task-actions
+    display none
+    
+  // Editing on mobile
+
+  // #edit-task-overlay
+  //   height 155px
+  //   overflow-x hidden
+
+  // .link-active #edit-task-overlay
+  //   height 190px !important
+
   #main-content
 
     #create-task #new-task-wrapper td, #create-task #new-task-input
@@ -18,8 +31,8 @@
     #attach-link-td
       padding 0
       
-    #edit-task-overlay
-      display none
+    .task-actions
+      margin-right 20px
 
     .task
       position relative
@@ -31,15 +44,9 @@
         position absolute
         right 10px
         top 10px
-
-      .drag-handle
-        display none
         
       &:hover
         background-color white
-        
-      &:hover .task-actions
-        display none
 
   footer ul li
     margin-bottom 5px

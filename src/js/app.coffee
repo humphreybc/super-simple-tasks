@@ -46,7 +46,11 @@ $(document).on 'mousedown', '.task > label', ->
     unless holding
 
       li = $(this).closest('li')
-      TaskView.completeTask(li)
+
+      $(li).animate {
+        opacity: 0.25
+      }, 150, ->
+        TaskView.completeTask(li)
 
 
 $(document).on 'click', '.edit', (e) ->
@@ -99,8 +103,23 @@ $(document).on 'click', '#add-link', (e) ->
 $(document).on 'click', '#clear-completed', (e) ->
   e.preventDefault()
 
-  $('.task-completed, #task-list hr').fadeOut 250, ->
-    Task.clearCompleted()
+  completed = $('.task-completed')
+
+  delayTime = 0
+  count = 0
+
+  completed.each ->
+    $(this).delay(delayTime).animate {
+      'margin-left': '-500px'
+      'opacity': '0'
+    }, 150
+    delayTime += 150
+    count += 1
+
+  if count == completed.length
+    setTimeout (->
+      Task.clearCompleted()
+    ), delayTime
 
 
 $(document).on 'click', '#link-devices', (e) ->
