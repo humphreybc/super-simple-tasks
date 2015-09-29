@@ -2,7 +2,7 @@ class Extension
 
   @setPopupClass: ->
     if Utils.getUrlParameter('popup') == 'true'
-      $('body').addClass('popup')
+      $('html').addClass('popup')
 
 
   @setBrowserActionBadge: (allTasks) ->
