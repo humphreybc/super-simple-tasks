@@ -158,12 +158,32 @@ class Views
     SST.storage.set 'version', 308, () ->
 
 
-  @setTheme: (color) ->
+  @setTheme: (theme) ->
     $('header, #task-submit').addClass('theme-transition')
     $('body').removeClass()
-    $('body').addClass(color)
+    $('body').addClass(theme)
 
-    favicon = 'favicon_' + (color.split('-'))[1] + '.png'
+    # Map color names to hex
+    colors = {
+      green:  '4CAF50',
+      blue:   '2196F3',
+      orange: 'FF7043',
+      purple: '7E57C2'
+    }
+
+    # e.g. theme = 'theme-green'
+    # e.g. color = 'green'
+    # e.g. hex   = '4CAF50'
+
+    # e.g. 'theme-green' to 'green'
+    color = theme.split('-')[1]
+    hex = '#' + colors[color]
+
+    # Change status bar on Android
+    $('#android-theme-color').attr('content', hex)
+
+    # Change favicon
+    favicon = 'favicon_' + color + '.png'
     $('#favicon').attr('href', favicon)
 
     setTimeout (->
@@ -171,7 +191,8 @@ class Views
         $('header, #task-submit').removeClass('theme-transition')
     ), 1000
 
-    SST.storage.set 'theme', color, () ->
+    # Save theme choice in storage
+    SST.storage.set 'theme', theme, () ->
       if SST.storage.syncEnabled
         SST.remote.sync () ->
 
