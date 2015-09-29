@@ -1934,7 +1934,7 @@ Views = (function() {
     return SST.storage.get('theme', (function(_this) {
       return function(color) {
         if (color === void 0) {
-          color === 'theme-green';
+          color = 'theme-green';
         }
         return _this.setTheme(color);
       };

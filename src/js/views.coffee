@@ -174,5 +174,5 @@ class Views
   @getTheme: ->
     SST.storage.get 'theme', (color) =>
       if color == undefined
-        color == 'theme-green'
+        color = 'theme-green'
       @setTheme(color)
