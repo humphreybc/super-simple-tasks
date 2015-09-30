@@ -22,6 +22,7 @@ class Views
     if SST.storage.syncEnabled and SST.online
       SST.remote.sync (allTasks) =>
         @reload(allTasks)
+        @displayApp(allTasks)
     else
       SST.storage.get 'everything', (everything) =>
         # Chrome extension
@@ -29,6 +30,7 @@ class Views
           chrome.storage.sync.get 'todo', (everything) =>
             allTasks = Migrations.updateToLocalStorage(everything)
             @reload(allTasks)
+            @displayApp(allTasks)
         else
           # New user with no tasks
           if everything == null
@@ -41,6 +43,7 @@ class Views
             allTasks = everything.tasks
 
           @reload(allTasks)
+          @displayApp(allTasks)
 
 
   @keyboardShortcuts: (e) ->
@@ -81,7 +84,6 @@ class Views
 
   @reload: (allTasks) ->
     ListView.showTasks(allTasks)
-    @displayApp(allTasks)
 
 
   @displayApp: (allTasks) ->
@@ -187,14 +189,13 @@ class Views
     $('#favicon').attr('href', favicon)
 
     setTimeout (->
-      unless $('header, #task-submit').hasClass('theme-transition')
-        $('header, #task-submit').removeClass('theme-transition')
-    ), 1000
+      $('header, #task-submit').removeClass('theme-transition')
 
-    # Save theme choice in storage
-    SST.storage.set 'theme', theme, () ->
-      if SST.storage.syncEnabled
-        SST.remote.sync () ->
+      # Save theme choice in storage
+      SST.storage.set 'theme', theme, () ->
+        if SST.storage.syncEnabled
+          SST.remote.sync () ->
+    ), 400
 
 
   @getTheme: ->

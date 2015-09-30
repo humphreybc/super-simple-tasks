@@ -12,21 +12,20 @@ class Analytics
 
 
   @sendTaskCount: (allTasks) ->
-    SST.storage.getTasks (allTasks) ->
-      ga 'send',
-        'hitType': 'event'
-        'eventCategory': 'Data'
-        'eventAction': 'Task count'
-        'eventValue': allTasks.length
+    ga 'send',
+      'hitType': 'event'
+      'eventCategory': 'Data'
+      'eventAction': 'Task count'
+      'eventValue': allTasks.length
 
-      haveLinks = _.filter(allTasks, 'link')
-      linkRatio = haveLinks.length / allTasks.length
+    haveLinks = _.filter(allTasks, 'link')
+    linkRatio = haveLinks.length / allTasks.length
 
-      ga 'send',
-        'hitType': 'event'
-        'eventCategory': 'Data'
-        'eventAction': 'Link ratio'
-        'eventValue': linkRatio
+    ga 'send',
+      'hitType': 'event'
+      'eventCategory': 'Data'
+      'eventAction': 'Link ratio'
+      'eventValue': linkRatio
 
 
   @sendTagClickEvent: ->
@@ -34,6 +33,14 @@ class Analytics
 
     window.timeout = setTimeout (->
       ga 'send', 'event', 'Tag color', 'click'
+    ), 1000
+
+
+  @sendThemeClickEvent: ->
+    window.clearTimeout(window.timeout)
+
+    window.timeout = setTimeout (->
+      ga 'send', 'event', 'Theme clicked', 'click'
     ), 1000
 
 
@@ -74,9 +81,9 @@ $(document).on 'click', '#copy', (e) ->
 $(document).on 'click', '#disconnect-devices', (e) ->
   ga 'send', 'event', 'Disconnect shared list', 'click'
 
-# Click on Print tasks in footer
-$(document).on 'click', '#print-tasks', ->
-  ga 'send', 'event', 'Print tasks', 'click'
+# Choose a theme
+$(document).on 'click', '.theme', ->
+  Analytics.sendThemeClickEvent()
 
 # Reorder a task
 document.querySelector('#task-list').addEventListener 'slip:reorder', (e) ->
