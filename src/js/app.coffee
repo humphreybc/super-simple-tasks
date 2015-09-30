@@ -132,6 +132,24 @@ $(document).on 'click', '#link-devices', (e) ->
   Views.toggleModalDialog()
 
 
+$(document).on 'click', '#share-with-someone', (e) ->
+  e.preventDefault()
+  $('#modal-choose').hide()
+  $('#modal-share').show()
+
+
+$(document).on 'click', '#join-existing-list', (e) ->
+  e.preventDefault()
+  $('#modal-choose').hide()
+  $('#modal-join').show()
+  $('#modal-code-input').focus()
+
+
+$(document).on 'click', '#modal-join-button', (e) ->
+  e.preventDefault()
+  Views.setSyncCode()
+
+
 $(document).on 'click', '#disconnect-devices', (e) ->
   e.preventDefault()
   SST.storage.disconnectDevices()
@@ -151,11 +169,6 @@ $(document).on 'click', '.modal-blanket', (e) ->
 $(document).on 'click', '.theme', (e) ->
   theme = this.id
   Views.setTheme(theme)
-
-
-$(document).on 'click', '#copy', (e) ->
-  $('#device-link-code').select()
-  document.execCommand('copy')
 
 
 $(document).ready ->

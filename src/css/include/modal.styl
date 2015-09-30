@@ -1,17 +1,3 @@
-.modal-blanket
-  background-color slate
-  bottom 0
-  height 100%
-  left 0
-  opacity 0
-  pointer-events none
-  position fixed
-  right 0
-  top 0
-  transition opacity transition-speed ease-in-out
-  width 100%
-  z-index z-index-modal-blanket
-  
 .modal
   background-color white
   border-radius radius
@@ -28,26 +14,48 @@
   width 600px
   z-index z-index-modal
   
-  input[type=text]
-    text-overflow ellipsis
-    padding-right 36px
-  
   .modal-header
     overflow hidden
+    margin-bottom 30px
+    
+  #modal-choose
+    margin-top 70px
+    
+  #modal-share
+    margin-top 50px
+    
+  #modal-join
+    width 80%
+    margin 50px auto 0
   
   .modal-section
-    margin-top 40px
+    margin 20px 0
     position relative
+    text-align center
+    
+    h1
+      font-size 2em
+    
+    a
+      color blue
+      
+      &:hover
+        color dark-blue
+
+  #modal-join #modal-join-button
+    background-image url('../img/check.svg')
+    background-position 50% 12px
+    float left
+    margin-top 10px
+    width 100px
     
   .modal-footer p
     font-size font-xsmall
     color light-gray
     
-  #copy
-    bottom 4px
+  .close:hover
     cursor pointer
-    position absolute
-    right 8px
+    opacity 0.6
   
 .modal-show
   
@@ -59,8 +67,18 @@
     opacity 1
     pointer-events all
     transform translate(-50%, -50%) scale(1, 1)
-    
-.close:hover
-  cursor pointer
-  opacity 0.6
+  
+.modal-blanket
+  background-color slate
+  bottom 0
+  height 100%
+  left 0
+  opacity 0
+  pointer-events none
+  position fixed
+  right 0
+  top 0
+  transition opacity transition-speed ease-in-out
+  width 100%
+  z-index z-index-modal-blanket
   

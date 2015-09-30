@@ -87,10 +87,15 @@ class Views
 
 
   @displayApp: (allTasks) ->
+    @loadTemplates()
     @getTheme()
     @checkWhatsNew(allTasks)
     @animateContent()
     @setListName()
+
+
+  @loadTemplates: ->
+    $('#modal-template').load('../modal.html')
 
 
   @setListName: ->
@@ -115,11 +120,24 @@ class Views
 
     if $('body').hasClass('modal-show')
       @populateLinkCode()
+    else
+      setTimeout (->
+        $('#modal-share, #modal-join').hide()
+        $('#modal-choose').show()
+      ), 250
 
 
   @populateLinkCode: ->
-    host = 'supersimpletasks.com'
-    $('#device-link-code').val('http://' + host + '/?share=' + SST.storage.dbKey)
+    $('#link-code').text(SST.storage.dbKey)
+    url = 'http://supersimpletasks.com/?share=' + SST.storage.dbKey
+    $('#link-code-url').text(url)
+    $('#link-code-url').attr('href', url)
+
+
+  @setSyncCode: () ->
+    code = $('#modal-code-input').val()
+    localStorage.setItem('sync_key', code)
+    location.reload()
 
 
   @toggleAddLinkInput: (forceOpen = null) ->
