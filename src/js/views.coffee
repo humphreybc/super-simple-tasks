@@ -77,7 +77,7 @@ class Views
 
 
   @standardLog: ->
-    console.log 'Super Simple Tasks v3.0.8'
+    console.log 'Super Simple Tasks v3.1.0'
     console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
                 better at https://github.com/humphreybc/super-simple-tasks'
 
