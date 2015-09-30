@@ -1854,7 +1854,7 @@ Views = (function() {
   };
 
   Views.animateContent = function() {
-    $('#spinner').hide();
+    $('#spinner').addClass('spinner-hidden');
     return setTimeout((function() {
       return $('#task-list').addClass('list-show');
     }), 150);

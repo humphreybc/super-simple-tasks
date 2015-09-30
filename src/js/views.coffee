@@ -104,7 +104,7 @@ class Views
 
 
   @animateContent: ->
-    $('#spinner').hide()
+    $('#spinner').addClass('spinner-hidden')
     setTimeout (->
       $('#task-list').addClass('list-show')
     ), 150
