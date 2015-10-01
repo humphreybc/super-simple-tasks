@@ -102,63 +102,23 @@ $(document).on 'click', '#add-link', (e) ->
 
 $(document).on 'click', '#clear-completed', (e) ->
   e.preventDefault()
-
-  completed = $('.task-completed')
-
-  if completed.length > 0
-    audio = new Audio('../img/ceres.ogg')
-    audio.play()
-
-  delayTime = 0
-  count = 0
-
-  completed.each ->
-    $(this).delay(delayTime).animate {
-      'margin-left': '-500px'
-      'opacity': '0'
-    }, 150
-    delayTime += 150
-    count += 1
-
-  if count == completed.length
-    setTimeout (->
-      Task.clearCompleted()
-    ), delayTime
+  Views.clearCompletedTasks()
 
 
-$(document).on 'click', '#link-devices', (e) ->
+$(document).on 'click', '#share-modal', (e) ->
   e.preventDefault()
   SST.storage.linkDevices()
-  Views.toggleModalDialog()
+  Views.doPushState('none')
+  Views.modal(this.id)
 
 
-$(document).on 'click', '#share-with-someone', (e) ->
+$(document).on 'click', '#share-list-modal a', (e) ->
   e.preventDefault()
-  $('#modal-choose').hide()
-  $('#modal-share').show()
-
-
-$(document).on 'click', '#join-existing-list', (e) ->
-  e.preventDefault()
-  $('#modal-choose').hide()
-  $('#modal-join').show()
-  $('#modal-code-input').focus()
+  Views.modal(this.id)
 
 
 $(document).on 'click', '#modal-join-button', (e) ->
-  e.preventDefault()
-  Views.setSyncCode()
-
-
-$(document).on 'click', '#disconnect-devices', (e) ->
-  e.preventDefault()
-  SST.storage.disconnectDevices()
-  location.reload()
-
-
-$(document).on 'click', '#modal-close', (e) ->
-  e.preventDefault()
-  Views.toggleModalDialog()
+  @setSyncCode()
 
 
 $(document).on 'click', '.modal-blanket', (e) ->
@@ -167,8 +127,14 @@ $(document).on 'click', '.modal-blanket', (e) ->
 
 
 $(document).on 'click', '.theme', (e) ->
-  theme = this.id
-  Views.setTheme(theme)
+  e.preventDefault()
+  Views.setTheme(this.id)
+
+
+$(window).on 'popstate', (event) ->
+  state = event.originalEvent.state
+  if state
+    Views.modal(state.id, true)
 
 
 $(document).ready ->

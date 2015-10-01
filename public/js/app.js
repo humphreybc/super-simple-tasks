@@ -1816,7 +1816,7 @@ Views = (function() {
       Views.toggleAddLinkInput(false);
     }
     if ((evtobj.keyCode === esc_key) && $('body').hasClass('modal-show')) {
-      Views.toggleModalDialog();
+      Views.modal('none');
       ga('send', 'event', 'Modal dialog close shortcut', 'shortcut');
     }
     if (evtobj.altKey && evtobj.keyCode === l_key) {
@@ -1865,16 +1865,74 @@ Views = (function() {
     }), 150);
   };
 
-  Views.toggleModalDialog = function() {
-    $('body').toggleClass('modal-show');
-    if ($('body').hasClass('modal-show')) {
-      return this.populateLinkCode();
-    } else {
-      return setTimeout((function() {
-        $('#modal-share, #modal-join').hide();
-        return $('#modal-choose').show();
-      }), 250);
+  Views.clearCompletedTasks = function() {
+    var audio, completed, count, delayTime;
+    completed = $('.task-completed');
+    if (completed.length > 0) {
+      audio = new Audio('../img/ceres.ogg');
+      audio.play();
     }
+    delayTime = 0;
+    count = 0;
+    completed.each(function() {
+      $(this).delay(delayTime).animate({
+        'margin-left': '-500px',
+        'opacity': '0'
+      }, 150);
+      delayTime += 150;
+      return count += 1;
+    });
+    if (count === completed.length) {
+      return setTimeout((function() {
+        return Task.clearCompleted();
+      }), delayTime);
+    }
+  };
+
+  Views.modal = function(id, pop) {
+    switch (id) {
+      case 'none':
+        return $('body').removeClass('modal-show');
+      case 'share-modal':
+        $('body').addClass('modal-show');
+        $('#modal-share, #modal-join').hide();
+        $('#modal-choose').show();
+        if (!pop) {
+          return this.doPushState(id);
+        }
+        break;
+      case 'share-list':
+        this.populateLinkCode();
+        $('#modal-choose').hide();
+        $('#modal-share').show();
+        if (!pop) {
+          return this.doPushState(id);
+        }
+        break;
+      case 'join-list':
+        $('#modal-choose').hide();
+        $('#modal-join').show();
+        $('#modal-code-input').focus();
+        if (!pop) {
+          return this.doPushState(id);
+        }
+        break;
+      case 'disconnect':
+        SST.storage.disconnectDevices();
+        return location.reload();
+      case 'modal-close':
+        return $('body').removeClass('modal-show');
+    }
+  };
+
+  Views.doPushState = function(id) {
+    var path, state, title;
+    state = {
+      id: id
+    };
+    title = id;
+    path = '';
+    return history.pushState(state, title, path);
   };
 
   Views.populateLinkCode = function() {
@@ -2312,63 +2370,24 @@ $(document).on('click', '#add-link', function(e) {
 });
 
 $(document).on('click', '#clear-completed', function(e) {
-  var audio, completed, count, delayTime;
   e.preventDefault();
-  completed = $('.task-completed');
-  if (completed.length > 0) {
-    audio = new Audio('../img/ceres.ogg');
-    audio.play();
-  }
-  delayTime = 0;
-  count = 0;
-  completed.each(function() {
-    $(this).delay(delayTime).animate({
-      'margin-left': '-500px',
-      'opacity': '0'
-    }, 150);
-    delayTime += 150;
-    return count += 1;
-  });
-  if (count === completed.length) {
-    return setTimeout((function() {
-      return Task.clearCompleted();
-    }), delayTime);
-  }
+  return Views.clearCompletedTasks();
 });
 
-$(document).on('click', '#link-devices', function(e) {
+$(document).on('click', '#share-modal', function(e) {
   e.preventDefault();
   SST.storage.linkDevices();
-  return Views.toggleModalDialog();
+  Views.doPushState('none');
+  return Views.modal(this.id);
 });
 
-$(document).on('click', '#share-with-someone', function(e) {
+$(document).on('click', '#share-list-modal a', function(e) {
   e.preventDefault();
-  $('#modal-choose').hide();
-  return $('#modal-share').show();
-});
-
-$(document).on('click', '#join-existing-list', function(e) {
-  e.preventDefault();
-  $('#modal-choose').hide();
-  $('#modal-join').show();
-  return $('#modal-code-input').focus();
+  return Views.modal(this.id);
 });
 
 $(document).on('click', '#modal-join-button', function(e) {
-  e.preventDefault();
-  return Views.setSyncCode();
-});
-
-$(document).on('click', '#disconnect-devices', function(e) {
-  e.preventDefault();
-  SST.storage.disconnectDevices();
-  return location.reload();
-});
-
-$(document).on('click', '#modal-close', function(e) {
-  e.preventDefault();
-  return Views.toggleModalDialog();
+  return this.setSyncCode();
 });
 
 $(document).on('click', '.modal-blanket', function(e) {
@@ -2377,9 +2396,16 @@ $(document).on('click', '.modal-blanket', function(e) {
 });
 
 $(document).on('click', '.theme', function(e) {
-  var theme;
-  theme = this.id;
-  return Views.setTheme(theme);
+  e.preventDefault();
+  return Views.setTheme(this.id);
+});
+
+$(window).on('popstate', function(event) {
+  var state;
+  state = event.originalEvent.state;
+  if (state) {
+    return Views.modal(state.id, true);
+  }
 });
 
 $(document).ready(function() {

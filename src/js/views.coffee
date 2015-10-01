@@ -68,7 +68,7 @@ class Views
       Views.toggleAddLinkInput(false)
 
     if (evtobj.keyCode == esc_key) and $('body').hasClass('modal-show')
-      Views.toggleModalDialog()
+      Views.modal('none')
       ga 'send', 'event', 'Modal dialog close shortcut', 'shortcut'
     
     if evtobj.altKey && evtobj.keyCode == l_key
@@ -115,16 +115,89 @@ class Views
     ), 150
 
 
-  @toggleModalDialog: ->
-    $('body').toggleClass('modal-show')
+  @clearCompletedTasks: ->
+    completed = $('.task-completed')
 
-    if $('body').hasClass('modal-show')
-      @populateLinkCode()
-    else
+    if completed.length > 0
+      audio = new Audio('../img/ceres.ogg')
+      audio.play()
+
+    delayTime = 0
+    count = 0
+
+    completed.each ->
+      $(this).delay(delayTime).animate {
+        'margin-left': '-500px'
+        'opacity': '0'
+      }, 150
+      delayTime += 150
+      count += 1
+
+    if count == completed.length
       setTimeout (->
+        Task.clearCompleted()
+      ), delayTime
+
+
+  # @toggleModalDialog: ->
+  #   $('body').toggleClass('modal-show')
+
+  #   state = {step: 'share'}
+  #   title = null
+  #   path = window.location.pathname
+
+  #   if $('body').hasClass('modal-show')
+  #     @populateLinkCode()
+  #     history.pushState(state, title, path)
+  #   else
+  #     setTimeout (->
+  #       $('#modal-share, #modal-join').hide()
+  #       $('#modal-choose').show()
+  #       history.pushState({step: ''}, title, path)
+  #     ), 250
+
+
+  @modal: (id, pop) ->
+
+    switch id
+      when 'none'
+        $('body').removeClass('modal-show')
+
+      when 'share-modal'
+        $('body').addClass('modal-show')
         $('#modal-share, #modal-join').hide()
         $('#modal-choose').show()
-      ), 250
+        unless pop
+          @doPushState(id)
+
+      when 'share-list'
+        @populateLinkCode()
+        $('#modal-choose').hide()
+        $('#modal-share').show()
+        unless pop
+          @doPushState(id)
+
+      when 'join-list'
+        $('#modal-choose').hide()
+        $('#modal-join').show()
+        $('#modal-code-input').focus()
+        unless pop
+          @doPushState(id)
+
+      when 'disconnect'
+        SST.storage.disconnectDevices()
+        location.reload()
+
+      when 'modal-close'
+        $('body').removeClass('modal-show')
+
+
+  @doPushState: (id) ->
+    state = {id: id}
+    title = id
+    path = ''
+
+    history.pushState(state, title, path)
 
 
   @populateLinkCode: ->
