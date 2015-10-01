@@ -1903,16 +1903,13 @@ Views = (function() {
         break;
       case 'share-list':
         this.populateLinkCode();
-        $('#modal-choose').hide();
-        $('#modal-share').show();
+        $('#modal-choose, #modal-share').toggle();
         if (!pop) {
           return this.doPushState(id);
         }
         break;
       case 'join-list':
-        $('#modal-choose').hide();
-        $('#modal-join').show();
-        $('#modal-code-input').focus();
+        $('#modal-choose, #modal-join').toggle();
         if (!pop) {
           return this.doPushState(id);
         }
@@ -2387,7 +2384,8 @@ $(document).on('click', '#share-list-modal a', function(e) {
 });
 
 $(document).on('click', '#modal-join-button', function(e) {
-  return this.setSyncCode();
+  Views.setSyncCode();
+  return location.reload();
 });
 
 $(document).on('click', '.modal-blanket', function(e) {

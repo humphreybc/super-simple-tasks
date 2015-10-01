@@ -118,7 +118,8 @@ $(document).on 'click', '#share-list-modal a', (e) ->
 
 
 $(document).on 'click', '#modal-join-button', (e) ->
-  @setSyncCode()
+  Views.setSyncCode()
+  location.reload()
 
 
 $(document).on 'click', '.modal-blanket', (e) ->

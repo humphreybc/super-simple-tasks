@@ -154,15 +154,12 @@ class Views
 
       when 'share-list'
         @populateLinkCode()
-        $('#modal-choose').hide()
-        $('#modal-share').show()
+        $('#modal-choose, #modal-share').toggle()
         unless pop
           @doPushState(id)
 
       when 'join-list'
-        $('#modal-choose').hide()
-        $('#modal-join').show()
-        $('#modal-code-input').focus()
+        $('#modal-choose, #modal-join').toggle()
         unless pop
           @doPushState(id)
 
