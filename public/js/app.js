@@ -2392,7 +2392,7 @@ $(document).on('click', '#modal-join-button', function(e) {
 
 $(document).on('click', '.modal-blanket', function(e) {
   e.preventDefault();
-  return Views.toggleModalDialog();
+  return Views.modal('none');
 });
 
 $(document).on('click', '.theme', function(e) {

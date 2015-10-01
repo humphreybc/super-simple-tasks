@@ -123,7 +123,7 @@ $(document).on 'click', '#modal-join-button', (e) ->
 
 $(document).on 'click', '.modal-blanket', (e) ->
   e.preventDefault()
-  Views.toggleModalDialog()
+  Views.modal('none')
 
 
 $(document).on 'click', '.theme', (e) ->

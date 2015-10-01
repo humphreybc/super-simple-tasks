@@ -139,24 +139,6 @@ class Views
       ), delayTime
 
 
-  # @toggleModalDialog: ->
-  #   $('body').toggleClass('modal-show')
-
-  #   state = {step: 'share'}
-  #   title = null
-  #   path = window.location.pathname
-
-  #   if $('body').hasClass('modal-show')
-  #     @populateLinkCode()
-  #     history.pushState(state, title, path)
-  #   else
-  #     setTimeout (->
-  #       $('#modal-share, #modal-join').hide()
-  #       $('#modal-choose').show()
-  #       history.pushState({step: ''}, title, path)
-  #     ), 250
-
-
   @modal: (id, pop) ->
 
     switch id
