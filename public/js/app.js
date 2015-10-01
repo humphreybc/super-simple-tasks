@@ -1915,6 +1915,7 @@ Views = (function() {
         }
         break;
       case 'disconnect':
+        debugger;
         SST.storage.disconnectDevices();
         return location.reload();
       case 'modal-close':

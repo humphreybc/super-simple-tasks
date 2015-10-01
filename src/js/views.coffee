@@ -164,6 +164,7 @@ class Views
           @doPushState(id)
 
       when 'disconnect'
+        debugger
         SST.storage.disconnectDevices()
         location.reload()
 
