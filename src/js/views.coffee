@@ -77,7 +77,7 @@ class Views
 
 
   @standardLog: ->
-    console.log 'Super Simple Tasks v3.1.0'
+    console.log 'Super Simple Tasks v3.1.1'
     console.log 'Like looking under the hood? Feel free to help make Super Simple Tasks
                 better at https://github.com/humphreybc/super-simple-tasks'
 
@@ -164,9 +164,9 @@ class Views
           @doPushState(id)
 
       when 'disconnect'
-        debugger
-        SST.storage.disconnectDevices()
-        location.reload()
+        if window.confirm('Are you sure you want to disconnect this list? Your tasks will still be stored locally.')
+          SST.storage.disconnectDevices()
+          location.reload()
 
       when 'modal-close'
         $('body').removeClass('modal-show')

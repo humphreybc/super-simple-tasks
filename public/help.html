@@ -14,8 +14,8 @@
 
   <meta name="description" content="The world’s simplest to-do list." />
 
-  <link rel="stylesheet" href="css/app.css">
-  <link rel="shortcut icon" href="favicon.png" />
+  <link rel="stylesheet" href="css/app.7fde04ea14541289.css">
+  <link rel="shortcut icon" href="favicon_green.png" />
 
 </head>
 <body class="help theme-green">
@@ -34,13 +34,11 @@
 
     <div id="help-menu">
       <ul>
-        <li><a href="#clear">Clear all completed tasks</a></li>
-        <li><a href="#edit">Edit a task</a></li>
+        <li><a href="#clear">Clear completed tasks</a></li>
         <li><a href="#share">Share your list with someone</a></li>
         <li><a href="#sync">Sync tasks to your phone</a></li>
         <li><a href="#connect">Connect multiple Chrome extensions</a></li>
         <li><a href="#disconnect">Disconnect from a shared list</a></li>
-        <li><a href="#delete">Delete a task</a></li>
         <li><a href="#print">Print tasks</a></li>
         <li><a href="#bug">Report a bug or send feedback</a></li>
         <li><a href="#about">About</a></li>
@@ -49,62 +47,48 @@
     </div>
 
     <a name="clear"></a>
-    <h2>Clear all completed tasks</h2>
+    <h2>Clear completed tasks</h2>
     <p>Click <span><img src="img/clear_completed_dark.svg" height="18" width="18"/></span> <b>Clear completed</b> to remove all completed tasks.</p>
-
-    <a name="edit"></a>
-    <h2>Edit a task</h2>
-    <p>On your computer, hover over a task and click <b>Edit</b>. Support for editing on mobile coming soon.</p>
 
     <a name="share"></a>
     <h2>Share your list with someone</h2>
     <p>
       <ol>
-        <li>Click on <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Share list</b> in the top right.</li>
-        <li>Copy the link to your clipboard and send it to someone.</li>
-        <li>When they open the link, your lists will be connected.</li>
+        <li>Click <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Sharing</b> in the top right.</li>
+        <li>Click <b>Share this list with someone</b>.</li>
+        <li>Send the link to your friend. When they open the link, your lists will be connected.</li>
       </ol>
     </p>
-    <p>If you experience any problems with shared lists, please <a href="#bug">let me know.</a></p>
 
     <a name="sync"></a>
     <h2>Sync tasks to your phone</h2>
     <p>
       <ol>
-        <li>Click on <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Share list</b> in the top right.</li>
-        <li>Copy the link to your clipboard, send it to yourself, and open it on your phone.</li>
-        <li>If you’re using Chrome on Android, tap <b>Menu</b> and choose <b>Add to Home screen</b> to save a shortcut to Super Simple Tasks. <a href="http://www.howtogeek.com/196087/how-to-add-websites-to-the-home-screen-on-any-smartphone-or-tablet/" target="_blank">Learn more about Add to Home screen.</a></li>
+        <li>Click <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Sharing</b> in the top right.</li>
+        <li>Click <b>Share this list with someone</b>.</li>
+        <li>On your phone, open <a href="http://supersimpletasks.com">supersimpletasks.com</a>.</li>
+        <li>Tap <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Sharing</b> in the top right.</li>
+        <li>Tap <b>Join an existing list</b>.</li>
+        <li>Enter the code from step 2 and tap the green button.</li>
       </ol>
     </p>
-    <p>If you experience any problems with syncing, please <a href="#bug">let me know.</a></p>
+    <p><b>Tip:</b> If you’re using Chrome on Android, tap <b>Menu</b> and choose <b>Add to Home screen</b> to put Super Simple Tasks on your home screen.</p>
 
     <a name="connect"></a>
     <h2>Connect multiple Chrome extensions</h2>
-    <p>As of Super Simple Tasks 3, syncing now uses the built-in sync feature instead of the chrome.storage.sync API. This means you need to manually connect multiple Chrome extensions.</p>
-    <p>Better support for easily connecting multiple Chrome extensions is coming, however for now you can connect them manually by following these steps:</p>
     <p>
       <ol>
-        <li>Click on <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Share list</b> in the top right.</li>
-        <li>Copy the the last part of the link that begins with <b>/?share=</b> and send that to yourself.</li>
-        <li>On your other device, open the extension in a new tab by clicking <span><img src="img/open_new_dark.svg" height="18" width="18"/></span> <b>Open as a tab</b>.</li>
-        <li>Paste the contents of <b>/?share=</b> at the end of the URL in your address bar.</li>
-        <li>Hit Enter, and your tasks should now sync.</li>
+        <li>Click <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Sharing</b> in the top right.</li>
+        <li>Click <b>Share this list with someone</b>.</li>
+        <li>On your other computer, open the extension and click <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Sharing</b>.</li>
+        <li>Click <b>Join an existing list</b>.</li>
+        <li>Enter the code from step 2 and click the green button.</li>
       </ol>
     </p>
-    <p><b>Example</b></p>
-    <p>If your copied share code is this:</p>
-    <p class="help-quote">/?share=c1428d</p>
-    <p>Then this is what you should have in the address bar of the second computer:</p>
-    <p class="help-quote">chrome-extension://ddbbiebdajepgmddlllejnbpfhfpcdpn/?share=c1428d</p>
-    <p>If you experience any problems with syncing, please <a href="#bug">let me know.</a></p>
 
     <a name="disconnect"></a>
     <h2>Disconnect from a shared list</h2>
-    <p>Click <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Share list</b> in the top right and choose <b>Disconnect from shared list.</b></p>
-
-    <a name="delete"></a>
-    <h2>Delete a task</h2>
-    <p>On your computer, hover over a task and click <b>Delete</b>. On your phone, swipe a task to delete it.</p>
+    <p>Click <span><img src="img/add_person_dark.svg" height="18" width="18"/></span> <b>Sharing</b> in the top right and click <b>Disconnect this list.</b></p>
 
     <a name="print"></a>
     <h2>Print tasks</h2>
