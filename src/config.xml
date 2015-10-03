@@ -3,7 +3,7 @@
     xmlns:gap   = "http://phonegap.com/ns/1.0"
     id          = "com.supersimple.tasks"
     versionCode = "30" 
-    version     = "3.0.6" >
+    version     = "3.1.1" >
 
     <name>Super Simple Tasks</name>
 
