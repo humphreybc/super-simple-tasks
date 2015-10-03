@@ -246,7 +246,7 @@ class Views
     color = theme.split('-')[1]
     hex = '#' + colors[color]
 
-    # Change status bar on Android
+    # Change status bar on Android (in Chrome)
     $('#android-theme-color').attr('content', hex)
 
     # Change favicon
@@ -268,3 +268,8 @@ class Views
       if color == undefined
         color = 'theme-green'
       @setTheme(color)
+
+
+  @setStatusBarColor: ->
+    if StatusBar
+      StatusBar.hide()

@@ -2,8 +2,8 @@
 <widget xmlns="http://www.w3.org/ns/widgets"
     xmlns:gap="http://phonegap.com/ns/1.0"
     id="com.phonegap.supersimpletasks"
-    versionCode="316"
-    version="3.1.6">
+    versionCode="317"
+    version="3.1.7">
 
     <name>Super Simple Tasks</name>
 
@@ -19,10 +19,8 @@
 
     <preference name="permissions" value="none" />
     <preference name="android-minSdkVersion" value="21" />
-    <preference name="SplashScreen" value="screen" />
-    <preference name="SplashScreenDelay" value="5000" />
 
-    <gap:plugin name="org.apache.cordova.splashscreen" />
+    <gap:plugin name="cordova-plugin-statusbar" source="npm" />
 
     <icon src="icon_xxxhdpi.png" />
     <icon src="img/icon_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
@@ -30,12 +28,20 @@
     <icon src="img/icon_xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
     <icon src="img/icon_xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
 
-    <gap:splash src="screen_xhdpi.png" />
-    <gap:splash src="img/screen_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
-    <gap:splash src="img/screen_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
-    <gap:splash src="img/screen_hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
-    <gap:splash src="img/screen_xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
-
     <access origin="*" />
+    <plugin name="cordova-plugin-whitelist" version="1" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+    </platform>
 
 </widget>

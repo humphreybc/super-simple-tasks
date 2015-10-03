@@ -138,5 +138,8 @@ $(window).on 'popstate', (event) ->
     Views.modal(state.id, true)
 
 
+document.addEventListener 'deviceready', Views.setStatusBarColor, false
+
+
 $(document).ready ->
   initialize()
