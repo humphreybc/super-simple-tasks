@@ -5,17 +5,23 @@ default:
 dev:
   description: 'Development build'
   tasks:
+    - 'build'
     - 'watch'
 build:
   description: 'Production build'
   tasks:
-    - 'exec'
+    - 'clean'
     - 'coffeelint'
     - 'coffee'
     - 'uglify'
     - 'stylus'
     - 'concat'
     - 'copy'
+release:
+  description: 'Bump version number and build'
+  tasks:
+    - 'bump'
+    - 'build'
     - 'cacheBust'
     - 'manifest'
     - 'compress'

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<widget xmlns   = "http://www.w3.org/ns/widgets"
-    xmlns:gap   = "http://phonegap.com/ns/1.0"
-    id          = "com.phonegap.supersimpletasks"
-    versionCode = "312" 
-    version     = "3.1.2" >
+<widget xmlns="http://www.w3.org/ns/widgets"
+    xmlns:gap="http://phonegap.com/ns/1.0"
+    id="com.phonegap.supersimpletasks"
+    versionCode="315"
+    version="3.1.5">
 
     <name>Super Simple Tasks</name>
 
@@ -19,25 +19,23 @@
 
     <preference name="permissions" value="none" />
     <preference name="android-minSdkVersion" value="21" />
+    <preference name="SplashScreen" value="screen" />
+    <preference name="SplashScreenDelay" value="5000" />
 
-    <icon src="android-icon.png" />
+    <gap:plugin name="org.apache.cordova.splashscreen" />
+
+    <icon src="icon_xxxhdpi.png" />
+    <icon src="img/icon_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
+    <icon src="img/icon_hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
+    <icon src="img/icon_xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
+    <icon src="img/icon_xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
+
+    <gap:splash src="screen_xhdpi.png" />
+    <gap:splash src="img/screen_ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
+    <gap:splash src="img/screen_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
+    <gap:splash src="img/screen_hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
+    <gap:splash src="img/screen_xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
 
     <access origin="*" />
-
-    <!-- Whitelist configuration. Refer to https://cordova.apache.org/docs/en/edge/guide_appdev_whitelist_index.md.html -->
-    <plugin name="cordova-plugin-whitelist" version="1" />
-    <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
-    <allow-intent href="tel:*" />
-    <allow-intent href="sms:*" />
-    <allow-intent href="mailto:*" />
-    <allow-intent href="geo:*" />
-    <platform name="android">
-        <allow-intent href="market:*" />
-    </platform>
-    <platform name="ios">
-        <allow-intent href="itms:*" />
-        <allow-intent href="itms-apps:*" />
-    </platform>
 
 </widget>
