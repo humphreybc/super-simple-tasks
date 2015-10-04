@@ -138,8 +138,17 @@ $(window).on 'popstate', (event) ->
     Views.modal(state.id, true)
 
 
-document.addEventListener 'deviceready', Views.setStatusBarColor, false
+onDeviceReady = ->
+  initialize()
+
+  $(document).on 'click', 'a[target="_blank"]', (e) ->
+    e.preventDefault()
+    window.open @href, '_system'
+
+  Views.setStatusBarColor('#607D8B')
 
 
-$(document).ready ->
+if !!window.cordova
+  document.addEventListener 'deviceready', onDeviceReady, false
+else
   initialize()

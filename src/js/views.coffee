@@ -249,6 +249,8 @@ class Views
     # Change status bar on Android (in Chrome)
     $('#android-theme-color').attr('content', hex)
 
+    @setStatusBarColor(hex)
+
     # Change favicon
     favicon = 'favicon_' + color + '.png'
     $('#favicon').attr('href', favicon)
@@ -270,6 +272,10 @@ class Views
       @setTheme(color)
 
 
-  @setStatusBarColor: ->
+  @setStatusBarColor: (hex) ->
     if StatusBar
-      StatusBar.hide()
+
+      switch hex
+        when '#4CAF50' then '#3B9E40'
+
+      StatusBar.backgroundColorByHexString(hex)

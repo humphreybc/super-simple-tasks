@@ -17,6 +17,7 @@ build:
     - 'stylus'
     - 'concat'
     - 'copy'
+    - 'compress'
 release:
   description: 'Bump version number and build'
   tasks:

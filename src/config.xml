@@ -8,7 +8,7 @@
     <name>Super Simple Tasks</name>
 
     <description>
-        The world’s simplest tasks app with offline support, an elegant design, and no account required! 
+        Beautiful tasks app with offline support, syncing, and no account required!
     </description>
 
     <author href="http://humphreybc.com" email="humphreybc@gmail.com">
@@ -18,9 +18,11 @@
     <gap:platform name="android" />
 
     <preference name="permissions" value="none" />
-    <preference name="android-minSdkVersion" value="21" />
+    <preference name="android-minSdkVersion" value="16" />
 
+    <gap:plugin name="cordova-plugin-whitelist" source="npm" />
     <gap:plugin name="cordova-plugin-statusbar" source="npm" />
+    <gap:plugin name="cordova-plugin-inappbrowser" source="npm" />
 
     <icon src="icon_xxxhdpi.png" />
     <icon src="img/icon_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
@@ -28,20 +30,13 @@
     <icon src="img/icon_xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
     <icon src="img/icon_xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
 
-    <access origin="*" />
-    <plugin name="cordova-plugin-whitelist" version="1" />
+    <allow-navigation href="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
-    <allow-intent href="tel:*" />
-    <allow-intent href="sms:*" />
-    <allow-intent href="mailto:*" />
-    <allow-intent href="geo:*" />
-    <platform name="android">
-        <allow-intent href="market:*" />
-    </platform>
-    <platform name="ios">
-        <allow-intent href="itms:*" />
-        <allow-intent href="itms-apps:*" />
-    </platform>
+
+    <access origin="*" />
+    <access origin="http://127.0.0.1*" />
+    <access origin="http://*.firebaseio.com" />
+    <access origin="https://*.firebaseio.com" />
 
 </widget>
