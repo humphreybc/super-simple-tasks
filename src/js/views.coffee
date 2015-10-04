@@ -86,7 +86,7 @@ class Views
 
 
   @displayApp: (allTasks) ->
-    @getTheme()
+    @setTheme(@getTheme())
     @checkWhatsNew(allTasks)
     @animateContent()
     @setListName()
@@ -225,12 +225,7 @@ class Views
     SST.storage.set 'version', 308, () ->
 
 
-  @setTheme: (theme) ->
-    $('header, #task-submit').addClass('theme-transition')
-    $('body').removeClass()
-    $('body').addClass(theme)
-
-    # Map color names to hex
+  @returnThemeColor: (theme) ->
     colors = {
       green:  '4CAF50',
       blue:   '2196F3',
@@ -238,27 +233,28 @@ class Views
       purple: '7E57C2'
     }
 
-    # e.g. theme = 'theme-green'
-    # e.g. color = 'green'
-    # e.g. hex   = '4CAF50'
+    colors[theme.split('-')[1]]
 
-    # e.g. 'theme-green' to 'green'
-    color = theme.split('-')[1]
-    hex = '#' + colors[color]
 
-    # Change status bar on Android (in Chrome)
+  @setTheme: (theme) ->
+    color = @returnThemeColor(theme)
+    hex = '#' + color
+
+    $('header, #task-submit').addClass('theme-transition')
+    $('body').removeClass()
+    $('body').addClass(theme)
+
     $('#android-theme-color').attr('content', hex)
 
-    @setStatusBarColor(hex)
+    if !!window.cordova
+      @setStatusBarColor(hex)
 
-    # Change favicon
-    favicon = 'favicon_' + color + '.png'
+    favicon = 'favicon_' + theme.split('-')[1] + '.png'
     $('#favicon').attr('href', favicon)
 
     setTimeout (->
       $('header, #task-submit').removeClass('theme-transition')
 
-      # Save theme choice in storage
       SST.storage.set 'theme', theme, () ->
         if SST.storage.syncEnabled
           SST.remote.sync () ->
@@ -266,16 +262,18 @@ class Views
 
 
   @getTheme: ->
-    SST.storage.get 'theme', (color) =>
-      if color == undefined
-        color = 'theme-green'
-      @setTheme(color)
+    SST.storage.get 'theme', (theme) ->
+      if theme == undefined
+        theme = 'theme-green'
+      theme
 
 
   @setStatusBarColor: (hex) ->
     if StatusBar
-
-      switch hex
-        when '#4CAF50' then '#3B9E40'
+      hex = switch hex # Android says we need to darken the color for the status bar
+        when '#4CAF50' then '#2A8D30'
+        when '#2196F3' then '#0075D1'
+        when '#FF7043' then '#DD5021'
+        when '#7E57C2' then '#5C35A0'
 
       StatusBar.backgroundColorByHexString(hex)

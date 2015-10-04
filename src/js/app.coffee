@@ -141,11 +141,10 @@ $(window).on 'popstate', (event) ->
 onDeviceReady = ->
   initialize()
 
+  # Open links with _blank in the system browser, not the webview
   $(document).on 'click', 'a[target="_blank"]', (e) ->
     e.preventDefault()
     window.open @href, '_system'
-
-  Views.setStatusBarColor('#607D8B')
 
 
 if !!window.cordova
