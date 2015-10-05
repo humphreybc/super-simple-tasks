@@ -19,6 +19,7 @@
 
     <preference name="permissions" value="none" />
     <preference name="android-minSdkVersion" value="16" />
+    <preference name="StatusBarBackgroundColor" value="#405B69" />
 
     <gap:plugin name="cordova-plugin-whitelist" source="npm" />
     <gap:plugin name="cordova-plugin-statusbar" source="npm" />
