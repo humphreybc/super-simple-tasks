@@ -31,7 +31,6 @@ build:
 release:
   description: 'Bump version number and build'
   tasks:
-    - 'bump'
     - 'build'
     - 'cacheBust'
     - 'manifest'
