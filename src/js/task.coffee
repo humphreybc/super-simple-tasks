@@ -10,8 +10,7 @@ class Arrays
   {
     'name': '',
     'timestamp': null,
-    'tour': null,
-    'version': null,
+    'version': 318,
     'theme': 'theme-green',
     'tasks': [
       {
@@ -189,7 +188,7 @@ class Task
       ListView.showTasks(allTasks)
 
 
-  @seedDefaultTasks: ->
+  @seedDefaultData: ->
     data = Arrays.default_data
     SST.storage.set('everything', data)
     data.tasks

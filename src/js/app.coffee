@@ -5,15 +5,12 @@ initialize = ->
   Views.standardLog()
   Extension.setPopupClass()
 
-  SST.online = Utils.checkOnline()
+  console.log 'Internet connection: ' + SST.online
 
   SST.storage = new Storage()
   SST.remote = new Remote()
 
   document.onkeyup = Views.keyboardShortcuts
-
-  window.onfocus = Views.onFocus
-  window.onblur = Views.onBlur
 
   SST.mobile = ($(window).width() < 499)
 
@@ -139,15 +136,22 @@ $(window).on 'popstate', (event) ->
 
 
 onDeviceReady = ->
-  initialize()
+  SST.online = Utils.checkConnection()
 
-  # Open links with _blank in the system browser, not the webview
+  document.addEventListener('pause', Views.onBlur, false)
+  document.addEventListener('resume', Views.onFocus, false)
+
   $(document).on 'click', 'a[target="_blank"]', (e) ->
     e.preventDefault()
     window.open @href, '_system'
+
+  initialize()
 
 
 if !!window.cordova
   document.addEventListener 'deviceready', onDeviceReady, false
 else
+  SST.online = Utils.checkOnline()
+  window.onfocus = Views.onFocus
+  window.onblur = Views.onBlur
   initialize()

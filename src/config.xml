@@ -2,8 +2,8 @@
 <widget xmlns="http://www.w3.org/ns/widgets"
     xmlns:gap="http://phonegap.com/ns/1.0"
     id="com.phonegap.supersimpletasks"
-    versionCode="318"
-    version="3.1.8">
+    versionCode="319"
+    version="3.1.9">
 
     <name>Super Simple Tasks</name>
 
@@ -23,6 +23,7 @@
     <gap:plugin name="cordova-plugin-whitelist" source="npm" />
     <gap:plugin name="cordova-plugin-statusbar" source="npm" />
     <gap:plugin name="cordova-plugin-inappbrowser" source="npm" />
+    <gap:plugin name="cordova-plugin-network-information" source="npm" />
 
     <icon src="icon_xxxhdpi.png" />
     <icon src="img/icon_mdpi.png" gap:platform="android" gap:qualifier="mdpi" />

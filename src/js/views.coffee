@@ -25,25 +25,13 @@ class Views
         @displayApp(allTasks)
     else
       SST.storage.get 'everything', (everything) =>
-        # Chrome extension
-        if everything == null and window.chrome and chrome.storage
-          chrome.storage.sync.get 'todo', (everything) =>
-            allTasks = Migrations.updateToLocalStorage(everything)
-            @reload(allTasks)
-            @displayApp(allTasks)
+        if everything == null
+          allTasks = Task.seedDefaultData()
         else
-          # New user with no tasks
-          if everything == null
-            allTasks = Task.seedDefaultTasks()
-          # Upgrading to 3.0.0
-          else if everything.version == undefined
-            allTasks = Migrations.updateToObject(everything)
-          # User on 3.0.0 and has tasks in the new storage model
-          else
-            allTasks = everything.tasks
+          allTasks = everything.tasks
 
-          @reload(allTasks)
-          @displayApp(allTasks)
+        @reload(allTasks)
+        @displayApp(allTasks)
 
 
   @keyboardShortcuts: (e) ->
@@ -216,13 +204,13 @@ class Views
   @checkWhatsNew: (allTasks) ->
     SST.storage.get 'version', (version) ->
       taskCount = allTasks.length
-      if (version < 308 || version == null) and (taskCount > 6) # Are they actually using it?
-        if SST.storage.syncEnabled == false # Hack for version 308
+      if (version < 319 || version == null) and (taskCount > 6)
+        if SST.storage.syncEnabled == false
           $('.whats-new').show()
 
 
   @closeWhatsNew: ->
-    SST.storage.set 'version', 308, () ->
+    SST.storage.set 'version', 319, () ->
 
 
   @returnThemeColor: (theme) ->

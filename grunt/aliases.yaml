@@ -3,10 +3,20 @@ default:
   tasks:
     - build
 dev:
-  description: 'Development build'
+  description: 'Development'
   tasks:
     - 'build'
     - 'watch'
+devbuild:
+  description: 'Development build'
+  tasks:
+    - 'clean'
+    - 'coffeelint'
+    - 'coffee'
+    - 'stylus'
+    - 'concat'
+    - 'copy'
+    - 'compress'
 build:
   description: 'Production build'
   tasks:
