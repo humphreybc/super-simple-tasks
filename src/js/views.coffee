@@ -205,7 +205,8 @@ class Views
     SST.storage.get 'version', (version) ->
       taskCount = allTasks.length
       if (version < 321 || version == null) and (taskCount > 5)
-        $('.whats-new').show()
+        unless SST.mobile
+          $('.whats-new').show()
 
 
   @closeWhatsNew: ->
