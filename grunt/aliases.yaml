@@ -29,7 +29,7 @@ build:
     - 'copy'
     - 'compress'
 release:
-  description: 'Bump version number and build'
+  description: 'Build a release ready version'
   tasks:
     - 'build'
     - 'cacheBust'

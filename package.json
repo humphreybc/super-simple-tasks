@@ -1,6 +1,6 @@
 {
   "name": "super-simple-tasks",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "license": "Apache-2.0",
   "devDependencies": {
     "coffee-script": "*",
