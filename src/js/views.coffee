@@ -204,13 +204,12 @@ class Views
   @checkWhatsNew: (allTasks) ->
     SST.storage.get 'version', (version) ->
       taskCount = allTasks.length
-      if (version < 320 || version == null) and (taskCount > 6)
-        if SST.storage.syncEnabled == false
-          $('.whats-new').show()
+      if (version < 321 || version == null) and (taskCount > 5)
+        $('.whats-new').show()
 
 
   @closeWhatsNew: ->
-    SST.storage.set 'version', 320, () ->
+    SST.storage.set 'version', 321, () ->
 
 
   @returnThemeColor: (theme) ->
