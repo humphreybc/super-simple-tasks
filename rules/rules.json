@@ -1,0 +1,32 @@
+{
+  "rules": {
+    "data": {
+      "$id": {
+        ".validate": "newData.hasChildren(['theme', 'timestamp', 'version'])",
+        "name": {
+          ".validate": "newData.isString() || newData.val() == null"
+        },
+        "tasks": {
+          ".validate": "newData.hasChildren() || newData.val() == null"
+        },
+        "theme": {
+          ".validate": "newData.isString()"
+        },
+        "timestamp": {
+          ".validate": "newData.isNumber()"
+        },
+        "tour": {
+          ".validate": "newData.isBoolean() || newData.val() == null"
+        },
+        "version": {
+          ".validate": "newData.isNumber()"
+        },
+        "$other": {
+          ".validate": "false"
+        },
+        ".read": "true",
+        ".write": "true"
+      }
+    }
+  }
+}

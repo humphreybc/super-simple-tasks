@@ -1,0 +1,13 @@
+type List {
+  name: String | Null,
+  tasks: Object | Null,
+  theme: String,
+  timestamp: Number,
+  tour: Boolean | Null,
+  version: Number
+}
+
+path /data/{id} is List {
+  read() = true;
+  write() = true;
+}
