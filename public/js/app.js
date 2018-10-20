@@ -24,8 +24,9 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','https://ssl.google-analytics.com/analytics.js','ga'); // Note: https protocol here
  
 ga('create', trackingCode, 'auto');
-ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
+ga('set', 'checkProtocolTask', null); // Disable file protocol checking so extension and mobile app work
 ga('require', 'displayfeatures');
+
 !function(){"use strict";function t(e,o){function i(t,e){return function(){return t.apply(e,arguments)}}var r;if(o=o||{},this.trackingClick=!1,this.trackingClickStart=0,this.targetElement=null,this.touchStartX=0,this.touchStartY=0,this.lastTouchIdentifier=0,this.touchBoundary=o.touchBoundary||10,this.layer=e,this.tapDelay=o.tapDelay||200,this.tapTimeout=o.tapTimeout||700,!t.notNeeded(e)){for(var a=["onMouse","onClick","onTouchStart","onTouchMove","onTouchEnd","onTouchCancel"],c=this,s=0,u=a.length;u>s;s++)c[a[s]]=i(c[a[s]],c);n&&(e.addEventListener("mouseover",this.onMouse,!0),e.addEventListener("mousedown",this.onMouse,!0),e.addEventListener("mouseup",this.onMouse,!0)),e.addEventListener("click",this.onClick,!0),e.addEventListener("touchstart",this.onTouchStart,!1),e.addEventListener("touchmove",this.onTouchMove,!1),e.addEventListener("touchend",this.onTouchEnd,!1),e.addEventListener("touchcancel",this.onTouchCancel,!1),Event.prototype.stopImmediatePropagation||(e.removeEventListener=function(t,n,o){var i=Node.prototype.removeEventListener;"click"===t?i.call(e,t,n.hijacked||n,o):i.call(e,t,n,o)},e.addEventListener=function(t,n,o){var i=Node.prototype.addEventListener;"click"===t?i.call(e,t,n.hijacked||(n.hijacked=function(t){t.propagationStopped||n(t)}),o):i.call(e,t,n,o)}),"function"==typeof e.onclick&&(r=e.onclick,e.addEventListener("click",function(t){r(t)},!1),e.onclick=null)}}var e=navigator.userAgent.indexOf("Windows Phone")>=0,n=navigator.userAgent.indexOf("Android")>0&&!e,o=/iP(ad|hone|od)/.test(navigator.userAgent)&&!e,i=o&&/OS 4_\d(_\d)?/.test(navigator.userAgent),r=o&&/OS [6-7]_\d/.test(navigator.userAgent),a=navigator.userAgent.indexOf("BB10")>0;t.prototype.needsClick=function(t){switch(t.nodeName.toLowerCase()){case"button":case"select":case"textarea":if(t.disabled)return!0;break;case"input":if(o&&"file"===t.type||t.disabled)return!0;break;case"label":case"iframe":case"video":return!0}return/\bneedsclick\b/.test(t.className)},t.prototype.needsFocus=function(t){switch(t.nodeName.toLowerCase()){case"textarea":return!0;case"select":return!n;case"input":switch(t.type){case"button":case"checkbox":case"file":case"image":case"radio":case"submit":return!1}return!t.disabled&&!t.readOnly;default:return/\bneedsfocus\b/.test(t.className)}},t.prototype.sendClick=function(t,e){var n,o;document.activeElement&&document.activeElement!==t&&document.activeElement.blur(),o=e.changedTouches[0],n=document.createEvent("MouseEvents"),n.initMouseEvent(this.determineEventType(t),!0,!0,window,1,o.screenX,o.screenY,o.clientX,o.clientY,!1,!1,!1,!1,0,null),n.forwardedTouchEvent=!0,t.dispatchEvent(n)},t.prototype.determineEventType=function(t){return n&&"select"===t.tagName.toLowerCase()?"mousedown":"click"},t.prototype.focus=function(t){var e;o&&t.setSelectionRange&&0!==t.type.indexOf("date")&&"time"!==t.type&&"month"!==t.type?(e=t.value.length,t.setSelectionRange(e,e)):t.focus()},t.prototype.updateScrollParent=function(t){var e,n;if(e=t.fastClickScrollParent,!e||!e.contains(t)){n=t;do{if(n.scrollHeight>n.offsetHeight){e=n,t.fastClickScrollParent=n;break}n=n.parentElement}while(n)}e&&(e.fastClickLastScrollTop=e.scrollTop)},t.prototype.getTargetElementFromEventTarget=function(t){return t.nodeType===Node.TEXT_NODE?t.parentNode:t},t.prototype.onTouchStart=function(t){var e,n,r;if(t.targetTouches.length>1)return!0;if(e=this.getTargetElementFromEventTarget(t.target),n=t.targetTouches[0],o){if(r=window.getSelection(),r.rangeCount&&!r.isCollapsed)return!0;if(!i){if(n.identifier&&n.identifier===this.lastTouchIdentifier)return t.preventDefault(),!1;this.lastTouchIdentifier=n.identifier,this.updateScrollParent(e)}}return this.trackingClick=!0,this.trackingClickStart=t.timeStamp,this.targetElement=e,this.touchStartX=n.pageX,this.touchStartY=n.pageY,t.timeStamp-this.lastClickTime<this.tapDelay&&t.preventDefault(),!0},t.prototype.touchHasMoved=function(t){var e=t.changedTouches[0],n=this.touchBoundary;return Math.abs(e.pageX-this.touchStartX)>n||Math.abs(e.pageY-this.touchStartY)>n?!0:!1},t.prototype.onTouchMove=function(t){return this.trackingClick?((this.targetElement!==this.getTargetElementFromEventTarget(t.target)||this.touchHasMoved(t))&&(this.trackingClick=!1,this.targetElement=null),!0):!0},t.prototype.findControl=function(t){return void 0!==t.control?t.control:t.htmlFor?document.getElementById(t.htmlFor):t.querySelector("button, input:not([type=hidden]), keygen, meter, output, progress, select, textarea")},t.prototype.onTouchEnd=function(t){var e,a,c,s,u,l=this.targetElement;if(!this.trackingClick)return!0;if(t.timeStamp-this.lastClickTime<this.tapDelay)return this.cancelNextClick=!0,!0;if(t.timeStamp-this.trackingClickStart>this.tapTimeout)return!0;if(this.cancelNextClick=!1,this.lastClickTime=t.timeStamp,a=this.trackingClickStart,this.trackingClick=!1,this.trackingClickStart=0,r&&(u=t.changedTouches[0],l=document.elementFromPoint(u.pageX-window.pageXOffset,u.pageY-window.pageYOffset)||l,l.fastClickScrollParent=this.targetElement.fastClickScrollParent),c=l.tagName.toLowerCase(),"label"===c){if(e=this.findControl(l)){if(this.focus(l),n)return!1;l=e}}else if(this.needsFocus(l))return t.timeStamp-a>100||o&&window.top!==window&&"input"===c?(this.targetElement=null,!1):(this.focus(l),this.sendClick(l,t),o&&"select"===c||(this.targetElement=null,t.preventDefault()),!1);return o&&!i&&(s=l.fastClickScrollParent,s&&s.fastClickLastScrollTop!==s.scrollTop)?!0:(this.needsClick(l)||(t.preventDefault(),this.sendClick(l,t)),!1)},t.prototype.onTouchCancel=function(){this.trackingClick=!1,this.targetElement=null},t.prototype.onMouse=function(t){return this.targetElement?t.forwardedTouchEvent?!0:t.cancelable&&(!this.needsClick(this.targetElement)||this.cancelNextClick)?(t.stopImmediatePropagation?t.stopImmediatePropagation():t.propagationStopped=!0,t.stopPropagation(),t.preventDefault(),!1):!0:!0},t.prototype.onClick=function(t){var e;return this.trackingClick?(this.targetElement=null,this.trackingClick=!1,!0):"submit"===t.target.type&&0===t.detail?!0:(e=this.onMouse(t),e||(this.targetElement=null),e)},t.prototype.destroy=function(){var t=this.layer;n&&(t.removeEventListener("mouseover",this.onMouse,!0),t.removeEventListener("mousedown",this.onMouse,!0),t.removeEventListener("mouseup",this.onMouse,!0)),t.removeEventListener("click",this.onClick,!0),t.removeEventListener("touchstart",this.onTouchStart,!1),t.removeEventListener("touchmove",this.onTouchMove,!1),t.removeEventListener("touchend",this.onTouchEnd,!1),t.removeEventListener("touchcancel",this.onTouchCancel,!1)},t.notNeeded=function(t){var e,o,i,r;if("undefined"==typeof window.ontouchstart)return!0;if(o=+(/Chrome\/([0-9]+)/.exec(navigator.userAgent)||[,0])[1]){if(!n)return!0;if(e=document.querySelector("meta[name=viewport]")){if(-1!==e.content.indexOf("user-scalable=no"))return!0;if(o>31&&document.documentElement.scrollWidth<=window.outerWidth)return!0}}if(a&&(i=navigator.userAgent.match(/Version\/([0-9]*)\.([0-9]*)/),i[1]>=10&&i[2]>=3&&(e=document.querySelector("meta[name=viewport]")))){if(-1!==e.content.indexOf("user-scalable=no"))return!0;if(document.documentElement.scrollWidth<=window.outerWidth)return!0}return"none"===t.style.msTouchAction||"manipulation"===t.style.touchAction?!0:(r=+(/Firefox\/([0-9]+)/.exec(navigator.userAgent)||[,0])[1],r>=27&&(e=document.querySelector("meta[name=viewport]"),e&&(-1!==e.content.indexOf("user-scalable=no")||document.documentElement.scrollWidth<=window.outerWidth))?!0:"none"===t.style.touchAction||"manipulation"===t.style.touchAction?!0:!1)},t.attach=function(e,n){return new t(e,n)},"function"==typeof define&&"object"==typeof define.amd&&define.amd?define(function(){return t}):"undefined"!=typeof module&&module.exports?(module.exports=t.attach,module.exports.FastClick=t):window.FastClick=t}();
 /*! @license Firebase v2.2.4
     License: https://www.firebase.com/terms/terms-of-service.html */
@@ -1202,4 +1203,1257 @@ window['Slip'] = (function(){
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 //     Underscore may be freely distributed under the MIT license.
 (function(){function n(n){function t(t,r,e,u,i,o){for(;i>=0&&o>i;i+=n){var a=u?u[i]:i;e=r(e,t[a],a,t)}return e}return function(r,e,u,i){e=b(e,i,4);var o=!k(r)&&m.keys(r),a=(o||r).length,c=n>0?0:a-1;return arguments.length<3&&(u=r[o?o[c]:c],c+=n),t(r,e,u,o,c,a)}}function t(n){return function(t,r,e){r=x(r,e);for(var u=O(t),i=n>0?0:u-1;i>=0&&u>i;i+=n)if(r(t[i],i,t))return i;return-1}}function r(n,t,r){return function(e,u,i){var o=0,a=O(e);if("number"==typeof i)n>0?o=i>=0?i:Math.max(i+a,o):a=i>=0?Math.min(i+1,a):i+a+1;else if(r&&i&&a)return i=r(e,u),e[i]===u?i:-1;if(u!==u)return i=t(l.call(e,o,a),m.isNaN),i>=0?i+o:-1;for(i=n>0?o:a-1;i>=0&&a>i;i+=n)if(e[i]===u)return i;return-1}}function e(n,t){var r=I.length,e=n.constructor,u=m.isFunction(e)&&e.prototype||a,i="constructor";for(m.has(n,i)&&!m.contains(t,i)&&t.push(i);r--;)i=I[r],i in n&&n[i]!==u[i]&&!m.contains(t,i)&&t.push(i)}var u=this,i=u._,o=Array.prototype,a=Object.prototype,c=Function.prototype,f=o.push,l=o.slice,s=a.toString,p=a.hasOwnProperty,h=Array.isArray,v=Object.keys,g=c.bind,y=Object.create,d=function(){},m=function(n){return n instanceof m?n:this instanceof m?void(this._wrapped=n):new m(n)};"undefined"!=typeof exports?("undefined"!=typeof module&&module.exports&&(exports=module.exports=m),exports._=m):u._=m,m.VERSION="1.8.3";var b=function(n,t,r){if(t===void 0)return n;switch(null==r?3:r){case 1:return function(r){return n.call(t,r)};case 2:return function(r,e){return n.call(t,r,e)};case 3:return function(r,e,u){return n.call(t,r,e,u)};case 4:return function(r,e,u,i){return n.call(t,r,e,u,i)}}return function(){return n.apply(t,arguments)}},x=function(n,t,r){return null==n?m.identity:m.isFunction(n)?b(n,t,r):m.isObject(n)?m.matcher(n):m.property(n)};m.iteratee=function(n,t){return x(n,t,1/0)};var _=function(n,t){return function(r){var e=arguments.length;if(2>e||null==r)return r;for(var u=1;e>u;u++)for(var i=arguments[u],o=n(i),a=o.length,c=0;a>c;c++){var f=o[c];t&&r[f]!==void 0||(r[f]=i[f])}return r}},j=function(n){if(!m.isObject(n))return{};if(y)return y(n);d.prototype=n;var t=new d;return d.prototype=null,t},w=function(n){return function(t){return null==t?void 0:t[n]}},A=Math.pow(2,53)-1,O=w("length"),k=function(n){var t=O(n);return"number"==typeof t&&t>=0&&A>=t};m.each=m.forEach=function(n,t,r){t=b(t,r);var e,u;if(k(n))for(e=0,u=n.length;u>e;e++)t(n[e],e,n);else{var i=m.keys(n);for(e=0,u=i.length;u>e;e++)t(n[i[e]],i[e],n)}return n},m.map=m.collect=function(n,t,r){t=x(t,r);for(var e=!k(n)&&m.keys(n),u=(e||n).length,i=Array(u),o=0;u>o;o++){var a=e?e[o]:o;i[o]=t(n[a],a,n)}return i},m.reduce=m.foldl=m.inject=n(1),m.reduceRight=m.foldr=n(-1),m.find=m.detect=function(n,t,r){var e;return e=k(n)?m.findIndex(n,t,r):m.findKey(n,t,r),e!==void 0&&e!==-1?n[e]:void 0},m.filter=m.select=function(n,t,r){var e=[];return t=x(t,r),m.each(n,function(n,r,u){t(n,r,u)&&e.push(n)}),e},m.reject=function(n,t,r){return m.filter(n,m.negate(x(t)),r)},m.every=m.all=function(n,t,r){t=x(t,r);for(var e=!k(n)&&m.keys(n),u=(e||n).length,i=0;u>i;i++){var o=e?e[i]:i;if(!t(n[o],o,n))return!1}return!0},m.some=m.any=function(n,t,r){t=x(t,r);for(var e=!k(n)&&m.keys(n),u=(e||n).length,i=0;u>i;i++){var o=e?e[i]:i;if(t(n[o],o,n))return!0}return!1},m.contains=m.includes=m.include=function(n,t,r,e){return k(n)||(n=m.values(n)),("number"!=typeof r||e)&&(r=0),m.indexOf(n,t,r)>=0},m.invoke=function(n,t){var r=l.call(arguments,2),e=m.isFunction(t);return m.map(n,function(n){var u=e?t:n[t];return null==u?u:u.apply(n,r)})},m.pluck=function(n,t){return m.map(n,m.property(t))},m.where=function(n,t){return m.filter(n,m.matcher(t))},m.findWhere=function(n,t){return m.find(n,m.matcher(t))},m.max=function(n,t,r){var e,u,i=-1/0,o=-1/0;if(null==t&&null!=n){n=k(n)?n:m.values(n);for(var a=0,c=n.length;c>a;a++)e=n[a],e>i&&(i=e)}else t=x(t,r),m.each(n,function(n,r,e){u=t(n,r,e),(u>o||u===-1/0&&i===-1/0)&&(i=n,o=u)});return i},m.min=function(n,t,r){var e,u,i=1/0,o=1/0;if(null==t&&null!=n){n=k(n)?n:m.values(n);for(var a=0,c=n.length;c>a;a++)e=n[a],i>e&&(i=e)}else t=x(t,r),m.each(n,function(n,r,e){u=t(n,r,e),(o>u||1/0===u&&1/0===i)&&(i=n,o=u)});return i},m.shuffle=function(n){for(var t,r=k(n)?n:m.values(n),e=r.length,u=Array(e),i=0;e>i;i++)t=m.random(0,i),t!==i&&(u[i]=u[t]),u[t]=r[i];return u},m.sample=function(n,t,r){return null==t||r?(k(n)||(n=m.values(n)),n[m.random(n.length-1)]):m.shuffle(n).slice(0,Math.max(0,t))},m.sortBy=function(n,t,r){return t=x(t,r),m.pluck(m.map(n,function(n,r,e){return{value:n,index:r,criteria:t(n,r,e)}}).sort(function(n,t){var r=n.criteria,e=t.criteria;if(r!==e){if(r>e||r===void 0)return 1;if(e>r||e===void 0)return-1}return n.index-t.index}),"value")};var F=function(n){return function(t,r,e){var u={};return r=x(r,e),m.each(t,function(e,i){var o=r(e,i,t);n(u,e,o)}),u}};m.groupBy=F(function(n,t,r){m.has(n,r)?n[r].push(t):n[r]=[t]}),m.indexBy=F(function(n,t,r){n[r]=t}),m.countBy=F(function(n,t,r){m.has(n,r)?n[r]++:n[r]=1}),m.toArray=function(n){return n?m.isArray(n)?l.call(n):k(n)?m.map(n,m.identity):m.values(n):[]},m.size=function(n){return null==n?0:k(n)?n.length:m.keys(n).length},m.partition=function(n,t,r){t=x(t,r);var e=[],u=[];return m.each(n,function(n,r,i){(t(n,r,i)?e:u).push(n)}),[e,u]},m.first=m.head=m.take=function(n,t,r){return null==n?void 0:null==t||r?n[0]:m.initial(n,n.length-t)},m.initial=function(n,t,r){return l.call(n,0,Math.max(0,n.length-(null==t||r?1:t)))},m.last=function(n,t,r){return null==n?void 0:null==t||r?n[n.length-1]:m.rest(n,Math.max(0,n.length-t))},m.rest=m.tail=m.drop=function(n,t,r){return l.call(n,null==t||r?1:t)},m.compact=function(n){return m.filter(n,m.identity)};var S=function(n,t,r,e){for(var u=[],i=0,o=e||0,a=O(n);a>o;o++){var c=n[o];if(k(c)&&(m.isArray(c)||m.isArguments(c))){t||(c=S(c,t,r));var f=0,l=c.length;for(u.length+=l;l>f;)u[i++]=c[f++]}else r||(u[i++]=c)}return u};m.flatten=function(n,t){return S(n,t,!1)},m.without=function(n){return m.difference(n,l.call(arguments,1))},m.uniq=m.unique=function(n,t,r,e){m.isBoolean(t)||(e=r,r=t,t=!1),null!=r&&(r=x(r,e));for(var u=[],i=[],o=0,a=O(n);a>o;o++){var c=n[o],f=r?r(c,o,n):c;t?(o&&i===f||u.push(c),i=f):r?m.contains(i,f)||(i.push(f),u.push(c)):m.contains(u,c)||u.push(c)}return u},m.union=function(){return m.uniq(S(arguments,!0,!0))},m.intersection=function(n){for(var t=[],r=arguments.length,e=0,u=O(n);u>e;e++){var i=n[e];if(!m.contains(t,i)){for(var o=1;r>o&&m.contains(arguments[o],i);o++);o===r&&t.push(i)}}return t},m.difference=function(n){var t=S(arguments,!0,!0,1);return m.filter(n,function(n){return!m.contains(t,n)})},m.zip=function(){return m.unzip(arguments)},m.unzip=function(n){for(var t=n&&m.max(n,O).length||0,r=Array(t),e=0;t>e;e++)r[e]=m.pluck(n,e);return r},m.object=function(n,t){for(var r={},e=0,u=O(n);u>e;e++)t?r[n[e]]=t[e]:r[n[e][0]]=n[e][1];return r},m.findIndex=t(1),m.findLastIndex=t(-1),m.sortedIndex=function(n,t,r,e){r=x(r,e,1);for(var u=r(t),i=0,o=O(n);o>i;){var a=Math.floor((i+o)/2);r(n[a])<u?i=a+1:o=a}return i},m.indexOf=r(1,m.findIndex,m.sortedIndex),m.lastIndexOf=r(-1,m.findLastIndex),m.range=function(n,t,r){null==t&&(t=n||0,n=0),r=r||1;for(var e=Math.max(Math.ceil((t-n)/r),0),u=Array(e),i=0;e>i;i++,n+=r)u[i]=n;return u};var E=function(n,t,r,e,u){if(!(e instanceof t))return n.apply(r,u);var i=j(n.prototype),o=n.apply(i,u);return m.isObject(o)?o:i};m.bind=function(n,t){if(g&&n.bind===g)return g.apply(n,l.call(arguments,1));if(!m.isFunction(n))throw new TypeError("Bind must be called on a function");var r=l.call(arguments,2),e=function(){return E(n,e,t,this,r.concat(l.call(arguments)))};return e},m.partial=function(n){var t=l.call(arguments,1),r=function(){for(var e=0,u=t.length,i=Array(u),o=0;u>o;o++)i[o]=t[o]===m?arguments[e++]:t[o];for(;e<arguments.length;)i.push(arguments[e++]);return E(n,r,this,this,i)};return r},m.bindAll=function(n){var t,r,e=arguments.length;if(1>=e)throw new Error("bindAll must be passed function names");for(t=1;e>t;t++)r=arguments[t],n[r]=m.bind(n[r],n);return n},m.memoize=function(n,t){var r=function(e){var u=r.cache,i=""+(t?t.apply(this,arguments):e);return m.has(u,i)||(u[i]=n.apply(this,arguments)),u[i]};return r.cache={},r},m.delay=function(n,t){var r=l.call(arguments,2);return setTimeout(function(){return n.apply(null,r)},t)},m.defer=m.partial(m.delay,m,1),m.throttle=function(n,t,r){var e,u,i,o=null,a=0;r||(r={});var c=function(){a=r.leading===!1?0:m.now(),o=null,i=n.apply(e,u),o||(e=u=null)};return function(){var f=m.now();a||r.leading!==!1||(a=f);var l=t-(f-a);return e=this,u=arguments,0>=l||l>t?(o&&(clearTimeout(o),o=null),a=f,i=n.apply(e,u),o||(e=u=null)):o||r.trailing===!1||(o=setTimeout(c,l)),i}},m.debounce=function(n,t,r){var e,u,i,o,a,c=function(){var f=m.now()-o;t>f&&f>=0?e=setTimeout(c,t-f):(e=null,r||(a=n.apply(i,u),e||(i=u=null)))};return function(){i=this,u=arguments,o=m.now();var f=r&&!e;return e||(e=setTimeout(c,t)),f&&(a=n.apply(i,u),i=u=null),a}},m.wrap=function(n,t){return m.partial(t,n)},m.negate=function(n){return function(){return!n.apply(this,arguments)}},m.compose=function(){var n=arguments,t=n.length-1;return function(){for(var r=t,e=n[t].apply(this,arguments);r--;)e=n[r].call(this,e);return e}},m.after=function(n,t){return function(){return--n<1?t.apply(this,arguments):void 0}},m.before=function(n,t){var r;return function(){return--n>0&&(r=t.apply(this,arguments)),1>=n&&(t=null),r}},m.once=m.partial(m.before,2);var M=!{toString:null}.propertyIsEnumerable("toString"),I=["valueOf","isPrototypeOf","toString","propertyIsEnumerable","hasOwnProperty","toLocaleString"];m.keys=function(n){if(!m.isObject(n))return[];if(v)return v(n);var t=[];for(var r in n)m.has(n,r)&&t.push(r);return M&&e(n,t),t},m.allKeys=function(n){if(!m.isObject(n))return[];var t=[];for(var r in n)t.push(r);return M&&e(n,t),t},m.values=function(n){for(var t=m.keys(n),r=t.length,e=Array(r),u=0;r>u;u++)e[u]=n[t[u]];return e},m.mapObject=function(n,t,r){t=x(t,r);for(var e,u=m.keys(n),i=u.length,o={},a=0;i>a;a++)e=u[a],o[e]=t(n[e],e,n);return o},m.pairs=function(n){for(var t=m.keys(n),r=t.length,e=Array(r),u=0;r>u;u++)e[u]=[t[u],n[t[u]]];return e},m.invert=function(n){for(var t={},r=m.keys(n),e=0,u=r.length;u>e;e++)t[n[r[e]]]=r[e];return t},m.functions=m.methods=function(n){var t=[];for(var r in n)m.isFunction(n[r])&&t.push(r);return t.sort()},m.extend=_(m.allKeys),m.extendOwn=m.assign=_(m.keys),m.findKey=function(n,t,r){t=x(t,r);for(var e,u=m.keys(n),i=0,o=u.length;o>i;i++)if(e=u[i],t(n[e],e,n))return e},m.pick=function(n,t,r){var e,u,i={},o=n;if(null==o)return i;m.isFunction(t)?(u=m.allKeys(o),e=b(t,r)):(u=S(arguments,!1,!1,1),e=function(n,t,r){return t in r},o=Object(o));for(var a=0,c=u.length;c>a;a++){var f=u[a],l=o[f];e(l,f,o)&&(i[f]=l)}return i},m.omit=function(n,t,r){if(m.isFunction(t))t=m.negate(t);else{var e=m.map(S(arguments,!1,!1,1),String);t=function(n,t){return!m.contains(e,t)}}return m.pick(n,t,r)},m.defaults=_(m.allKeys,!0),m.create=function(n,t){var r=j(n);return t&&m.extendOwn(r,t),r},m.clone=function(n){return m.isObject(n)?m.isArray(n)?n.slice():m.extend({},n):n},m.tap=function(n,t){return t(n),n},m.isMatch=function(n,t){var r=m.keys(t),e=r.length;if(null==n)return!e;for(var u=Object(n),i=0;e>i;i++){var o=r[i];if(t[o]!==u[o]||!(o in u))return!1}return!0};var N=function(n,t,r,e){if(n===t)return 0!==n||1/n===1/t;if(null==n||null==t)return n===t;n instanceof m&&(n=n._wrapped),t instanceof m&&(t=t._wrapped);var u=s.call(n);if(u!==s.call(t))return!1;switch(u){case"[object RegExp]":case"[object String]":return""+n==""+t;case"[object Number]":return+n!==+n?+t!==+t:0===+n?1/+n===1/t:+n===+t;case"[object Date]":case"[object Boolean]":return+n===+t}var i="[object Array]"===u;if(!i){if("object"!=typeof n||"object"!=typeof t)return!1;var o=n.constructor,a=t.constructor;if(o!==a&&!(m.isFunction(o)&&o instanceof o&&m.isFunction(a)&&a instanceof a)&&"constructor"in n&&"constructor"in t)return!1}r=r||[],e=e||[];for(var c=r.length;c--;)if(r[c]===n)return e[c]===t;if(r.push(n),e.push(t),i){if(c=n.length,c!==t.length)return!1;for(;c--;)if(!N(n[c],t[c],r,e))return!1}else{var f,l=m.keys(n);if(c=l.length,m.keys(t).length!==c)return!1;for(;c--;)if(f=l[c],!m.has(t,f)||!N(n[f],t[f],r,e))return!1}return r.pop(),e.pop(),!0};m.isEqual=function(n,t){return N(n,t)},m.isEmpty=function(n){return null==n?!0:k(n)&&(m.isArray(n)||m.isString(n)||m.isArguments(n))?0===n.length:0===m.keys(n).length},m.isElement=function(n){return!(!n||1!==n.nodeType)},m.isArray=h||function(n){return"[object Array]"===s.call(n)},m.isObject=function(n){var t=typeof n;return"function"===t||"object"===t&&!!n},m.each(["Arguments","Function","String","Number","Date","RegExp","Error"],function(n){m["is"+n]=function(t){return s.call(t)==="[object "+n+"]"}}),m.isArguments(arguments)||(m.isArguments=function(n){return m.has(n,"callee")}),"function"!=typeof/./&&"object"!=typeof Int8Array&&(m.isFunction=function(n){return"function"==typeof n||!1}),m.isFinite=function(n){return isFinite(n)&&!isNaN(parseFloat(n))},m.isNaN=function(n){return m.isNumber(n)&&n!==+n},m.isBoolean=function(n){return n===!0||n===!1||"[object Boolean]"===s.call(n)},m.isNull=function(n){return null===n},m.isUndefined=function(n){return n===void 0},m.has=function(n,t){return null!=n&&p.call(n,t)},m.noConflict=function(){return u._=i,this},m.identity=function(n){return n},m.constant=function(n){return function(){return n}},m.noop=function(){},m.property=w,m.propertyOf=function(n){return null==n?function(){}:function(t){return n[t]}},m.matcher=m.matches=function(n){return n=m.extendOwn({},n),function(t){return m.isMatch(t,n)}},m.times=function(n,t,r){var e=Array(Math.max(0,n));t=b(t,r,1);for(var u=0;n>u;u++)e[u]=t(u);return e},m.random=function(n,t){return null==t&&(t=n,n=0),n+Math.floor(Math.random()*(t-n+1))},m.now=Date.now||function(){return(new Date).getTime()};var B={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","`":"&#x60;"},T=m.invert(B),R=function(n){var t=function(t){return n[t]},r="(?:"+m.keys(n).join("|")+")",e=RegExp(r),u=RegExp(r,"g");return function(n){return n=null==n?"":""+n,e.test(n)?n.replace(u,t):n}};m.escape=R(B),m.unescape=R(T),m.result=function(n,t,r){var e=null==n?void 0:n[t];return e===void 0&&(e=r),m.isFunction(e)?e.call(n):e};var q=0;m.uniqueId=function(n){var t=++q+"";return n?n+t:t},m.templateSettings={evaluate:/<%([\s\S]+?)%>/g,interpolate:/<%=([\s\S]+?)%>/g,escape:/<%-([\s\S]+?)%>/g};var K=/(.)^/,z={"'":"'","\\":"\\","\r":"r","\n":"n","\u2028":"u2028","\u2029":"u2029"},D=/\\|'|\r|\n|\u2028|\u2029/g,L=function(n){return"\\"+z[n]};m.template=function(n,t,r){!t&&r&&(t=r),t=m.defaults({},t,m.templateSettings);var e=RegExp([(t.escape||K).source,(t.interpolate||K).source,(t.evaluate||K).source].join("|")+"|$","g"),u=0,i="__p+='";n.replace(e,function(t,r,e,o,a){return i+=n.slice(u,a).replace(D,L),u=a+t.length,r?i+="'+\n((__t=("+r+"))==null?'':_.escape(__t))+\n'":e?i+="'+\n((__t=("+e+"))==null?'':__t)+\n'":o&&(i+="';\n"+o+"\n__p+='"),t}),i+="';\n",t.variable||(i="with(obj||{}){\n"+i+"}\n"),i="var __t,__p='',__j=Array.prototype.join,"+"print=function(){__p+=__j.call(arguments,'');};\n"+i+"return __p;\n";try{var o=new Function(t.variable||"obj","_",i)}catch(a){throw a.source=i,a}var c=function(n){return o.call(this,n,m)},f=t.variable||"obj";return c.source="function("+f+"){\n"+i+"}",c},m.chain=function(n){var t=m(n);return t._chain=!0,t};var P=function(n,t){return n._chain?m(t).chain():t};m.mixin=function(n){m.each(m.functions(n),function(t){var r=m[t]=n[t];m.prototype[t]=function(){var n=[this._wrapped];return f.apply(n,arguments),P(this,r.apply(m,n))}})},m.mixin(m),m.each(["pop","push","reverse","shift","sort","splice","unshift"],function(n){var t=o[n];m.prototype[n]=function(){var r=this._wrapped;return t.apply(r,arguments),"shift"!==n&&"splice"!==n||0!==r.length||delete r[0],P(this,r)}}),m.each(["concat","join","slice"],function(n){var t=o[n];m.prototype[n]=function(){return P(this,t.apply(this._wrapped,arguments))}}),m.prototype.value=function(){return this._wrapped},m.prototype.valueOf=m.prototype.toJSON=m.prototype.value,m.prototype.toString=function(){return""+this._wrapped},"function"==typeof define&&define.amd&&define("underscore",[],function(){return m})}).call(this);
-var Utils;Utils=function(){function a(){}return a.getUrlAttribute=function(a){var b;return b=document.createElement("a"),b.href=window.location.href,b[a]},a.getUrlParameter=function(a){var b,c,d,e;for(c=this.getUrlAttribute("search").substring(1),e=c.split("&"),b=0;b<e.length;){if(d=e[b].split("="),d[0]===a)return d[1];b++}},a.generateID=function(){var a;return a=function(){return Math.floor(4096*(1+Math.random())).toString(16).substring(1)},a()+a()},a.checkOnline=function(){return SST.online=navigator.onLine},a.checkConnection=function(){var a,b;return a=navigator.connection.type,b={},b[Connection.UNKNOWN]=!1,b[Connection.ETHERNET]=!0,b[Connection.WIFI]=!0,b[Connection.CELL_2G]=!0,b[Connection.CELL_3G]=!0,b[Connection.CELL_4G]=!0,b[Connection.CELL]=!0,b[Connection.NONE]=!1,b[a]?!0:!1},a}();var LocalStorage,Storage;LocalStorage=function(){function a(){}return a.get=function(a,b,c){var d;return d=localStorage.getItem(a),null===d?void c(d):(d=JSON.parse(d),c("everything"===b?d:"tasks"===b&&void 0===d[b]?d[b]||[]:d[b]))},a.set=function(a,b,c,d){var e;return e=JSON.parse(localStorage.getItem(a))||{},"everything"===b?e=c:e[b]=c,e=JSON.stringify(e),localStorage.setItem(a,e),d?d():void 0},a}(),Storage=function(){function a(){var a;this.syncKey=localStorage.getItem("sync_key"),null===this.syncKey?this.syncEnabled=!1:this.syncEnabled=!0,a=Utils.getUrlParameter("share"),void 0!==a&&(this.dbKey=a,localStorage.setItem("sync_key",a),this.syncEnabled=!0,history.pushState("",document.title,window.location.pathname)),this.setSyncKey(),this.syncEnabled&&this.createFirebase()}return a.prototype.get=function(a,b){return LocalStorage.get(this.dbKey,a,b)},a.prototype.set=function(a,b,c){return LocalStorage.set(this.dbKey,a,b,c),LocalStorage.set(this.dbKey,"timestamp",Date.now(),c)},a.prototype.getTasks=function(a){return this.get("tasks",a)},a.prototype.setTasks=function(a,b){return this.set("tasks",a,b),SST.storage.syncEnabled?SST.remote.sync(function(){}):void 0},a.prototype.setListName=function(a,b){return this.set("name",a,b)},a.prototype.linkDevices=function(){return this.syncEnabled=!0,this.setSyncKey(),this.createFirebase(),SST.remote.sync(function(){})},a.prototype.createFirebase=function(){return SST.remoteFirebase=new Firebase("https://supersimpletasks.firebaseio.com/data/"+this.dbKey)},a.prototype.goOnline=function(){return Firebase.goOnline()},a.prototype.goOffline=function(){return Firebase.goOffline()},a.prototype.migrateKey=function(a){return this.get("everything",function(b){return function(c){return b.dbKey=a,SST.storage.set("everything",c,function(){}),b.dbKey}}(this))},a.prototype.setSyncKey=function(){var a;return this.syncEnabled?(this.dbKey=localStorage.getItem("sync_key"),null===this.dbKey?(this.dbKey="todo",a=Utils.generateID(),this.dbKey=this.migrateKey(a),localStorage.setItem("sync_key",this.dbKey),console.log("Your sync key has been set to: "+this.dbKey)):void 0):this.dbKey="todo"},a.prototype.disconnectDevices=function(){return localStorage.removeItem("sync_enabled"),localStorage.removeItem("sync_key"),this.migrateKey("todo")},a}();var Remote;Remote=function(){function a(){}return a.prototype.merge=function(a,b,c){var d;return d=a.timestamp>b.timestamp?a:a.timestamp===b.timestamp?a:b,SST.storage.set("everything",d,function(){return SST.storage.get("everything",function(a,b){return SST.remoteFirebase.set(a,function(a){})})}),c(d.tasks)},a.prototype.sync=function(a){var b,c;return b=$.Deferred(),c=$.Deferred(),setTimeout(function(){return SST.storage.get("everything",function(a){var c;return c=a||{},b.resolve(c)})},250),SST.remoteFirebase.once("value",function(a){var b;return b=a.val()||{timestamp:0},c.resolve(b)}),$.when(b,c).done(function(b){return function(c,d){return b.merge(c,d,a)}}(this))},a}();var Analytics;Analytics=function(){function a(){}return a.sendPageView=function(){var a;return a=window.location.href.split("://"),"chrome-extension"===a[0]?ga("send","pageview","chrome-extension"):ga("send","pageview",a[1])},a.sendTaskCount=function(a){var b,c;return ga("send",{hitType:"event",eventCategory:"Data",eventAction:"Task count",eventValue:a.length}),b=_.filter(a,"link"),c=b.length/a.length,ga("send",{hitType:"event",eventCategory:"Data",eventAction:"Link ratio",eventValue:c})},a.sendTagClickEvent=function(){return window.clearTimeout(window.timeout),window.timeout=setTimeout(function(){return ga("send","event","Tag color","click")},1e3)},a.sendThemeClickEvent=function(){return window.clearTimeout(window.timeout),window.timeout=setTimeout(function(){return ga("send","event","Theme clicked","click")},1e3)},a}(),$(window).focus(function(){return Analytics.sendPageView()}),$(document).on("blur","#list-name",function(a){return ga("send","event","Name task list","click")}),$(document).on("click","#add-link",function(){return ga("send","event","Add link button","click")}),$(document).on("click","#task-submit",function(){return ga("send","event","Add task button","click")}),$(document).on("click","#clear-completed",function(){return ga("send","event","Clear completed","click")}),$(document).on("click","#link-devices",function(a){return ga("send","event","Share list","click")}),$(document).on("click","#expand",function(){return ga("send","event","Open as tab","click")}),$(document).on("click","#copy",function(a){return ga("send","event","Copy share URL","click")}),$(document).on("click","#disconnect-devices",function(a){return ga("send","event","Disconnect shared list","click")}),$(document).on("click",".theme",function(){return Analytics.sendThemeClickEvent()}),document.querySelector("#task-list").addEventListener("slip:reorder",function(a){return ga("send","event","Reorder","click")}),$(document).on("click",".drag-handle",function(){return ga("send","event","Reorder with handle","click")}),$(document).on("click",".edit",function(){return ga("send","event","Edit task","click")}),$(document).on("click",".tag",function(){return Analytics.sendTagClickEvent()}),$(document).on("mousedown",".task > tag",function(){return ga("send","event","Complete task","click")}),$(document).on("click",".task-link",function(){return ga("send","event","Task link","click")}),$(document).on("mousedown","#whats-new-close",function(){return ga("send","event","Close Whats New","click")});var Arrays,Task;Arrays=function(){function a(){}return a.tags=["gray","green","yellow","red","blue","pink","purple"],a.default_data={name:"",timestamp:null,version:319,theme:"theme-green",tasks:[{id:Utils.generateID(),isDone:!1,name:"Add a new task above",tag:"red",link:""},{id:Utils.generateID(),isDone:!1,name:"Perhaps give it a tag or reorder it",tag:"green",link:""},{id:Utils.generateID(),isDone:!1,name:"Refresh to see that your task is still here",tag:"pink",link:""},{id:Utils.generateID(),isDone:!1,name:"Reference things by attaching a URL to tasks",tag:"blue",link:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"},{id:Utils.generateID(),isDone:!1,name:"Follow @humphreybc on Twitter",tag:"yellow",link:"http://twitter.com/humphreybc"}]},a}(),Task=function(){function a(){}return a.createTask=function(a,b){var c;return""!==b&&(b.match(/^[a-zA-Z]+:\/\//)||(b="http://"+b)),c={id:Utils.generateID(),isDone:!1,name:a,tag:"gray",link:b}},a.setNewTask=function(a,b){var c;return c=this.createTask(a,b),SST.storage.getTasks(function(a){return a.unshift(c),SST.storage.setTasks(a),ListView.showTasks(a),Analytics.sendTaskCount(a)})},a.updateTask=function(a,b,c){return SST.storage.getTasks(function(d){return d[c].name=a,d[c].link=b,SST.storage.setTasks(d,function(){return ListView.showTasks(d)})})},a.deleteTask=function(a){var b;return b=TaskView.getId(a),SST.storage.getTasks(function(a){return a.splice(b,1),SST.storage.setTasks(a,function(){return ListView.showTasks(a)})})},a.updateOrder=function(a,b){return a!==b?SST.storage.getTasks(function(c){var d;return d=c[a],b>a&&(b+=1),c.splice(b,0,d),a>b&&(a+=1),c.splice(a,1),c=_.sortBy(c,"isDone"),c=_.sortBy(c,"isDone"),SST.storage.setTasks(c),ListView.showTasks(c)}):void 0},a.cycleAttr=function(a,b,c){var d,e,f;return"tag"===b&&(d=Arrays.tags),e=$.inArray(c,d),f=TaskView.getId(a),e===d.length-1&&(e=-1),c=d[e+1],this.updateAttr(f,b,c)},a.updateAttr=function(a,b,c){return SST.storage.getTasks(function(d){var e;return e=d[a],e[b]=c,d=_.sortBy(d,"isDone"),SST.storage.setTasks(d),ListView.showTasks(d)})},a.clearCompleted=function(){return SST.storage.getTasks(function(a){var b;if(null!==a){for(b=a.length-1;b>=0;)a[b].isDone&&a.splice(b,1),b--;return SST.storage.setTasks(a),ListView.showTasks(a)}})},a.seedDefaultData=function(){var a;return a=Arrays.default_data,SST.storage.set("everything",a),a.tasks},a}();var Views;Views=function(){function a(){}var b;return b=0,a.onFocus=function(){return SST.storage.syncEnabled&&SST.online?(SST.storage.goOnline(),console.log("Sync connected"),SST.remote.sync(function(b){return a.reload(b)})):void 0},a.onBlur=function(){return SST.storage.syncEnabled?setTimeout(function(){return SST.storage.goOffline(),console.log("Sync disconnected")},500):void 0},a.getInitialTasks=function(){return SST.storage.syncEnabled&&SST.online?SST.remote.sync(function(b){return a.reload(b),a.displayApp(b)}):SST.storage.get("everything",function(b){var c;return c=null===b?Task.seedDefaultData():b.tasks,a.reload(c),a.displayApp(c)})},a.keyboardShortcuts=function(b){var c,d,e,f,g;return e=window.event?event:b,c=13,f=76,d=27,g=16,e.keyCode===c&&($("#list-name").is(":focus")?(a.storeListName(),$("#list-name").blur()):(TaskView.addTaskTriggered(),ga("send","event","Add task shortcut","shortcut"))),e.keyCode===d&&($("#edit-task-overlay").removeClass("fade"),ListView.clearNewTaskInputs(),a.toggleAddLinkInput(!1)),e.keyCode===d&&$("body").hasClass("modal-show")&&(a.modal("none"),ga("send","event","Modal dialog close shortcut","shortcut")),e.altKey&&e.keyCode===f?(a.toggleAddLinkInput(),ga("send","event","Add link shortcut","shortcut")):void 0},a.standardLog=function(){return console.log("Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks")},a.reload=function(a){return ListView.showTasks(a)},a.displayApp=function(a){return this.setTheme(this.getTheme()),this.checkWhatsNew(a),this.animateContent(),this.setListName()},a.setListName=function(){return SST.storage.get("name",function(a){return $("#list-name").val(a)})},a.storeListName=function(){var a;return a=$("#list-name").val(),SST.storage.setListName(a,function(){})},a.animateContent=function(){return $("#spinner").addClass("spinner-hidden"),setTimeout(function(){return $("#task-list").addClass("list-show")},150)},a.clearCompletedTasks=function(){var a,b,c,d;return b=$(".task-completed"),b.length>0&&(a=new Audio("../img/ceres.ogg"),a.play()),d=0,c=0,b.each(function(){return $(this).delay(d).animate({"margin-left":"-500px",opacity:"0"},150),d+=150,c+=1}),c===b.length?setTimeout(function(){return Task.clearCompleted()},d):void 0},a.modal=function(a,b){switch(a){case"none":return $("body").removeClass("modal-show");case"share-modal":if($("body").addClass("modal-show"),$("#modal-share, #modal-join").hide(),$("#modal-choose").show(),!b)return this.doPushState(a);break;case"share-list":if(this.populateLinkCode(),$("#modal-choose, #modal-share").toggle(),!b)return this.doPushState(a);break;case"join-list":if($("#modal-choose, #modal-join").toggle(),!b)return this.doPushState(a);break;case"disconnect":if(window.confirm("Are you sure you want to disconnect this list? Your tasks will still be stored locally."))return SST.storage.disconnectDevices(),location.reload();break;case"modal-close":return $("body").removeClass("modal-show")}},a.doPushState=function(a){var b,c,d;return c={id:a},d=a,b="",history.pushState(c,d,b)},a.populateLinkCode=function(){var a;return $("#link-code").text(SST.storage.dbKey),a="http://supersimpletasks.com/?share="+SST.storage.dbKey,$("#link-code-url").text(a),$("#link-code-url").attr("href",a)},a.setSyncCode=function(){var a;return a=$("#modal-code-input").val(),localStorage.setItem("sync_key",a),location.reload()},a.toggleAddLinkInput=function(a){var b,c,d,e,f,g;if(null==a&&(a=null),b=$("body"),d=$("#new-task"),c=$("#add-link-input"),f="link-active",e=b.hasClass(f),e!==a)if(g=null===a?!e:a){if(b.addClass(f),!SST.mobile)return c.focus()}else if(b.removeClass(f),!SST.mobile)return d.focus()},a.checkWhatsNew=function(a){return SST.storage.get("version",function(b){var c;return c=a.length,(321>b||null===b)&&c>5&&!SST.mobile?$(".whats-new").show():void 0})},a.closeWhatsNew=function(){return SST.storage.set("version",321,function(){})},a.returnThemeColor=function(a){var b;return b={green:"4CAF50",blue:"2196F3",orange:"FF7043",purple:"7E57C2"},b[a.split("-")[1]]},a.setTheme=function(a){var b,c,d;return b=this.returnThemeColor(a),d="#"+b,$("header, #task-submit").addClass("theme-transition"),$("body").removeClass(),$("body").addClass(a),$("#android-theme-color").attr("content",d),window.cordova&&this.setStatusBarColor(d),c="favicon_"+a.split("-")[1]+".png",$("#favicon").attr("href",c),setTimeout(function(){return $("header, #task-submit").removeClass("theme-transition"),SST.storage.set("theme",a,function(){return SST.storage.syncEnabled?SST.remote.sync(function(){}):void 0})},400)},a.getTheme=function(){return SST.storage.get("theme",function(a){return void 0===a&&(a="theme-green"),a})},a.setStatusBarColor=function(a){return StatusBar?(a=function(){switch(a){case"#4CAF50":return"#2A8D30";case"#2196F3":return"#0075D1";case"#FF7043":return"#DD5021";case"#7E57C2":return"#5C35A0"}}(),StatusBar.backgroundColorByHexString(a)):void 0},a}();var ListView;ListView=function(){function a(){}return a.clearNewTaskInputs=function(){return $("#new-task").val(""),$("#add-link-input").val(""),$("#edit-task-id").val("")},a.addHTML=function(a){var b,c;return c=this.compileTemplate(a),$("#task-list").html(c),b=$("#task-list").find(".task-completed")[0],$(b).before("<hr>")},a.compileTemplate=function(a){var b,c;return b=$("#task-template").html(),(c=Handlebars.compile(b))({tasks:a})},a.showTasks=function(a){return void 0===a&&(a=[]),this.showEmptyState(a),this.addHTML(a),Extension.setBrowserActionBadge(a),smartquotes()},a.showEmptyState=function(a){return 0===a.length?($("#all-done").addClass("show-empty-state"),$("#print-tasks").addClass("disabled-link")):($("#all-done").removeClass("show-empty-state"),$("#print-tasks").removeClass("disabled-link"))},a.changeEmptyStateImage=function(){return SST.online?$("#empty-state-image").css("background-image",'url("https://unsplash.it/680/440/?random")'):void 0},a}();var TaskView;TaskView=function(){function a(){}return a.getId=function(a){return $(a).parent().find("li").index(a)},a.getLi=function(a){var b;return b=$("#task-list li:nth-child("+(a+1)+")")},a.addTaskTriggered=function(){var b,c,d;return d=$("#new-task").val(),c=$("#add-link-input").val(),b=$("#edit-task-id").val(),d&&(b?a.editTaskTriggered(d,c,b):(Task.setNewTask(d,c),ListView.clearNewTaskInputs(),a.taskAddedAnimation())),$("#new-task").focus()},a.taskAddedAnimation=function(){return $("#task-submit").addClass("task-submitted"),setTimeout(function(){return $("#task-submit").removeClass("task-submitted")},1e3)},a.editTask=function(a){return SST.storage.getTasks(function(b){var c,d;return d=b[a].name,c=b[a].link,$("#edit-task-id").val(a),$("#new-task").val(d),c?($("#add-link-input").val(c),Views.toggleAddLinkInput(!0)):Views.toggleAddLinkInput(!1),$("#edit-task-overlay").addClass("fade"),$("#new-task").focus(),$("#new-task").select()})},a.editTaskTriggered=function(a,b,c){return c=parseInt(c),Task.updateTask(a,b,c),$("#edit-task-overlay").removeClass("fade"),ListView.clearNewTaskInputs(),Views.toggleAddLinkInput(!1)},a.completeTask=function(a){var b,c;return b=a.find("input"),c=!b.prop("checked"),Task.updateAttr(this.getId(a),"isDone",c),b.prop("checked",c)},a}();var Extension;Extension=function(){function a(){}return a.setPopupClass=function(){return"true"===Utils.getUrlParameter("popup")?$("html").addClass("popup"):void 0},a.setBrowserActionBadge=function(a){var b;return this.isExtension()&&(b=a.filter(function(a){return a.isDone===!1}).length,b=""+b,"0"===b&&(b=""),chrome.browserAction.setBadgeText({text:b}),15>b&&chrome.browserAction.setBadgeBackgroundColor({color:"#555555"}),b>15)?chrome.browserAction.setBadgeBackgroundColor({color:"#FF4444"}):void 0},a.isExtension=function(){var a;return a=window.location.href.split("://"),"chrome-extension"===a[0]},a}();var list;list=document.querySelector("#task-list"),new Slip(list),list.addEventListener("slip:swipe",function(a){return a.preventDefault(),Task.deleteTask(a.target)}),list.addEventListener("slip:reorder",function(a){var b,c;return a.target.parentNode.insertBefore(a.target,a.detail.insertBefore),c=a.detail.originalIndex,b=a.detail.spliceIndex,$(a.target).hasClass("task-completed")&&(c-=1,b-=1),Task.updateOrder(c,b)}),list.addEventListener("slip:beforewait",function(a){return a.target.className.indexOf("drag-handle")>-1?a.preventDefault():void 0},!1);var SST,initialize,onDeviceReady;SST=SST||{},initialize=function(){return Views.standardLog(),Extension.setPopupClass(),console.log("Internet connection: "+SST.online),SST.storage=new Storage,SST.remote=new Remote,document.onkeyup=Views.keyboardShortcuts,SST.mobile=$(window).width()<499,ListView.changeEmptyStateImage(),Views.getInitialTasks(),SST.mobile?void 0:$("#new-task").focus()},$(document).on("click",".task > label",function(a){return a.preventDefault()}),$(document).on("mousedown",".task > label",function(){var a;return a=!1,setTimeout(function(){return a=!0},250),$(this).one("mouseup",function(){var b;return a?void 0:(b=$(this).closest("li"),$(b).animate({opacity:"0.25"},250,function(){return TaskView.completeTask(b)}))})}),$(document).on("click",".edit",function(a){var b;return b=$(this).closest("li"),TaskView.editTask(TaskView.getId(b))}),$(document).on("click",".delete",function(a){var b;return b=$(this).closest("li"),$(b).slideUp(250,function(){return Task.deleteTask(b)})}),$(document).on("click",".tag",function(a){var b,c,d;return a.preventDefault(),c="tag",d=$(this).attr(c),b=$(this).closest("li"),Task.cycleAttr(b,c,d)}),$(document).on("mouseenter",".drag-handle",function(a){return $("#new-task").blur()}),$(document).on("blur","#list-name",function(a){return Views.storeListName()}),$(document).on("click","#whats-new-close",function(a){return $(".whats-new").slideUp(),Views.closeWhatsNew()}),$(document).on("click","#task-submit",function(a){return TaskView.addTaskTriggered()}),$(document).on("click","#add-link",function(a){return Views.toggleAddLinkInput()}),$(document).on("click","#clear-completed",function(a){return a.preventDefault(),Views.clearCompletedTasks()}),$(document).on("click","#share-modal",function(a){return a.preventDefault(),SST.storage.linkDevices(),Views.doPushState("none"),Views.modal(this.id)}),$(document).on("click","#share-list-modal a",function(a){return a.preventDefault(),Views.modal(this.id)}),$(document).on("click","#modal-join-button",function(a){return Views.setSyncCode(),location.reload()}),$(document).on("click",".modal-blanket",function(a){return a.preventDefault(),Views.modal("none")}),$(document).on("click",".theme",function(a){return a.preventDefault(),Views.setTheme(this.id)}),$(window).on("popstate",function(a){var b;return b=a.originalEvent.state,b?Views.modal(b.id,!0):void 0}),onDeviceReady=function(){return SST.online=Utils.checkConnection(),document.addEventListener("pause",Views.onBlur,!1),document.addEventListener("resume",Views.onFocus,!1),$(document).on("click",'a[target="_blank"]',function(a){return a.preventDefault(),window.open(this.href,"_system")}),initialize()},window.cordova?document.addEventListener("deviceready",onDeviceReady,!1):(SST.online=Utils.checkOnline(),window.onfocus=Views.onFocus,window.onblur=Views.onBlur,initialize());
+// Miscellaneous utilities
+
+// parser.protocol; // => "http:"
+// parser.hostname; // => "example.com"
+// parser.port;     // => "3000"
+// parser.pathname; // => "/pathname/"
+// parser.search;   // => "?search=test"
+// parser.hash;     // => "#hash"
+// parser.host;     // => "example.com:3000"
+var Utils;
+
+Utils = class Utils {
+  static getUrlAttribute(attribute) {
+    var parser;
+    parser = document.createElement('a');
+    parser.href = window.location.href;
+    return parser[attribute];
+  }
+
+  static getUrlParameter(param) {
+    var i, pageURL, parameterName, urlVariables;
+    pageURL = this.getUrlAttribute('search').substring(1);
+    urlVariables = pageURL.split('&');
+    i = 0;
+    while (i < urlVariables.length) {
+      parameterName = urlVariables[i].split('=');
+      if (parameterName[0] === param) {
+        return parameterName[1];
+      }
+      i++;
+    }
+  }
+
+  static generateID() {
+    var s4;
+    s4 = function() {
+      return Math.floor((1 + Math.random()) * 0x1000).toString(16).substring(1);
+    };
+    return s4() + s4();
+  }
+
+  static checkOnline() {
+    return SST.online = navigator.onLine;
+  }
+
+  static checkConnection() {
+    var networkState, states;
+    networkState = navigator.connection.type;
+    states = {};
+    states[Connection.UNKNOWN] = false;
+    states[Connection.ETHERNET] = true;
+    states[Connection.WIFI] = true;
+    states[Connection.CELL_2G] = true;
+    states[Connection.CELL_3G] = true;
+    states[Connection.CELL_4G] = true;
+    states[Connection.CELL] = true;
+    states[Connection.NONE] = false;
+    if (states[networkState]) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+};
+
+var LocalStorage, Storage;
+
+LocalStorage = class LocalStorage {
+  static get(key, property, callback) {
+    var value;
+    value = localStorage.getItem(key);
+    if (value === null) {
+      callback(value);
+      return;
+    }
+    value = JSON.parse(value);
+    if (property === 'everything') {
+      return callback(value);
+    } else if ((property === 'tasks') && (value[property] === void 0)) {
+      return callback(value[property] || []);
+    } else {
+      return callback(value[property]);
+    }
+  }
+
+  static set(key, property, value, callback) {
+    var data;
+    data = JSON.parse(localStorage.getItem(key)) || {};
+    if (property === 'everything') {
+      data = value;
+    } else {
+      data[property] = value;
+    }
+    data = JSON.stringify(data);
+    localStorage.setItem(key, data);
+    if (callback) {
+      return callback();
+    }
+  }
+
+};
+
+Storage = class Storage {
+  constructor() {
+    var shareCode;
+    this.syncKey = localStorage.getItem('sync_key');
+    if (this.syncKey === null) {
+      this.syncEnabled = false;
+    } else {
+      this.syncEnabled = true;
+    }
+    shareCode = Utils.getUrlParameter('share');
+    if (shareCode !== void 0) {
+      this.dbKey = shareCode;
+      localStorage.setItem('sync_key', shareCode);
+      this.syncEnabled = true;
+      history.pushState('', document.title, window.location.pathname);
+    }
+    this.setSyncKey();
+    if (this.syncEnabled) {
+      this.createFirebase();
+    }
+  }
+
+  get(property, callback) {
+    return LocalStorage.get(this.dbKey, property, callback);
+  }
+
+  set(property, value, callback) {
+    LocalStorage.set(this.dbKey, property, value, callback);
+    return LocalStorage.set(this.dbKey, 'timestamp', Date.now(), callback);
+  }
+
+  getTasks(callback) {
+    return this.get('tasks', callback);
+  }
+
+  setTasks(value, callback) {
+    this.set('tasks', value, callback);
+    if (SST.storage.syncEnabled) {
+      return SST.remote.sync(function() {});
+    }
+  }
+
+  setListName(value, callback) {
+    return this.set('name', value, callback);
+  }
+
+  linkDevices() {
+    this.syncEnabled = true;
+    this.setSyncKey();
+    this.createFirebase();
+    return SST.remote.sync(function() {});
+  }
+
+  createFirebase() {
+    return SST.remoteFirebase = new Firebase('https://supersimpletasks.firebaseio.com/data/' + this.dbKey);
+  }
+
+  goOnline() {
+    return Firebase.goOnline();
+  }
+
+  goOffline() {
+    return Firebase.goOffline();
+  }
+
+  migrateKey(new_key) {
+    return this.get('everything', (everything) => {
+      this.dbKey = new_key;
+      SST.storage.set('everything', everything, function() {});
+      return this.dbKey;
+    });
+  }
+
+  setSyncKey() {
+    var new_key;
+    if (this.syncEnabled) {
+      this.dbKey = localStorage.getItem('sync_key');
+      if (this.dbKey === null) {
+        this.dbKey = 'todo';
+        new_key = Utils.generateID();
+        this.dbKey = this.migrateKey(new_key);
+        localStorage.setItem('sync_key', this.dbKey);
+        return console.log('Your sync key has been set to: ' + this.dbKey);
+      }
+    } else {
+      return this.dbKey = 'todo';
+    }
+  }
+
+  disconnectDevices() {
+    localStorage.removeItem('sync_enabled');
+    localStorage.removeItem('sync_key');
+    return this.migrateKey('todo');
+  }
+
+};
+
+var Remote;
+
+Remote = class Remote {
+  merge(local, remote, callback) {
+    var data;
+    if (local.timestamp > remote.timestamp) {
+      data = local;
+    } else if (local.timestamp === remote.timestamp) {
+      data = local;
+    } else {
+      data = remote;
+    }
+    SST.storage.set('everything', data, function() {
+      return SST.storage.get('everything', function(data, callback) {
+        return SST.remoteFirebase.set(data, function(callback) {});
+      });
+    });
+    return callback(data.tasks);
+  }
+
+  sync(callback) {
+    var d1, d2;
+    d1 = $.Deferred();
+    d2 = $.Deferred();
+    setTimeout((function() {
+      return SST.storage.get('everything', function(data) {
+        var local;
+        local = data || {};
+        return d1.resolve(local);
+      });
+    }), 250);
+    SST.remoteFirebase.once('value', function(value) {
+      var remote;
+      remote = value.val() || {
+        timestamp: 0
+      };
+      return d2.resolve(remote);
+    });
+    return $.when(d1, d2).done((local, remote) => {
+      return this.merge(local, remote, callback);
+    });
+  }
+
+};
+
+// Analytics events
+var Analytics;
+
+Analytics = class Analytics {
+  static sendPageView() {
+    var url;
+    url = window.location.href.split('://');
+    if (url[0] === 'chrome-extension') {
+      return ga('send', 'pageview', 'chrome-extension');
+    } else {
+      return ga('send', 'pageview', url[1]);
+    }
+  }
+
+  static sendTaskCount(allTasks) {
+    var haveLinks, linkRatio;
+    ga('send', {
+      'hitType': 'event',
+      'eventCategory': 'Data',
+      'eventAction': 'Task count',
+      'eventValue': allTasks.length
+    });
+    haveLinks = _.filter(allTasks, 'link');
+    linkRatio = haveLinks.length / allTasks.length;
+    return ga('send', {
+      'hitType': 'event',
+      'eventCategory': 'Data',
+      'eventAction': 'Link ratio',
+      'eventValue': linkRatio
+    });
+  }
+
+  static sendTagClickEvent() {
+    window.clearTimeout(window.timeout);
+    return window.timeout = setTimeout((function() {
+      return ga('send', 'event', 'Tag color', 'click');
+    }), 1000);
+  }
+
+  static sendThemeClickEvent() {
+    window.clearTimeout(window.timeout);
+    return window.timeout = setTimeout((function() {
+      return ga('send', 'event', 'Theme clicked', 'click');
+    }), 1000);
+  }
+
+};
+
+// Because this code is set as background code for the extension, we
+// don't want the pageviews firing all the time. So instead we
+// only send the pageview when the window has focus.
+$(window).focus(function() {
+  return Analytics.sendPageView();
+});
+
+$(document).on('blur', '#list-name', function(e) {
+  return ga('send', 'event', 'Name task list', 'click');
+});
+
+// Click on Add link button
+$(document).on('click', '#add-link', function() {
+  return ga('send', 'event', 'Add link button', 'click');
+});
+
+// Click on Add task button
+$(document).on('click', '#task-submit', function() {
+  return ga('send', 'event', 'Add task button', 'click');
+});
+
+// Click on Clear completed in navigation
+$(document).on('click', '#clear-completed', function() {
+  return ga('send', 'event', 'Clear completed', 'click');
+});
+
+// Click on Share list icon
+$(document).on('click', '#link-devices', function(e) {
+  return ga('send', 'event', 'Share list', 'click');
+});
+
+// Click to open as a tab
+$(document).on('click', '#expand', function() {
+  return ga('send', 'event', 'Open as tab', 'click');
+});
+
+// Click on disconnect from shared list
+$(document).on('click', '#copy', function(e) {
+  return ga('send', 'event', 'Copy share URL', 'click');
+});
+
+// Click on disconnect from shared list
+$(document).on('click', '#disconnect-devices', function(e) {
+  return ga('send', 'event', 'Disconnect shared list', 'click');
+});
+
+// Choose a theme
+$(document).on('click', '.theme', function() {
+  return Analytics.sendThemeClickEvent();
+});
+
+// Reorder a task
+document.querySelector('#task-list').addEventListener('slip:reorder', function(e) {
+  return ga('send', 'event', 'Reorder', 'click');
+});
+
+// Reorder with the drag handle
+$(document).on('click', '.drag-handle', function() {
+  return ga('send', 'event', 'Reorder with handle', 'click');
+});
+
+// Click on edit task
+$(document).on('click', '.edit', function() {
+  return ga('send', 'event', 'Edit task', 'click');
+});
+
+// Click a tag color
+$(document).on('click', '.tag', function() {
+  return Analytics.sendTagClickEvent();
+});
+
+// Click a task to complete / uncomplete it
+$(document).on('mousedown', '.task > tag', function() {
+  return ga('send', 'event', 'Complete task', 'click');
+});
+
+// Click a task link
+$(document).on('click', '.task-link', function() {
+  return ga('send', 'event', 'Task link', 'click');
+});
+
+// Close What's New dialog
+$(document).on('mousedown', '#whats-new-close', function() {
+  return ga('send', 'event', 'Close Whats New', 'click');
+});
+
+var Arrays, Task;
+
+Arrays = (function() {
+  class Arrays {};
+
+  // This class contains default arrays
+
+  // Colors for the tags
+  Arrays.tags = ['gray', 'green', 'yellow', 'red', 'blue', 'pink', 'purple'];
+
+  // Default task data for new users
+  Arrays.default_data = {
+    'name': '',
+    'timestamp': null,
+    'version': 319,
+    'theme': 'theme-green',
+    'tasks': [
+      {
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Add a new task above',
+        'tag': 'red',
+        'link': ''
+      },
+      {
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Perhaps give it a tag or reorder it',
+        'tag': 'green',
+        'link': ''
+      },
+      {
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Refresh to see that your task is still here',
+        'tag': 'pink',
+        'link': ''
+      },
+      {
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Reference things by attaching a URL to tasks',
+        'tag': 'blue',
+        'link': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+      },
+      {
+        'id': Utils.generateID(),
+        'isDone': false,
+        'name': 'Follow @humphreybc on Twitter',
+        'tag': 'yellow',
+        'link': 'http://twitter.com/humphreybc'
+      }
+    ]
+  };
+
+  return Arrays;
+
+}).call(this);
+
+Task = class Task {
+  static createTask(name, link) {
+    var task;
+    // Regex to add http:// if it's missing from the user input
+    if (link !== '') {
+      if (!link.match(/^[a-zA-Z]+:\/\//)) {
+        link = 'http://' + link;
+      }
+    }
+    // Actually create the task
+    return task = {
+      id: Utils.generateID(),
+      isDone: false,
+      name: name,
+      tag: 'gray',
+      link: link
+    };
+  }
+
+  static setNewTask(name, link) {
+    var newTask;
+    newTask = this.createTask(name, link);
+    return SST.storage.getTasks(function(allTasks) {
+      // Adds that new task to the end of the array
+      allTasks.unshift(newTask);
+      SST.storage.setTasks(allTasks);
+      ListView.showTasks(allTasks);
+      return Analytics.sendTaskCount(allTasks);
+    });
+  }
+
+  static updateTask(name, link, id) {
+    return SST.storage.getTasks(function(allTasks) {
+      allTasks[id].name = name;
+      allTasks[id].link = link;
+      return SST.storage.setTasks(allTasks, function() {
+        return ListView.showTasks(allTasks);
+      });
+    });
+  }
+
+  static deleteTask(li) {
+    var toDelete;
+    toDelete = TaskView.getId(li);
+    return SST.storage.getTasks(function(allTasks) {
+      allTasks.splice(toDelete, 1);
+      return SST.storage.setTasks(allTasks, function() {
+        return ListView.showTasks(allTasks);
+      });
+    });
+  }
+
+  // Updates the order upon drag and drop
+  // Takes oldLocation and newLocation from dragdrop.coffee
+  static updateOrder(oldLocation, newLocation) {
+    // If the old and new locations are the same, return
+    if (oldLocation === newLocation) {
+      return;
+    }
+    return SST.storage.getTasks(function(allTasks) {
+      var toMove;
+      toMove = allTasks[oldLocation];
+      // If the current position (oldLocation) is above (rendered on the screen) the new location
+      // the splice needs to take into account the existing toMove object and "jump" over it
+      if (oldLocation < newLocation) {
+        newLocation += 1;
+      }
+      allTasks.splice(newLocation, 0, toMove);
+      // If the newLocation is above (rendered on the screen) the old location
+      // the splice needs to take into account the new toMove object and "jump" over it
+      if (newLocation < oldLocation) {
+        oldLocation += 1;
+      }
+      allTasks.splice(oldLocation, 1);
+      // Brilliantly hacky way to put the completed stuff at the bottom
+      allTasks = _.sortBy(allTasks, 'isDone');
+      allTasks = _.sortBy(allTasks, 'isDone');
+      SST.storage.setTasks(allTasks);
+      return ListView.showTasks(allTasks);
+    });
+  }
+
+  static cycleAttr(li, attr, value) {
+    var array, currentIndex, id;
+    if (attr === 'tag') {
+      array = Arrays.tags;
+    }
+    // Get the current position in the attribute array
+    currentIndex = $.inArray(value, array);
+    id = TaskView.getId(li);
+    // Handle the current attribute if it's at the end of the attribute array
+    if (currentIndex === array.length - 1) {
+      currentIndex = -1;
+    }
+    value = array[currentIndex + 1];
+    return this.updateAttr(id, attr, value);
+  }
+
+  static updateAttr(id, attr, value) {
+    return SST.storage.getTasks(function(allTasks) {
+      var task;
+      task = allTasks[id];
+      task[attr] = value;
+      // Brilliantly hacky way to put the completed stuff at the bottom
+      allTasks = _.sortBy(allTasks, 'isDone');
+      SST.storage.setTasks(allTasks);
+      return ListView.showTasks(allTasks);
+    });
+  }
+
+  static clearCompleted() {
+    return SST.storage.getTasks(function(allTasks) {
+      var index;
+      if (allTasks === null) {
+        return;
+      }
+      // Start from the bottom
+      index = allTasks.length - 1;
+      // For each task, if the task's attribute 'isDone' is equal to true
+      // remove that task from the array allTasks
+      while (index >= 0) {
+        if (allTasks[index].isDone) {
+          allTasks.splice(index, 1);
+        }
+        index--;
+      }
+      SST.storage.setTasks(allTasks);
+      return ListView.showTasks(allTasks);
+    });
+  }
+
+  static seedDefaultData() {
+    var data;
+    data = Arrays.default_data;
+    SST.storage.set('everything', data);
+    return data.tasks;
+  }
+
+};
+
+var Views;
+
+Views = (function() {
+  var timeout;
+
+  class Views {
+    static onFocus() {
+      if (SST.storage.syncEnabled && SST.online) {
+        SST.storage.goOnline();
+        console.log('Sync connected');
+        return SST.remote.sync((allTasks) => {
+          return Views.reload(allTasks);
+        });
+      }
+    }
+
+    static onBlur() {
+      if (SST.storage.syncEnabled) {
+        return setTimeout((function() {
+          SST.storage.goOffline();
+          return console.log('Sync disconnected');
+        }), 500);
+      }
+    }
+
+    static getInitialTasks() {
+      if (SST.storage.syncEnabled && SST.online) {
+        return SST.remote.sync((allTasks) => {
+          Views.reload(allTasks);
+          return Views.displayApp(allTasks);
+        });
+      } else {
+        return SST.storage.get('everything', (everything) => {
+          var allTasks;
+          if (everything === null) {
+            allTasks = Task.seedDefaultData();
+          } else {
+            allTasks = everything.tasks;
+          }
+          Views.reload(allTasks);
+          return Views.displayApp(allTasks);
+        });
+      }
+    }
+
+    static keyboardShortcuts(e) {
+      var enter_key, esc_key, evtobj, l_key, shift_key;
+      evtobj = window.event ? event : e;
+      enter_key = 13;
+      l_key = 76;
+      esc_key = 27;
+      shift_key = 16;
+      if (evtobj.keyCode === enter_key) {
+        if ($('#list-name').is(':focus')) {
+          Views.storeListName();
+          $('#list-name').blur();
+        } else {
+          TaskView.addTaskTriggered();
+          ga('send', 'event', 'Add task shortcut', 'shortcut');
+        }
+      }
+      if (evtobj.keyCode === esc_key) {
+        $('#edit-task-overlay').removeClass('fade');
+        ListView.clearNewTaskInputs();
+        Views.toggleAddLinkInput(false);
+      }
+      if ((evtobj.keyCode === esc_key) && $('body').hasClass('modal-show')) {
+        Views.modal('none');
+        ga('send', 'event', 'Modal dialog close shortcut', 'shortcut');
+      }
+      if (evtobj.altKey && evtobj.keyCode === l_key) {
+        Views.toggleAddLinkInput();
+        return ga('send', 'event', 'Add link shortcut', 'shortcut');
+      }
+    }
+
+    static standardLog() {
+      return console.log('Like looking under the hood? Feel free to help make Super Simple Tasks better at https://github.com/humphreybc/super-simple-tasks');
+    }
+
+    static reload(allTasks) {
+      return ListView.showTasks(allTasks);
+    }
+
+    static displayApp(allTasks) {
+      this.setTheme(this.getTheme());
+      this.checkWhatsNew(allTasks);
+      this.animateContent();
+      return this.setListName();
+    }
+
+    static setListName() {
+      return SST.storage.get('name', function(list_name) {
+        return $('#list-name').val(list_name);
+      });
+    }
+
+    static storeListName() {
+      var list_name;
+      list_name = $('#list-name').val();
+      return SST.storage.setListName(list_name, function() {});
+    }
+
+    static animateContent() {
+      $('#spinner').addClass('spinner-hidden');
+      return setTimeout((function() {
+        return $('#task-list').addClass('list-show');
+      }), 150);
+    }
+
+    static clearCompletedTasks() {
+      var audio, completed, count, delayTime;
+      completed = $('.task-completed');
+      if (completed.length > 0) {
+        audio = new Audio('../img/ceres.ogg');
+        audio.play();
+      }
+      delayTime = 0;
+      count = 0;
+      completed.each(function() {
+        $(this).delay(delayTime).animate({
+          'margin-left': '-500px',
+          'opacity': '0'
+        }, 150);
+        delayTime += 150;
+        return count += 1;
+      });
+      if (count === completed.length) {
+        return setTimeout((function() {
+          return Task.clearCompleted();
+        }), delayTime);
+      }
+    }
+
+    static modal(id, pop) {
+      switch (id) {
+        case 'none':
+          return $('body').removeClass('modal-show');
+        case 'share-modal':
+          $('body').addClass('modal-show');
+          $('#modal-share, #modal-join').hide();
+          $('#modal-choose').show();
+          if (!pop) {
+            return this.doPushState(id);
+          }
+          break;
+        case 'share-list':
+          this.populateLinkCode();
+          $('#modal-choose, #modal-share').toggle();
+          if (!pop) {
+            return this.doPushState(id);
+          }
+          break;
+        case 'join-list':
+          $('#modal-choose, #modal-join').toggle();
+          if (!pop) {
+            return this.doPushState(id);
+          }
+          break;
+        case 'disconnect':
+          if (window.confirm('Are you sure you want to disconnect this list? Your tasks will still be stored locally.')) {
+            SST.storage.disconnectDevices();
+            return location.reload();
+          }
+          break;
+        case 'modal-close':
+          return $('body').removeClass('modal-show');
+      }
+    }
+
+    static doPushState(id) {
+      var path, state, title;
+      state = {
+        id: id
+      };
+      title = id;
+      path = '';
+      return history.pushState(state, title, path);
+    }
+
+    static populateLinkCode() {
+      var url;
+      $('#link-code').text(SST.storage.dbKey);
+      url = 'http://supersimpletasks.com/?share=' + SST.storage.dbKey;
+      $('#link-code-url').text(url);
+      return $('#link-code-url').attr('href', url);
+    }
+
+    static setSyncCode() {
+      var code;
+      code = $('#modal-code-input').val();
+      localStorage.setItem('sync_key', code);
+      return location.reload();
+    }
+
+    static toggleAddLinkInput(forceOpen = null) {
+      var $body, $link_input, $new_task_input, isOpen, linkActiveClass, shouldOpenDrawer;
+      $body = $('body');
+      $new_task_input = $('#new-task');
+      $link_input = $('#add-link-input');
+      linkActiveClass = 'link-active';
+      isOpen = $body.hasClass(linkActiveClass);
+      if (isOpen === forceOpen) {
+        return;
+      }
+      if (forceOpen === null) {
+        shouldOpenDrawer = !isOpen;
+      } else {
+        shouldOpenDrawer = forceOpen;
+      }
+      if (shouldOpenDrawer) {
+        $body.addClass(linkActiveClass);
+        if (!SST.mobile) {
+          return $link_input.focus();
+        }
+      } else {
+        $body.removeClass(linkActiveClass);
+        if (!SST.mobile) {
+          return $new_task_input.focus();
+        }
+      }
+    }
+
+    static checkWhatsNew(allTasks) {
+      return SST.storage.get('version', function(version) {
+        var taskCount;
+        taskCount = allTasks.length;
+        if (version < 400 || version === null) {
+          if (!SST.mobile) {
+            return $('.whats-new').show();
+          }
+        }
+      });
+    }
+
+    static closeWhatsNew() {
+      return SST.storage.set('version', 400, function() {});
+    }
+
+    static returnThemeColor(theme) {
+      var colors;
+      colors = {
+        green: '4CAF50',
+        blue: '2196F3',
+        orange: 'FF7043',
+        purple: '7E57C2'
+      };
+      return colors[theme.split('-')[1]];
+    }
+
+    static setTheme(theme) {
+      var color, favicon, hex;
+      color = this.returnThemeColor(theme);
+      hex = '#' + color;
+      $('header, #task-submit').addClass('theme-transition');
+      $('body').removeClass();
+      $('body').addClass(theme);
+      $('#android-theme-color').attr('content', hex);
+      if (!!window.cordova) {
+        this.setStatusBarColor(hex);
+      }
+      favicon = 'favicon_' + theme.split('-')[1] + '.png';
+      $('#favicon').attr('href', favicon);
+      return setTimeout((function() {
+        $('header, #task-submit').removeClass('theme-transition');
+        return SST.storage.set('theme', theme, function() {
+          if (SST.storage.syncEnabled) {
+            return SST.remote.sync(function() {});
+          }
+        });
+      }), 400);
+    }
+
+    static getTheme() {
+      return SST.storage.get('theme', function(theme) {
+        if (theme === void 0) {
+          theme = 'theme-green';
+        }
+        return theme;
+      });
+    }
+
+    static setStatusBarColor(hex) {
+      if (StatusBar) {
+        hex = (function() {
+          switch (hex) { // Android says we need to darken the color for the status bar
+            case '#4CAF50':
+              return '#2A8D30';
+            case '#2196F3':
+              return '#0075D1';
+            case '#FF7043':
+              return '#DD5021';
+            case '#7E57C2':
+              return '#5C35A0';
+          }
+        })();
+        return StatusBar.backgroundColorByHexString(hex);
+      }
+    }
+
+  };
+
+  timeout = 0;
+
+  return Views;
+
+}).call(this);
+
+var ListView;
+
+ListView = class ListView {
+  static clearNewTaskInputs() {
+    $('#new-task').val('');
+    $('#add-link-input').val('');
+    return $('#edit-task-id').val('');
+  }
+
+  static addHTML(allTasks) {
+    var firstCompleted, tasks;
+    tasks = this.compileTemplate(allTasks);
+    $('#task-list').html(tasks);
+    // Hack city hack hack city hack
+    firstCompleted = ($('#task-list').find('.task-completed'))[0];
+    return $(firstCompleted).before('<hr>');
+  }
+
+  static compileTemplate(allTasks) {
+    var source, template;
+    source = $('#task-template').html();
+    template = Handlebars.compile(source);
+    return template({
+      tasks: allTasks
+    });
+  }
+
+  static showTasks(allTasks) {
+    if (allTasks === void 0) {
+      allTasks = [];
+    }
+    this.showEmptyState(allTasks);
+    this.addHTML(allTasks);
+    Extension.setBrowserActionBadge(allTasks);
+    // smartquotesforsmartpeople.com
+    return smartquotes();
+  }
+
+  static showEmptyState(allTasks) {
+    if (allTasks.length === 0) {
+      $('#all-done').addClass('show-empty-state');
+      return $('#print-tasks').addClass('disabled-link');
+    } else {
+      $('#all-done').removeClass('show-empty-state');
+      return $('#print-tasks').removeClass('disabled-link');
+    }
+  }
+
+  static changeEmptyStateImage() {
+    if (SST.online) {
+      return $('#empty-state-image').css('background-image', 'url("https://unsplash.it/680/440/?random")');
+    }
+  }
+
+};
+
+var TaskView;
+
+TaskView = class TaskView {
+  static getId(li) {
+    return $(li).parent().find('li').index(li);
+  }
+
+  static getLi(id) {
+    var task;
+    return task = $('#task-list li:nth-child(' + (id + 1) + ')');
+  }
+
+  static addTaskTriggered() {
+    var id, link, name;
+    name = $('#new-task').val();
+    link = $('#add-link-input').val();
+    id = $('#edit-task-id').val();
+    if (name) {
+      if (id) {
+        TaskView.editTaskTriggered(name, link, id);
+      } else {
+        Task.setNewTask(name, link);
+        ListView.clearNewTaskInputs();
+        TaskView.taskAddedAnimation();
+      }
+    }
+    return $('#new-task').focus();
+  }
+
+  static taskAddedAnimation() {
+    $('#task-submit').addClass('task-submitted');
+    return setTimeout((function() {
+      return $('#task-submit').removeClass('task-submitted');
+    }), 1000);
+  }
+
+  static editTask(id) {
+    return SST.storage.getTasks(function(allTasks) {
+      var link, name;
+      name = allTasks[id].name;
+      link = allTasks[id].link;
+      $('#edit-task-id').val(id);
+      $('#new-task').val(name);
+      if (link) {
+        $('#add-link-input').val(link);
+        Views.toggleAddLinkInput(true);
+      } else {
+        Views.toggleAddLinkInput(false);
+      }
+      $('#edit-task-overlay').addClass('fade');
+      $('#new-task').focus();
+      return $('#new-task').select();
+    });
+  }
+
+  static editTaskTriggered(name, link, id) {
+    id = parseInt(id);
+    Task.updateTask(name, link, id);
+    $('#edit-task-overlay').removeClass('fade');
+    ListView.clearNewTaskInputs();
+    return Views.toggleAddLinkInput(false);
+  }
+
+  static completeTask(li) {
+    var checkbox, is_done;
+    checkbox = li.find('input');
+    is_done = !checkbox.prop('checked');
+    Task.updateAttr(this.getId(li), 'isDone', is_done);
+    // Manually toggle the value of the checkbox
+    return checkbox.prop('checked', is_done);
+  }
+
+};
+
+var Extension;
+
+Extension = class Extension {
+  static setPopupClass() {
+    if (Utils.getUrlParameter('popup') === 'true') {
+      return $('html').addClass('popup');
+    }
+  }
+
+  static setBrowserActionBadge(allTasks) {
+    var task_count;
+    if (this.isExtension()) {
+      task_count = allTasks.filter(function(task) {
+        return task.isDone === false;
+      }).length;
+      task_count = `${task_count // Just `'' + n` in disguise
+}`;
+      if (task_count === '0') {
+        task_count = '';
+      }
+      chrome.browserAction.setBadgeText({
+        'text': task_count
+      });
+      if (task_count < 15) {
+        chrome.browserAction.setBadgeBackgroundColor({
+          'color': '#555555'
+        });
+      }
+      // We want people to be productive here!
+      if (task_count > 15) {
+        return chrome.browserAction.setBadgeBackgroundColor({
+          'color': '#FF4444'
+        });
+      }
+    }
+  }
+
+  static isExtension() {
+    var url;
+    url = window.location.href.split('://');
+    return url[0] === 'chrome-extension';
+  }
+
+};
+
+// Make the task list sortable using Slip.js
+
+// Set the list element
+var list;
+
+list = document.querySelector('#task-list');
+
+// Create a new Slip object with that element
+new Slip(list);
+
+// Swipe a task
+list.addEventListener('slip:swipe', function(e) {
+  e.preventDefault();
+  return Task.deleteTask(e.target);
+});
+
+// Reorder a task
+list.addEventListener('slip:reorder', function(e) {
+  var newLocation, oldLocation;
+  // Insert the task into the correct place
+  e.target.parentNode.insertBefore(e.target, e.detail.insertBefore);
+  // Get the old and new locations
+  oldLocation = e.detail.originalIndex;
+  newLocation = e.detail.spliceIndex;
+  // Account for the <hr> to separate completed tasks
+  if ($(e.target).hasClass('task-completed')) {
+    oldLocation = oldLocation - 1;
+    newLocation = newLocation - 1;
+  }
+  // Pass those locations to Task.updateOrder() to save the list
+  return Task.updateOrder(oldLocation, newLocation);
+});
+
+// Reorder a task with the drag handle
+list.addEventListener('slip:beforewait', (function(e) {
+  if (e.target.className.indexOf('drag-handle') > -1) {
+    return e.preventDefault();
+  }
+}), false);
+
+var SST, initialize, onDeviceReady;
+
+SST = SST || {};
+
+// All the goodness
+initialize = function() {
+  Views.standardLog();
+  Extension.setPopupClass();
+  console.log('Internet connection: ' + SST.online);
+  SST.storage = new Storage();
+  SST.remote = new Remote();
+  document.onkeyup = Views.keyboardShortcuts;
+  SST.mobile = $(window).width() < 499;
+  ListView.changeEmptyStateImage();
+  Views.getInitialTasks();
+  if (!SST.mobile) {
+    return $('#new-task').focus();
+  }
+};
+
+// We'll manage checking the checkbox thank you very much
+$(document).on('click', '.task > label', function(e) {
+  return e.preventDefault();
+});
+
+// Clicking on the checkbox or label to mark a task as completed
+$(document).on('mousedown', '.task > label', function() {
+  var holding;
+  holding = false;
+  
+  // If they haven't released the mouse after 250 milliseconds,
+  // then they're probably dragging and we don't want to (un)check
+  setTimeout((function() {
+    return holding = true;
+  }), 250);
+  return $(this).one('mouseup', function() {
+    var li;
+    if (!holding) {
+      li = $(this).closest('li');
+      return $(li).animate({
+        'opacity': '0.25'
+      }, 250, function() {
+        return TaskView.completeTask(li);
+      });
+    }
+  });
+});
+
+$(document).on('click', '.edit', function(e) {
+  var li;
+  li = $(this).closest('li');
+  return TaskView.editTask(TaskView.getId(li));
+});
+
+$(document).on('click', '.delete', function(e) {
+  var li;
+  li = $(this).closest('li');
+  return $(li).slideUp(250, function() {
+    return Task.deleteTask(li);
+  });
+});
+
+$(document).on('click', '.tag', function(e) {
+  var li, type_attr, value;
+  e.preventDefault();
+  type_attr = 'tag';
+  value = $(this).attr(type_attr);
+  li = $(this).closest('li');
+  return Task.cycleAttr(li, type_attr, value);
+});
+
+// When hovering over the drag handle, unfocus the new task input field
+// This prevents people having to click twice, once to unfocus, the other to drag
+$(document).on('mouseenter', '.drag-handle', function(e) {
+  return $('#new-task').blur();
+});
+
+$(document).on('blur', '#list-name', function(e) {
+  return Views.storeListName();
+});
+
+$(document).on('click', '#whats-new-close', function(e) {
+  $('.whats-new').slideUp();
+  return Views.closeWhatsNew();
+});
+
+$(document).on('click', '#task-submit', function(e) {
+  return TaskView.addTaskTriggered();
+});
+
+$(document).on('click', '#add-link', function(e) {
+  return Views.toggleAddLinkInput();
+});
+
+$(document).on('click', '#clear-completed', function(e) {
+  e.preventDefault();
+  return Views.clearCompletedTasks();
+});
+
+$(document).on('click', '#share-modal', function(e) {
+  e.preventDefault();
+  SST.storage.linkDevices();
+  Views.doPushState('none');
+  return Views.modal(this.id);
+});
+
+$(document).on('click', '#share-list-modal a', function(e) {
+  e.preventDefault();
+  return Views.modal(this.id);
+});
+
+$(document).on('click', '#modal-join-button', function(e) {
+  Views.setSyncCode();
+  return location.reload();
+});
+
+$(document).on('click', '.modal-blanket', function(e) {
+  e.preventDefault();
+  return Views.modal('none');
+});
+
+$(document).on('click', '.theme', function(e) {
+  e.preventDefault();
+  return Views.setTheme(this.id);
+});
+
+$(window).on('popstate', function(event) {
+  var state;
+  state = event.originalEvent.state;
+  if (state) {
+    return Views.modal(state.id, true);
+  }
+});
+
+onDeviceReady = function() {
+  SST.online = Utils.checkConnection();
+  document.addEventListener('pause', Views.onBlur, false);
+  document.addEventListener('resume', Views.onFocus, false);
+  $(document).on('click', 'a[target="_blank"]', function(e) {
+    e.preventDefault();
+    return window.open(this.href, '_system');
+  });
+  return initialize();
+};
+
+if (!!window.cordova) {
+  document.addEventListener('deviceready', onDeviceReady, false);
+} else {
+  SST.online = Utils.checkOnline();
+  window.onfocus = Views.onFocus;
+  window.onblur = Views.onBlur;
+  initialize();
+}

@@ -204,13 +204,13 @@ class Views
   @checkWhatsNew: (allTasks) ->
     SST.storage.get 'version', (version) ->
       taskCount = allTasks.length
-      if (version < 321 || version == null) and (taskCount > 5)
+      if (version < 400 || version == null)
         unless SST.mobile
           $('.whats-new').show()
 
 
   @closeWhatsNew: ->
-    SST.storage.set 'version', 321, () ->
+    SST.storage.set 'version', 400, () ->
 
 
   @returnThemeColor: (theme) ->

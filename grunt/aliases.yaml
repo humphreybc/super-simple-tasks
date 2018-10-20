@@ -1,37 +1,38 @@
 default:
-  description: 'Default (production) build'
+  description: "Default (production) build"
   tasks:
     - build
 dev:
-  description: 'Development'
+  description: "Development"
   tasks:
-    - 'build'
-    - 'watch'
+    - "build"
+    - "watch"
 devbuild:
-  description: 'Development build'
+  description: "Development build"
   tasks:
-    - 'clean'
-    - 'coffeelint'
-    - 'coffee'
-    - 'stylus'
-    - 'concat'
-    - 'copy'
-    - 'compress'
+    - "clean"
+    - "coffeelint"
+    - "coffee"
+    - "stylus"
+    - "concat"
+    - "copy"
+    - "compress"
 build:
-  description: 'Production build'
+  description: "Production build"
   tasks:
-    - 'clean'
-    - 'coffeelint'
-    - 'coffee'
-    - 'uglify'
-    - 'stylus'
-    - 'concat'
-    - 'copy'
-    - 'compress'
+    - "clean"
+    - "coffeelint"
+    - "coffee"
+    # This doesn't work at the moment
+    # - "uglify"
+    - "stylus"
+    - "concat"
+    - "copy"
+    - "compress"
 release:
-  description: 'Build a release ready version'
+  description: "Build a release ready version"
   tasks:
-    - 'build'
-    - 'cacheBust'
-    - 'manifest'
-    - 'compress'
+    - "build"
+    - "cacheBust"
+    - "manifest"
+    - "compress"
