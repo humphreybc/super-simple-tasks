@@ -2009,9 +2009,7 @@ Views = (function() {
         var taskCount;
         taskCount = allTasks.length;
         if (version < 400 || version === null) {
-          if (!SST.mobile) {
-            return $('.whats-new').show();
-          }
+          return $('.whats-new').show();
         }
       });
     }
