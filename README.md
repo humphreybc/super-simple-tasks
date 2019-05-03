@@ -1,7 +1,5 @@
 # Super Simple Tasks
 
-[supersimpletasks.com](http://supersimpletasks.com)
-
 A very simple, 100% client-side tasks app that uses localStorage to save the list and Slip.js for reordering. This exists mainly so I can teach myself Coffeescript and better programming in general.
 
 ## Features
